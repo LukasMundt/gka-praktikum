@@ -32,6 +32,9 @@ optional:
 Trennzeichen der Datensätze: newline, Semikolon
 Leerzeichen zwischen allen Komponenten optional
 
+Unterschied gerichtet - ungerichtet:
+
+
 
 ## Speichern einer (Graph-Datei)
 - Speichern als .gka-Datei
@@ -57,4 +60,8 @@ via GraphViz oder anderer Library
 
 ## Performance-Messung
 - Ausführungszeiten in ms und Speicherverbrauch in mb für Beispielgraphen
+    - ms: System.nanoTime();
+    - mb: ?
 - was passiert bei Skalierung, bei 10, 100, 1000 Knoten?
+
+
