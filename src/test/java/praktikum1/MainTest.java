@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MainTest {
 
+    //does JUnit work?
     @Test
     void example() {
         assertEquals(4, 2 + 2);
