@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class GraphIO {
 
     //parse .gka file
-    public GraphModel readFile(String path) throws IOException {
+    public GraphModel readGraph(String path) throws IOException {
 
         File file = new File(path);
         Scanner scanner = new Scanner(file);
@@ -20,7 +20,12 @@ public class GraphIO {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            //TODO: the actual parsing
+            //TODO: the actual parsing, Felder separieren
+
+            //RegEx angefangen: [a-z]{1,}\s
+
+
+
         }
         scanner.close();
         return graph;
