@@ -15,17 +15,20 @@ import java.util.regex.Pattern;
  */
 public class GraphIn {
     //Methode nimmt Datei entgegen, liest zeilenweise ein und parst Inhalt, um Graphen zu extrahieren
-    public void readGraph(String path) throws IOException {
+    public List<GraphModel> readGraph(String path) throws IOException {
         //Datei einlesen
         List<String> lines = readFile(path);
 
         //Liste der Graphen parsen
-        GraphModel graph = new GraphModel();
+        GraphModel graph = new GraphModel(null, null);
 
+        List<GraphModel> graphs = new ArrayList<>();
         for (String l : lines) {
             GraphModel tempGraph = parseLine(l);
+            graphs.add(tempGraph);
 
         }
+        return graphs;
     }
 
     //Hilfs-Methode liest Datei zeilenweise ein, verwirft leere Zeilen und gibt Liste zurück
@@ -62,7 +65,7 @@ public class GraphIn {
         Matcher mUndirected = undirected.matcher(line);
         Matcher mNode = singleNode.matcher(line);
 
-        GraphModel graph = new GraphModel();
+        GraphModel graph = new GraphModel(null, null);
         List<String> failures = new ArrayList<>();
 
         //TODO das hier noch sauber einarbeiten, macht gerade keinen SInn mehr in meinem Kopf
@@ -73,9 +76,9 @@ public class GraphIn {
             if (parts.length == 2) {
                 String from = parts[0].trim();
                 String to = parts[1].trim();
-                // graph.addDirectedEdge(from, to);
+                graph.addDirectedEdge(from, to);
             } else {
-                // Fehlerfall
+                failures.add(line);
             }
         } else if (mUndirected.matches()) {
             //extract nodes and double the undirected edge into zwo directed ones
@@ -83,15 +86,15 @@ public class GraphIn {
             if (parts.length == 2) {
                 String a = parts[0].trim();
                 String b = parts[1].trim();
-                // graph.addUndirectedEdge(a, b);
-                // ggf. zwei gerichtete Kanten hinzufügen
+                graph.addUndirectedEdge(a, b);
             }
         } else if (mNode.matches()) {
             // try single node
             String node = line.trim();
-            // graph.addNode(node);
+            graph.addNode(node);
         } else {
-            //put line in List<String> failures
+            //put line in List<String> failures TODO Liste noch von außerhalb erreichbar machen
+            failures.add(line);
         }
 
         return graph;

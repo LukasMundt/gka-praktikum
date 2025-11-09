@@ -34,7 +34,15 @@ public class GraphModel {
     }
 
     public HashSet<Edge> getEdges() {
-        return _edges;
+        return null;
     }
 
+    public void addUndirectedEdge(String a, String b) {
+    }
+
+    public void addNode(String node) {
+    }
+
+    public void addDirectedEdge(String from, String to) {
+    }
 }

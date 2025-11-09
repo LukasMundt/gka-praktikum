@@ -24,8 +24,8 @@ public class GraphIOTest {
     @Test
     void testReadFile() throws IOException {
         GraphIn graphIO = new GraphIn();
-        GraphModel expected = new GraphModel();
-        //GraphModel actual = graphIO.readGraphs(testFile.toString());
+        GraphModel expected = new GraphModel(null, null);
+        GraphModel actual = graphIO.readGraph(testFile.toString());
 
         //assertNotNull(actual, "GraphModel darf nicht Null sein");
         // assertEquals(expected.getNodes(), actual.getNodes(), "Knotenlisten müssen übereinstimmen");
