@@ -1,4 +1,4 @@
-package praktikum1;
+package haw.gka.praktikum;
 
 import java.io.IOException;
 import java.io.PrintWriter;

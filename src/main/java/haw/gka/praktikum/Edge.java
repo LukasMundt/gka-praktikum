@@ -1,4 +1,4 @@
-package praktikum1;
+package haw.gka.praktikum;
 
 public class Edge {
     private final Node _start;

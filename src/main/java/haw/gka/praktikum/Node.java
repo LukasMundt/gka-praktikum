@@ -1,9 +1,20 @@
-package praktikum1;
+package haw.gka.praktikum;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Node {
     private final String _name;
+    private static Map<String, Node> _nodes = new HashMap<String, Node>();
 
-    public Node(String name) {
+    public static Node getNode(String name) {
+        if(!_nodes.containsKey(name)) {
+            _nodes.put(name, new Node(name));
+        }
+        return _nodes.get(name);
+    }
+
+    private Node(String name) {
         _name = name;
     }
 
