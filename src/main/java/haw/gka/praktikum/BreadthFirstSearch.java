@@ -1,4 +1,4 @@
-package praktikum1;
+package haw.gka.praktikum;
 
 /**
 * Implementation of the BFS algorithm

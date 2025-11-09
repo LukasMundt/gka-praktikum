@@ -1,4 +1,4 @@
-package praktikum1;
+package haw.gka.praktikum;
 
 /**
  * visualizing of graphs by using JGraphT or GraphViz or other lib
