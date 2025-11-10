@@ -17,6 +17,7 @@ public class GraphModel {
         _nodes = new HashSet<>();
         _edges = new HashSet<>();
         _indexedNodes = new HashMap<>();
+
     }
 
     public GraphModel(Set<Node> nodes, Set<Edge> edges) {
@@ -158,6 +159,8 @@ public class GraphModel {
 
         return allNodes;
     }
+
+
 
     public HashSet<Node> getNodes() {
         return _nodes;

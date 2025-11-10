@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         GraphModel graph = null;
-        String pathIn = "src/test/java/resources/graph01.gka";
+        String pathIn = "src/test/java/resources/directed.gka";
         GraphIn graphReader = new GraphIn();
 
         String pathOut = "src/test/java/resources/graphOUT1.gka";
