@@ -2,6 +2,7 @@ package praktikum1;
 
 import haw.gka.praktikum.GraphIn;
 import haw.gka.praktikum.GraphModel;
+import haw.gka.praktikum.GraphOut;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,12 +13,16 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        String path = "src/test/java/resources/graph05.gka";
+        GraphModel graph = null;
+        String pathIn = "src/test/java/resources/graph01.gka";
         GraphIn graphReader = new GraphIn();
+
+        String pathOut = "src/test/java/resources/graphOUT1.gka";
+        GraphOut graphWriter = new GraphOut();
 
         //Testfile einlesen
         try {
-            GraphModel graph = graphReader.readGraph(path);
+            graph = graphReader.readGraph(pathIn);
             List<String> failures = graphReader.getFailures();
             System.out.println("Datei erfolgreich eingelesen.");
             System.out.println();
@@ -27,6 +32,9 @@ public class Main {
             System.err.println("Fehler beim Einlesen der Datei: " + e.getMessage());
             e.printStackTrace();
         }
+
+        graphWriter.writeFile(graph, pathOut);
+
 
     }
 }

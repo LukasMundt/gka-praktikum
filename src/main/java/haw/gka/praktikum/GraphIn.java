@@ -61,12 +61,12 @@ public class GraphIn {
 
         //ggf. Gewichtung abtrennen
         String graphPart = trimmed;
-        int edgeWeight = 0;
+        float edgeWeight = 0;
         int colonIndex = trimmed.lastIndexOf(':');
         if (colonIndex != -1) {
             try {
                 //Gewichtung speichern
-                edgeWeight = Integer.parseInt(trimmed.substring(colonIndex + 1).trim());
+                edgeWeight = Float.parseFloat(trimmed.substring(colonIndex + 1).trim());
 
             } catch (NumberFormatException e) {
                 failures.add("ungültige Gewichtung bei: " + trimmed);

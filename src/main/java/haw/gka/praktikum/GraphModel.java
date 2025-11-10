@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * models for directed and undirected graphs, subgraph and overall graph
+ * methods to build graphs from nodes end edges &
+ * methods needed for BFS
  */
 public class GraphModel {
     private final HashSet<Node> _nodes;
@@ -63,7 +64,7 @@ public class GraphModel {
         _nodes.add(tempNode);
     }
 
-    public GraphModel addEdge(Node start, Node end, boolean isDirected, int weight) {
+    public GraphModel addEdge(Node start, Node end, boolean isDirected, float weight) {
        Edge edge = new Edge(start, end, isDirected, weight);
        _edges.add(edge);
 

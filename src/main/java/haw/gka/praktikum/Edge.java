@@ -5,7 +5,7 @@ public class Edge {
     private final Node _end;
     private final boolean _isDirected;
     private final boolean _isWeighted;
-    private final int _weight;
+    private final float _weight;
 
     public Edge(Node start, Node end, boolean isDirected) {
         if (start == null || end == null) {
@@ -18,7 +18,7 @@ public class Edge {
         this._weight = 0;
     }
 
-    public Edge(Node start, Node end, boolean isDirected, int weight) {
+    public Edge(Node start, Node end, boolean isDirected, float weight) {
         if (start == null || end == null) {
             throw new IllegalArgumentException();
         }
@@ -45,7 +45,7 @@ public class Edge {
         return _isWeighted;
     }
 
-    public int getWeight() {
+    public float getWeight() {
         return _weight;
     }
 
