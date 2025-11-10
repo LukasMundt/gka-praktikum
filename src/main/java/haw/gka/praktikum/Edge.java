@@ -82,6 +82,19 @@ public class Edge {
         return this._start.equals(a) || this._end.equals(a);
     }
 
+    public boolean isAReachableFromOtherNode(Node a) {
+        if(a == null){
+            throw new IllegalArgumentException("a == null");
+        } else if(!a.equals(_start) && !a.equals(_end)){
+            return false;
+        }
+
+        if(this._isDirected) {
+            return a.equals(_end);
+        }
+        return this._start.equals(a) || this._end.equals(a);
+    }
+
     public Node getOtherNode(Node node) {
         if(node == null){
             throw new IllegalArgumentException("node == null");

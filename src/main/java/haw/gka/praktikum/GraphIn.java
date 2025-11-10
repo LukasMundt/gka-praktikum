@@ -20,7 +20,7 @@ public class GraphIn {
         List<String> lines = readFile(path);
 
         //neuen Graphen EINMAL erzeugen, an parseLine übergeben
-        GraphModel graph = new GraphModel(null, null);
+        GraphModel graph = new GraphModel();
         //Liste der Graphen parsen
         for (String l : lines) {
             parseLine(l, graph);
@@ -101,7 +101,9 @@ public class GraphIn {
                 String to = parts[1].trim();
                 Node startNode = Node.getNode(from);
                 Node endNode = Node.getNode(to);
-                return graph.addEdge(startNode, endNode, true, edgeWeight);
+                graph.addNodes(startNode, endNode);
+                graph.addEdge(startNode, endNode, true, edgeWeight);
+                return graph;
             } else {
                 failures.add(trimmed);
             }
@@ -113,12 +115,14 @@ public class GraphIn {
                 String b = parts[1].trim();
                 Node aNode = Node.getNode(a);
                 Node bNode = Node.getNode(b);
-
-               return graph.addEdge(aNode, bNode, false, edgeWeight);
+                graph.addNodes(aNode, bNode);
+                graph.addEdge(aNode, bNode, false, edgeWeight);
+                return graph;
             }
         } else if (mNode.matches()) {
             // try single node
-            return graph.addNode(trimmed);
+            graph.addNode(trimmed);
+            return graph;
         } else {
             //put line in List<String> failures
             failures.add(line);

@@ -8,11 +8,15 @@ import java.util.Set;
  * models for directed and undirected graphs, subgraph and overall graph
  */
 public class GraphModel {
-//Getter, Setter, Felder (Nodes, ID, Kantengewichte...)
     private final HashSet<Node> _nodes;
     private final HashSet<Edge> _edges;
     private final HashMap<Node, Integer> _indexedNodes;
 
+    public GraphModel() {
+        _nodes = new HashSet<>();
+        _edges = new HashSet<>();
+        _indexedNodes = new HashMap<>();
+    }
 
     public GraphModel(Set<Node> nodes, Set<Edge> edges) {
         _nodes = (HashSet<Node>) nodes;
@@ -33,14 +37,30 @@ public class GraphModel {
 //        );
 //    }
 
-    public GraphModel addNode(String line) {
+    public void addNodes(Node ...nodes) {
+        for (Node node : nodes){
+            if(node == null) {
+                throw new NullPointerException("node is null");
+            }
+            _nodes.add(node);
+        }
+    }
+
+    public void addEdges(Edge ...edges) {
+        for (Edge edge : edges) {
+            if(edge == null) {
+                throw new NullPointerException("edge is null");
+            }
+            _edges.add(edge);
+        }
+    }
+
+    public void addNode(String line) {
         if (line == null) {
             throw new NullPointerException("node is null");
         }
         Node tempNode = Node.getNode(line);
         _nodes.add(tempNode);
-
-        return new GraphModel(_nodes, _edges);
     }
 
     public GraphModel addEdge(Node start, Node end, boolean isDirected, int weight) {
@@ -95,6 +115,32 @@ public class GraphModel {
             }
         }
         return neighbors;
+    }
+
+    public Set<Node> getReverseNeighbors(Node node) {
+        if (!_nodes.contains(node)) {
+            throw new IllegalArgumentException("node is not contained in the graph");
+        }
+        Set<Node> neighbors = new HashSet<>();
+        for (Edge edge : _edges) {
+            if(edge.isAReachableFromOtherNode(node)) {
+                neighbors.add(edge.getOtherNode(node));
+            }
+        }
+        return neighbors;
+    }
+
+    public Node getReverseNeighborWithIndex(Node node, int index) {
+        if (!_nodes.contains(node)) {
+            throw new IllegalArgumentException("node is not contained in the graph");
+        }
+        Set<Node> neighbors = getReverseNeighbors(node);
+        for (Node neighbor : neighbors) {
+            if(index == getIndexOfNode(neighbor)) {
+                return neighbor;
+            }
+        }
+        return null;
     }
 
     public HashSet<Node> getNodes() {
