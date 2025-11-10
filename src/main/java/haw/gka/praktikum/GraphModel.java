@@ -15,8 +15,8 @@ public class GraphModel {
 
 
     public GraphModel(Set<Node> nodes, Set<Edge> edges) {
-        _nodes = (HashSet<Node>) nodes;
-        _edges = (HashSet<Edge>) edges;
+        _nodes = (nodes == null) ? new HashSet<>() : new HashSet<>(nodes);
+        _edges = (edges == null) ? new HashSet<>() : new HashSet<>(edges);
         _indexedNodes = new HashMap<>();
     }
 
