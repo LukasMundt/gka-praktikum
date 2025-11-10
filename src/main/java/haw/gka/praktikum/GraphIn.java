@@ -1,5 +1,7 @@
 package haw.gka.praktikum;
 
+import haw.gka.praktikum.LogResources.LogResources;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
 public class GraphIn {
     //Methode nimmt Datei entgegen, liest zeilenweise ein und parst Inhalt, um Graphen zu extrahieren
     public GraphModel readGraph(String path) throws IOException {
+        LogResources.startTask("Reading graph from " + path);
         //Datei einlesen
         List<String> lines = readFile(path);
 
@@ -25,6 +28,7 @@ public class GraphIn {
         for (String l : lines) {
             parseLine(l, graph);
         }
+        LogResources.stopTask("Reading graph from " + path);
         return graph;
     }
 

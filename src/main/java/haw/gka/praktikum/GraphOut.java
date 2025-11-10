@@ -1,5 +1,7 @@
 package haw.gka.praktikum;
 
+import haw.gka.praktikum.LogResources.LogResources;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -18,6 +20,8 @@ public class GraphOut {
             return;
         }
 
+        LogResources.startTask("Writing Graph to " + path);
+
         //try with ressources, um sicherzustellen, dass Writer geschlossen wird
         try (PrintWriter writer = new PrintWriter(path)) {
             writeGraphs(g.getEdges(), writer);
@@ -26,6 +30,8 @@ public class GraphOut {
             System.err.println("Fehler beim Schreiben der Datei: " + e.getMessage());
             throw e;
         }
+
+        LogResources.stopTask(path);
 
         System.out.println("Die .gka Datei wird nach " + path + " gespeichert.");
     }
