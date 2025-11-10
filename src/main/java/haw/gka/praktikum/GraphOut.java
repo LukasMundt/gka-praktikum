@@ -3,6 +3,7 @@ package haw.gka.praktikum;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Methods to write the .gka files
@@ -20,6 +21,7 @@ public class GraphOut {
         //try with ressources, um sicherzustellen, dass Writer geschlossen wird
         try (PrintWriter writer = new PrintWriter(path)) {
             writeGraphs(g.getEdges(), writer);
+            writeSingleNodes(g.getSingleNodes(), writer);
         } catch (IOException e) {
             System.err.println("Fehler beim Schreiben der Datei: " + e.getMessage());
             throw e;
@@ -41,6 +43,13 @@ public class GraphOut {
                 graph += " : " + edge.getWeight();
             }
             writer.println(graph + ";");
+        }
+    }
+
+    //Hilfsmethode, die Knoten ohne Kanten ausgibt
+    private void writeSingleNodes(Set<Node> nodes, PrintWriter writer){
+        for (Node node : nodes) {
+            writer.println(node.getName() + ";");
         }
     }
 

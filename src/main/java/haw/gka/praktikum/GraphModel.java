@@ -144,6 +144,21 @@ public class GraphModel {
         return null;
     }
 
+    public Set<Node> getSingleNodes() {
+        Set<Node> nodes = new HashSet<>();
+
+        //alle Knoten mit Kanten sammeln
+        for (Edge edge : _edges) {
+            nodes.add(edge.getStart());
+            nodes.add(edge.getEnd());
+        }
+        //dann aus Kopie aller Knoten entfernen = SingleKnoten
+        Set<Node> allNodes = new HashSet<>(_nodes);
+        allNodes.removeAll(nodes);
+
+        return allNodes;
+    }
+
     public HashSet<Node> getNodes() {
         return _nodes;
     }
