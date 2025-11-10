@@ -13,31 +13,39 @@ public class GraphModel {
     private final HashSet<Edge> _edges;
     private final HashMap<Node, Integer> _indexedNodes;
 
+
     public GraphModel(Set<Node> nodes, Set<Edge> edges) {
         _nodes = (HashSet<Node>) nodes;
         _edges = (HashSet<Edge>) edges;
         _indexedNodes = new HashMap<>();
     }
 
-    public GraphModel addNodes(Set<Node> nodes) {
-        if (nodes == null) {
-            throw new NullPointerException("nodes is null");
-        }
-        Set<Node> temp = _nodes;
-        temp.addAll(nodes);
-
-        return new GraphModel(
-            temp,
-            _edges
-        );
-    }
+//    public GraphModel addNodes(Set<Node> nodes) {
+//        if (nodes == null) {
+//            throw new NullPointerException("nodes is null");
+//        }
+//        Set<Node> temp = _nodes;
+//        temp.addAll(nodes);
+//
+//        return new GraphModel(
+//            temp,
+//            _edges
+//        );
+//    }
 
     public GraphModel addNode(String line) {
         if (line == null) {
             throw new NullPointerException("node is null");
         }
-        Node tempNode = new Node(line);
+        Node tempNode = Node.getNode(line);
         _nodes.add(tempNode);
+
+        return new GraphModel(_nodes, _edges);
+    }
+
+    public GraphModel addEdge(Node start, Node end, boolean isDirected, int weight) {
+       Edge edge = new Edge(start, end, isDirected, weight);
+       _edges.add(edge);
 
         return new GraphModel(_nodes, _edges);
     }
@@ -89,10 +97,6 @@ public class GraphModel {
         return neighbors;
     }
 
-    public void addGraph(GraphModel tempGraph) {
-    //TODO momentan werden immer neue Graphen erzeugt, aber die Teilgraphen müssen ja in den Gesamtgraph eingebaut werden?
-    }
-
     public HashSet<Node> getNodes() {
         return _nodes;
     }
@@ -100,15 +104,4 @@ public class GraphModel {
     public HashSet<Edge> getEdges() {
         return _edges;
     }
-
-
-
-    //TODO werden die wirklich gebraucht? nochmal anschauen
-    public void addUndirectedEdge(String a, String b) {
-    }
-
-    public void addDirectedEdge(String from, String to) {
-    }
-
-
 }

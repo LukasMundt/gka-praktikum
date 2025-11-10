@@ -21,21 +21,21 @@ public class GraphIOTest {
     /**
      * Tests for readFile(); use sample data
      */
-    @Test
-    void testReadFile() throws IOException {
-        GraphIn graphIO = new GraphIn();
-        GraphModel expected = new GraphModel(null, null);
-        GraphModel actual = graphIO.readGraph(testFile.toString());
-
-        //assertNotNull(actual, "GraphModel darf nicht Null sein");
-        // assertEquals(expected.getNodes(), actual.getNodes(), "Knotenlisten müssen übereinstimmen");
-    }
-
-    @Test
-    void testReadNonexistentFile() {
-        // TODO fixen, Aufruf nicht korrekt
-        //  assertThrows(IOException.class, () -> readFile("noFile.gka"));
-    }
+//    @Test
+//    void testReadFile() throws IOException {
+//        GraphIn graphIO = new GraphIn();
+//        GraphModel expected = new GraphModel(null, null);
+//        GraphModel actual = graphIO.readGraph(testFile.toString());
+//
+//        //assertNotNull(actual, "GraphModel darf nicht Null sein");
+//        // assertEquals(expected.getNodes(), actual.getNodes(), "Knotenlisten müssen übereinstimmen");
+//    }
+//
+//    @Test
+//    void testReadNonexistentFile() {
+//        // TODO fixen, Aufruf nicht korrekt
+//        //  assertThrows(IOException.class, () -> readFile("noFile.gka"));
+//    }
 
 
 

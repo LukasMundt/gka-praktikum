@@ -20,6 +20,7 @@ public class Main {
             GraphModel graph = graphReader.readGraph(path);
             List<String> failures = graphReader.getFailures();
             System.out.println("Datei erfolgreich eingelesen.");
+            System.out.println();
             System.out.println("fehlerhaft eingelesene Teilgraphen: "+ failures);
 
         } catch (IOException e) {

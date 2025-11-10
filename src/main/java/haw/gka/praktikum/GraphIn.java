@@ -19,9 +19,9 @@ public class GraphIn {
         //Datei einlesen
         List<String> lines = readFile(path);
 
+        //neuen Graphen EINMAL erzeugen, an parseLine übergeben
+        GraphModel graph = new GraphModel(null, null);
         //Liste der Graphen parsen
-        GraphModel graph = new GraphModel();
-
         for (String l : lines) {
             parseLine(l, graph);
         }
@@ -43,13 +43,35 @@ public class GraphIn {
     }
 
     List<String> failures = new ArrayList<>();
+
     //Hilfsmethode übernimmt das pattern matching via RegEx
-    private void parseLine(String line, GraphModel graph) {
+    private GraphModel parseLine(String line, GraphModel graph) {
+
+        //auf leere Zeile prüfen
         if (line == null) throw new IllegalArgumentException("line is null");
         if (graph == null) throw new IllegalArgumentException("graph is null");
         String trimmed = line.trim();
         if (trimmed.isEmpty()) {
-            return;
+            return graph;
+        }
+        //Zeichen für Zeilenende entfernen
+        if (trimmed.endsWith(";")) {
+            trimmed = trimmed.substring(0, trimmed.length() - 1).trim();
+        }
+
+        //ggf. Gewichtung abtrennen
+        String graphPart = trimmed;
+        int edgeWeight = 0;
+        int colonIndex = trimmed.lastIndexOf(':');
+        if (colonIndex != -1) {
+            try {
+                //Gewichtung speichern
+                edgeWeight = Integer.parseInt(trimmed.substring(colonIndex + 1).trim());
+
+            } catch (NumberFormatException e) {
+                failures.add("ungültige Gewichtung bei: " + trimmed);
+            }
+            graphPart = trimmed.substring(0, colonIndex).trim();
         }
 
         //RegEx erstellt mit regex101:
@@ -58,52 +80,50 @@ public class GraphIn {
          * [a-z]{1,}\s\-\-\s[a-z]{1,} matcht ungerichtete Graphen mit zwei Knoten
          * [a-z] matcht einzelne Knoten
          **/
-        //Pattern aus Java.utils verwenden
         //Muster erstellen
-        Pattern directed = Pattern.compile("[a-zA-Z]{1,}\\s*(?:->|<-)\\s*[a-zA-Z]{1,}\\s*:\\s*[0-9]{0,}");
-        Pattern undirected = Pattern.compile("[a-zA-Z]{1,}\\s\\-\\-\\s[a-zA-Z]{1,}\\s*:\\s*[0-9]{0,}");
+        Pattern directed = Pattern.compile("[a-zA-Z]{1,}\\s*(?:->|<-)\\s*[a-zA-Z]{1,}\\s*");
+        Pattern undirected = Pattern.compile("[a-zA-Z]{1,}\\s\\-\\-\\s[a-zA-Z]{1,}\\s*");
         //eventuell nicht robust?
         Pattern singleNode = Pattern.compile("[a-zA-Z]{1,}\\s*");
 
         //Matcherobjekt enthält Ergebnis der Prüfung
-        Matcher mDirected = directed.matcher(trimmed);
-        Matcher mUndirected = undirected.matcher(trimmed);
-        Matcher mNode = singleNode.matcher(trimmed);
+        Matcher mDirected = directed.matcher(graphPart);
+        Matcher mUndirected = undirected.matcher(graphPart);
+        Matcher mNode = singleNode.matcher(graphPart);
 
         if (mDirected.matches()){
-            String[] parts = trimmed.split("\\s*(?:->|<-|-)\\s*");
+
+            //Aufspaltung der Knoten
+            String[] parts = graphPart.split("\\s*(?:->|<-)\\s*");
 
             if (parts.length == 2) {
                 String from = parts[0].trim();
                 String to = parts[1].trim();
                 Node startNode = Node.getNode(from);
                 Node endNode = Node.getNode(to);
-                Edge edge = new Edge(startNode, endNode, true);
-                graph.addNodes(startNode, endNode);
-                graph.addEdges(edge);
+                return graph.addEdge(startNode, endNode, true, edgeWeight);
             } else {
                 failures.add(trimmed);
             }
         } else if (mUndirected.matches()) {
             //extract nodes and double the undirected edge into zwo directed ones
-            String[] parts = trimmed.split("\\s*\\-\\-\\s*");
+            String[] parts = graphPart.split("\\s*\\-\\-\\s*");
             if (parts.length == 2) {
                 String a = parts[0].trim();
                 String b = parts[1].trim();
                 Node aNode = Node.getNode(a);
                 Node bNode = Node.getNode(b);
 
-                Edge edge = new Edge(aNode, bNode, false);
-                graph.addNodes(aNode, bNode);
-                graph.addEdges(edge);
+               return graph.addEdge(aNode, bNode, false, edgeWeight);
             }
         } else if (mNode.matches()) {
             // try single node
-            graph.addNode(trimmed);
+            return graph.addNode(trimmed);
         } else {
             //put line in List<String> failures
             failures.add(line);
         }
+        return graph;
     }
 
     public List<String> getFailures() {
