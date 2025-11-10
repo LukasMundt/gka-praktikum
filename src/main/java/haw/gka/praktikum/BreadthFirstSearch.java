@@ -1,5 +1,7 @@
 package haw.gka.praktikum;
 
+import haw.gka.praktikum.LogResources.LogResources;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -9,12 +11,15 @@ import java.util.Set;
  **/
 public class BreadthFirstSearch {
     public static List<Node> search(GraphModel graphModel, Node start, Node end) {
+        LogResources.startTask("BreadthFirstSearch");
         GraphModel graph = new GraphModel(graphModel.getNodes(), graphModel.getEdges());
 
         if(start.equals(end)){
             List<Node> resultList = new ArrayList<>();
             resultList.add(start);
             return resultList;
+        } else if(graph.getNodes().isEmpty()){
+            return new ArrayList<>();
         }
         graph.indexNode(start, 0);
 
@@ -50,7 +55,9 @@ public class BreadthFirstSearch {
         }
 
 
-        return findPathFromTraversedGraph(graph, start, end);
+        List<Node> result = findPathFromTraversedGraph(graph, start, end);
+        LogResources.stopTask("BreadthFirstSearch");
+        return result;
     }
 
     private static List<Node> findPathFromTraversedGraph(GraphModel graph, Node start, Node end) {

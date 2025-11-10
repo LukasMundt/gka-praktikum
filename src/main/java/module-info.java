@@ -6,4 +6,5 @@ module gka {
     requires gs.ui.javafx;
 
     exports haw.gka.praktikum;
+    exports haw.gka.praktikum.LogResources;
 }
