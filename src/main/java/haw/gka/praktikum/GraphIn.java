@@ -19,9 +19,9 @@ public class GraphIn {
         //Datei einlesen
         List<String> lines = readFile(path);
 
-        //Liste der Graphen parsen
-        GraphModel graph = new GraphModel(null, null);
 
+//        GraphModel graph = new GraphModel(null, null);
+        //Liste der Graphen parsen
         List<GraphModel> graphs = new ArrayList<>();
         for (String l : lines) {
             GraphModel tempGraph = parseLine(l);
@@ -47,6 +47,15 @@ public class GraphIn {
 
     //Hilfsmethode übernimmt das pattern matching via RegEx
     private GraphModel parseLine(String line) {
+        GraphModel graph = new GraphModel(null, null);
+        List<String> failures = new ArrayList<>();
+
+        if (line == null) throw new IllegalArgumentException("line is null");
+        String trimmed = line.trim();
+        if (trimmed.isEmpty()) {
+            return graph;
+        }
+
         //RegEx erstellt mit regex101:
         /**
          * [a-z]{1,}\s*(?:->|<-)\s*[a-z]{1,} matcht gerichtete Graphen in beide Richtungen, mit beliebig vielen Leerzeichen
@@ -61,28 +70,23 @@ public class GraphIn {
         Pattern singleNode = Pattern.compile("[a-z]");
 
         //Matcherobjekt enthält Ergebnis der Prüfung
-        Matcher mDirected = directed.matcher(line);
-        Matcher mUndirected = undirected.matcher(line);
-        Matcher mNode = singleNode.matcher(line);
+        Matcher mDirected = directed.matcher(trimmed);
+        Matcher mUndirected = undirected.matcher(trimmed);
+        Matcher mNode = singleNode.matcher(trimmed);
 
-        GraphModel graph = new GraphModel(null, null);
-        List<String> failures = new ArrayList<>();
-
-        //TODO das hier noch sauber einarbeiten, macht gerade keinen SInn mehr in meinem Kopf
         if (mDirected.matches()){
-            //
-            String[] parts = line.split("\\s*(?:->|<-|-)\\s*");
+            String[] parts = trimmed.split("\\s*(?:->|<-|-)\\s*");
 
             if (parts.length == 2) {
                 String from = parts[0].trim();
                 String to = parts[1].trim();
                 graph.addDirectedEdge(from, to);
             } else {
-                failures.add(line);
+                failures.add(trimmed);
             }
         } else if (mUndirected.matches()) {
             //extract nodes and double the undirected edge into zwo directed ones
-            String[] parts = line.split("\\s*\\-\\-\\s*");
+            String[] parts = trimmed.split("\\s*\\-\\-\\s*");
             if (parts.length == 2) {
                 String a = parts[0].trim();
                 String b = parts[1].trim();
@@ -90,8 +94,7 @@ public class GraphIn {
             }
         } else if (mNode.matches()) {
             // try single node
-            String node = line.trim();
-            graph.addNode(node);
+            graph.addNode(trimmed);
         } else {
             //put line in List<String> failures TODO Liste noch von außerhalb erreichbar machen
             failures.add(line);

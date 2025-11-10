@@ -1,5 +1,8 @@
 package praktikum1;
 
+import haw.gka.praktikum.GraphIn;
+import haw.gka.praktikum.GraphModel;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -16,7 +19,7 @@ public class Main {
         //Testfile einlesen
         try {
             List<GraphModel> graphs = graphReader.readGraph(path);
-            System.out.println("Datei erfolgreich eingelesen. Anzahl: " + graphs.size());
+            System.out.println("Datei erfolgreich eingelesen. Anzahl Teilgraphen: " + graphs.size());
         } catch (IOException e) {
             System.err.println("Fehler beim Einlesen der Datei: " + e.getMessage());
             e.printStackTrace();

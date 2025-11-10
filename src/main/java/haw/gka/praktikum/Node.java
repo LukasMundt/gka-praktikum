@@ -14,7 +14,7 @@ public class Node {
         return _nodes.get(name);
     }
 
-    private Node(String name) {
+    Node(String name) {
         _name = name;
     }
 

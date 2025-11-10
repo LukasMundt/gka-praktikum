@@ -29,6 +29,16 @@ public class GraphModel {
         );
     }
 
+    public GraphModel addNode(String line) {
+        if (line == null) {
+            throw new NullPointerException("node is null");
+        }
+        Node tempNode = new Node(line);
+        _nodes.add(tempNode);
+
+        return new GraphModel(_nodes, _edges);
+    }
+
     public HashSet<Node> getNodes() {
         return _nodes;
     }
@@ -40,9 +50,8 @@ public class GraphModel {
     public void addUndirectedEdge(String a, String b) {
     }
 
-    public void addNode(String node) {
-    }
-
     public void addDirectedEdge(String from, String to) {
     }
+
+
 }
