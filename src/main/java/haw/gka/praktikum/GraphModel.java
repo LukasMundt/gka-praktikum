@@ -1,5 +1,6 @@
 package haw.gka.praktikum;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,10 +11,12 @@ public class GraphModel {
 //Getter, Setter, Felder (Nodes, ID, Kantengewichte...)
     private final HashSet<Node> _nodes;
     private final HashSet<Edge> _edges;
+    private final HashMap<Node, Integer> _indexedNodes;
 
     public GraphModel(Set<Node> nodes, Set<Edge> edges) {
         _nodes = (HashSet<Node>) nodes;
         _edges = (HashSet<Edge>) edges;
+        _indexedNodes = new HashMap<>();
     }
 
     public GraphModel addNodes(Set<Node> nodes) {
@@ -39,6 +42,53 @@ public class GraphModel {
         return new GraphModel(_nodes, _edges);
     }
 
+    public void indexNode(Node node, int index) {
+        if (!_nodes.contains(node)) {
+            throw new IllegalArgumentException("node is not contained in the graph");
+        } else if(_indexedNodes.containsKey(node)) {
+            System.err.println("Node already indexed: "+node.getName()+"; Resetting index.");
+        }
+        _indexedNodes.put(node, index);
+    }
+
+    public int getIndexOfNode(Node node) {
+        if(node == null) {
+            throw new IllegalArgumentException("node is null");
+        } else if(_indexedNodes.containsKey(node)) {
+            return _indexedNodes.get(node);
+        }
+        return -1;
+    }
+
+    public Set<Node> getNeighbors(Node node) {
+        if (!_nodes.contains(node)) {
+            throw new IllegalArgumentException("node is not contained in the graph");
+        }
+        Set<Node> neighbors = new HashSet<>();
+        for (Edge edge : _edges) {
+            if(edge.isOtherNodeReachableFromA(node)) {
+                neighbors.add(edge.getOtherNode(node));
+            }
+        }
+        return neighbors;
+    }
+
+    public Set<Node> getUnindexedNeighbors(Node node) {
+        if (!_nodes.contains(node)) {
+            throw new IllegalArgumentException("node is not contained in the graph");
+        }
+        Set<Node> neighbors = new HashSet<>();
+        for (Edge edge : _edges) {
+            if(edge.isOtherNodeReachableFromA(node)) {
+                Node otherNode = edge.getOtherNode(node);
+                if(!_indexedNodes.containsKey(otherNode)) {
+                    neighbors.add(otherNode);
+                }
+            }
+        }
+        return neighbors;
+    }
+
     public void addGraph(GraphModel tempGraph) {
     //TODO momentan werden immer neue Graphen erzeugt, aber die Teilgraphen müssen ja in den Gesamtgraph eingebaut werden?
     }
@@ -50,6 +100,8 @@ public class GraphModel {
     public HashSet<Edge> getEdges() {
         return _edges;
     }
+
+
 
     //TODO werden die wirklich gebraucht? nochmal anschauen
     public void addUndirectedEdge(String a, String b) {
