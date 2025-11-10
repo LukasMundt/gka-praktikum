@@ -18,8 +18,11 @@ public class Main {
 
         //Testfile einlesen
         try {
-            List<GraphModel> graphs = graphReader.readGraph(path);
-            System.out.println("Datei erfolgreich eingelesen. Anzahl Teilgraphen: " + graphs.size());
+            GraphModel graph = graphReader.readGraph(path);
+            List<String> failures = graphReader.getFailures();
+            System.out.println("Datei erfolgreich eingelesen.");
+            System.out.println("fehlerhaft eingelesene Teilgraphen: "+ failures);
+
         } catch (IOException e) {
             System.err.println("Fehler beim Einlesen der Datei: " + e.getMessage());
             e.printStackTrace();

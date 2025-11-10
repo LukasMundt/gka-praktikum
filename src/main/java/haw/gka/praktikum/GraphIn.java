@@ -15,20 +15,18 @@ import java.util.regex.Pattern;
  */
 public class GraphIn {
     //Methode nimmt Datei entgegen, liest zeilenweise ein und parst Inhalt, um Graphen zu extrahieren
-    public List<GraphModel> readGraph(String path) throws IOException {
+    public GraphModel readGraph(String path) throws IOException {
         //Datei einlesen
         List<String> lines = readFile(path);
 
-
-//        GraphModel graph = new GraphModel(null, null);
         //Liste der Graphen parsen
-        List<GraphModel> graphs = new ArrayList<>();
+        GraphModel graph = new GraphModel(null, null);
+
         for (String l : lines) {
             GraphModel tempGraph = parseLine(l);
-            graphs.add(tempGraph);
-
+            graph.addGraph(tempGraph);
         }
-        return graphs;
+        return graph;
     }
 
     //Hilfs-Methode liest Datei zeilenweise ein, verwirft leere Zeilen und gibt Liste zurück
@@ -45,10 +43,10 @@ public class GraphIn {
         return lines;
     }
 
+    List<String> failures = new ArrayList<>();
     //Hilfsmethode übernimmt das pattern matching via RegEx
     private GraphModel parseLine(String line) {
         GraphModel graph = new GraphModel(null, null);
-        List<String> failures = new ArrayList<>();
 
         if (line == null) throw new IllegalArgumentException("line is null");
         String trimmed = line.trim();
@@ -96,10 +94,14 @@ public class GraphIn {
             // try single node
             graph.addNode(trimmed);
         } else {
-            //put line in List<String> failures TODO Liste noch von außerhalb erreichbar machen
+            //put line in List<String> failures
             failures.add(line);
         }
 
         return graph;
+    }
+
+    public List<String> getFailures() {
+        return failures;
     }
 }

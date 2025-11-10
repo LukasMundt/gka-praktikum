@@ -39,6 +39,10 @@ public class GraphModel {
         return new GraphModel(_nodes, _edges);
     }
 
+    public void addGraph(GraphModel tempGraph) {
+    //TODO momentan werden immer neue Graphen erzeugt, aber die Teilgraphen müssen ja in den Gesamtgraph eingebaut werden?
+    }
+
     public HashSet<Node> getNodes() {
         return _nodes;
     }
@@ -47,6 +51,7 @@ public class GraphModel {
         return _edges;
     }
 
+    //TODO werden die wirklich gebraucht? nochmal anschauen
     public void addUndirectedEdge(String a, String b) {
     }
 
