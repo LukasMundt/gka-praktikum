@@ -20,7 +20,11 @@ public class GraphVisualizer {
             String idFrom = edge.getStart().getName();
             String idTo = edge.getEnd().getName();
             try {
-                graphViz.addEdge(idFrom+idTo, idFrom, idTo, edge.isDirected());
+                String label = idFrom + idTo;
+                if(edge.isWeighted()){
+                    label = label + " : "+edge.getWeight();
+                }
+                graphViz.addEdge(label, idFrom, idTo, edge.isDirected());
             } catch (EdgeRejectedException exception) {
                 System.out.println(exception.getMessage());
             }
