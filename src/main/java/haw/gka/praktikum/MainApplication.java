@@ -60,6 +60,21 @@ public class MainApplication extends Application {
         graph = GraphConverter.getUndirectedGraphModel(graph);
         GraphVisualizer.displayGraph(graph);
 
+        // print ellapsed time for bfs
+        long start = System.currentTimeMillis();
         BreadthFirstSearch.search(graph, Node.getNode("a"), Node.getNode("b"));
+        long finish = System.currentTimeMillis();
+        long timeElapsed = finish - start;
+        System.out.println("Time elapsed: "+timeElapsed+"ms");
+
+        // print ressource consumption
+        Runtime runtime = Runtime.getRuntime();
+        // Run garbarge collector
+        runtime.gc();
+
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+        System.out.println("Used memory is bytes: " + memory);
+        System.out.println("Used memory is megabytes: "
+                + (double)memory/1_000_000);
     }
 }
