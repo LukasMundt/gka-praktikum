@@ -8,7 +8,9 @@ import java.util.Set;
 * Implementation of the BFS algorithm
  **/
 public class BreadthFirstSearch {
-    public static List<Node> search(GraphModel graph, Node start, Node end) {
+    public static List<Node> search(GraphModel graphModel, Node start, Node end) {
+        GraphModel graph = new GraphModel(graphModel.getNodes(), graphModel.getEdges());
+
         if(start.equals(end)){
             List<Node> resultList = new ArrayList<>();
             resultList.add(start);
@@ -44,6 +46,7 @@ public class BreadthFirstSearch {
             System.out.println("Ziel gefunden. Benutze Kanten: "+(graph.getIndexOfNode(end)));
         } else {
             System.out.println("Ziel ist nicht vom Start erreichbar.");
+            return new ArrayList<>();
         }
 
 
