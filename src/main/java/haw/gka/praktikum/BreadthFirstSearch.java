@@ -18,6 +18,8 @@ public class BreadthFirstSearch {
             List<Node> resultList = new ArrayList<>();
             resultList.add(start);
             return resultList;
+        } else if(graph.getNodes().isEmpty()){
+            return new ArrayList<>();
         }
         graph.indexNode(start, 0);
 
