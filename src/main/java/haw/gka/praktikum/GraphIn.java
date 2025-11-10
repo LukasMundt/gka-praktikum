@@ -20,11 +20,10 @@ public class GraphIn {
         List<String> lines = readFile(path);
 
         //Liste der Graphen parsen
-        GraphModel graph = new GraphModel(null, null);
+        GraphModel graph = new GraphModel();
 
         for (String l : lines) {
-            GraphModel tempGraph = parseLine(l);
-            graph.addGraph(tempGraph);
+            parseLine(l, graph);
         }
         return graph;
     }
@@ -45,13 +44,12 @@ public class GraphIn {
 
     List<String> failures = new ArrayList<>();
     //Hilfsmethode übernimmt das pattern matching via RegEx
-    private GraphModel parseLine(String line) {
-        GraphModel graph = new GraphModel(null, null);
-
+    private void parseLine(String line, GraphModel graph) {
         if (line == null) throw new IllegalArgumentException("line is null");
+        if (graph == null) throw new IllegalArgumentException("graph is null");
         String trimmed = line.trim();
         if (trimmed.isEmpty()) {
-            return graph;
+            return;
         }
 
         //RegEx erstellt mit regex101:
@@ -78,7 +76,11 @@ public class GraphIn {
             if (parts.length == 2) {
                 String from = parts[0].trim();
                 String to = parts[1].trim();
-                graph.addDirectedEdge(from, to);
+                Node startNode = Node.getNode(from);
+                Node endNode = Node.getNode(to);
+                Edge edge = new Edge(startNode, endNode, true);
+                graph.addNodes(startNode, endNode);
+                graph.addEdges(edge);
             } else {
                 failures.add(trimmed);
             }
@@ -88,7 +90,12 @@ public class GraphIn {
             if (parts.length == 2) {
                 String a = parts[0].trim();
                 String b = parts[1].trim();
-                graph.addUndirectedEdge(a, b);
+                Node aNode = Node.getNode(a);
+                Node bNode = Node.getNode(b);
+
+                Edge edge = new Edge(aNode, bNode, false);
+                graph.addNodes(aNode, bNode);
+                graph.addEdges(edge);
             }
         } else if (mNode.matches()) {
             // try single node
@@ -97,8 +104,6 @@ public class GraphIn {
             //put line in List<String> failures
             failures.add(line);
         }
-
-        return graph;
     }
 
     public List<String> getFailures() {
