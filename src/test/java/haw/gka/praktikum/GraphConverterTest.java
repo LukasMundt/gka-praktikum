@@ -54,4 +54,62 @@ public class GraphConverterTest {
             assertTrue(edge.isDirected());
         }
     }
+
+    @Test
+    public void testEmptyGraph() {
+        GraphModel graphModel = new GraphModel();
+        GraphModel converted = GraphConverter.getUndirectedGraphModel(graphModel);
+        assertEquals(0, converted.getEdges().size());
+        assertEquals(0, converted.getNodes().size());
+
+        GraphModel converted2 = GraphConverter.getDirectedGraphModel(graphModel);
+        assertEquals(0, converted2.getEdges().size());
+        assertEquals(0, converted2.getNodes().size());
+    }
+
+    /**
+     *     b
+     *    / ^
+     *   /   \
+     *  a     c
+     */
+    @Test
+    public void testMixedGraphToDirected() {
+        GraphModel graphModel = new GraphModel();
+        graphModel.addNode("a");
+        graphModel.addNode("b");
+        graphModel.addNode("c");
+        graphModel.addEdges(new Edge(Node.getNode("a"), Node.getNode("b"), false));
+        graphModel.addEdges(new Edge(Node.getNode("c"), Node.getNode("b"), true));
+
+        GraphModel converted = GraphConverter.getDirectedGraphModel(graphModel);
+
+        assertEquals(3, converted.getEdges().size());
+        for (Edge edge : converted.getEdges()) {
+            assertTrue(edge.isDirected());
+        }
+    }
+
+    /**
+     *     b
+     *    / ^
+     *   /   \
+     *  a     c
+     */
+    @Test
+    public void testMixedGraphToUndirected() {
+        GraphModel graphModel = new GraphModel();
+        graphModel.addNode("a");
+        graphModel.addNode("b");
+        graphModel.addNode("c");
+        graphModel.addEdges(new Edge(Node.getNode("a"), Node.getNode("b"), false));
+        graphModel.addEdges(new Edge(Node.getNode("c"), Node.getNode("b"), true));
+
+        GraphModel converted = GraphConverter.getUndirectedGraphModel(graphModel);
+
+        assertEquals(2, converted.getEdges().size());
+        for (Edge edge : converted.getEdges()) {
+            assertFalse(edge.isDirected());
+        }
+    }
 }

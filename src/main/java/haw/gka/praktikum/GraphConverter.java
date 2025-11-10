@@ -15,7 +15,9 @@ public class GraphConverter {
     public static GraphModel getDirectedGraphModel(GraphModel graph) {
         Set<Edge> directedEdges = new HashSet<>();
         for (Edge edge : graph.getEdges()) {
-            if (edge.isWeighted()) {
+            if(edge.isDirected()) {
+                directedEdges.add(edge);
+            } else if (edge.isWeighted()) {
                 directedEdges.add(new Edge(edge.getStart(), edge.getEnd(), true, edge.getWeight()));
                 directedEdges.add(new Edge(edge.getEnd(), edge.getStart(), true, edge.getWeight()));
             } else {
