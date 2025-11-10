@@ -12,8 +12,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("hello world");
-        String path = "src/test/java/resources/directed.gka";
+        String path = "src/test/java/resources/graph03.gka";
         GraphIn graphReader = new GraphIn();
 
         //Testfile einlesen

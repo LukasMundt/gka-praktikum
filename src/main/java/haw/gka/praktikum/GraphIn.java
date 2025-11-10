@@ -62,10 +62,10 @@ public class GraphIn {
          **/
         //Pattern aus Java.utils verwenden
         //Muster erstellen
-        Pattern directed = Pattern.compile("[a-z]{1,}\\s*(?:->|<-)\\s*[a-z]{1,} ");
-        Pattern undirected = Pattern.compile("[a-z]{1,}\\s\\-\\-\\s[a-z]{1,}");
+        Pattern directed = Pattern.compile("[a-zA-Z]{1,}\\s*(?:->|<-)\\s*[a-zA-Z]{1,}\\s*:\\s*[0-9]{0,}");
+        Pattern undirected = Pattern.compile("[a-zA-Z]{1,}\\s\\-\\-\\s[a-zA-Z]{1,}\\s*:\\s*[0-9]{0,}");
         //eventuell nicht robust?
-        Pattern singleNode = Pattern.compile("[a-z]");
+        Pattern singleNode = Pattern.compile("[a-zA-Z]{1,}\\s*");
 
         //Matcherobjekt enthält Ergebnis der Prüfung
         Matcher mDirected = directed.matcher(trimmed);
@@ -102,6 +102,8 @@ public class GraphIn {
     }
 
     public List<String> getFailures() {
+        if (failures.isEmpty())
+            failures.add("keine Fehler beim Einlesen");
         return failures;
     }
 }
