@@ -13,7 +13,12 @@ import java.util.Set;
  */
 
 public class GraphOut {
-    //Methode, die gegebenes Graphmodel in Datei schreibt
+    /**
+     * Methode, die gegebenes Graphmodel in Datei schreibt
+     * @param g
+     * @param path
+     * @throws IOException
+     */
     public void writeFile(GraphModel g, String path) throws IOException {
         if (g == null) {
             System.err.println("Das GraphModel ist null und kann nicht in eine Datei gespeichert werden.");
@@ -36,8 +41,12 @@ public class GraphOut {
         System.out.println("Die .gka Datei wird nach " + path + " gespeichert.");
     }
 
-    //Hilfsmethode, die Graphen (eigentlich: Kanten, diese beinhalten Knoteninfos) formatiert
-    // und ausgibt
+    /**
+     * Hilfsmethode, die Graphen (eigentlich: Kanten, diese beinhalten Knoteninfos) formatiert
+     * und ausgibt
+     * @param edges
+     * @param writer
+     */
     private void writeGraphs(HashSet<Edge> edges, PrintWriter writer) {
         for (Edge edge : edges) {
             //Kantenzeichen auswählen je nach (un)gerichtetem Graph
@@ -52,7 +61,11 @@ public class GraphOut {
         }
     }
 
-    //Hilfsmethode, die Knoten ohne Kanten ausgibt
+    /**
+     * Hilfsmethode, die Knoten ohne Kanten ausgibt
+     * @param nodes
+     * @param writer
+     */
     private void writeSingleNodes(Set<Node> nodes, PrintWriter writer){
         for (Node node : nodes) {
             writer.println(node.getName() + ";");

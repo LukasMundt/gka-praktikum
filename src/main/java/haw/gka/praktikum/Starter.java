@@ -26,10 +26,18 @@ public class Starter extends Application {
     final Button buttonConvertToUndirected = new Button("zu ungerichtetem Graph konvertieren");
     final Label notification = new Label ();
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     *
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Suche dir eine Datei aus.");

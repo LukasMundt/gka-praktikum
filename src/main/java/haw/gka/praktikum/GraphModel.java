@@ -13,6 +13,9 @@ public class GraphModel {
     private final HashSet<Edge> _edges;
     private final HashMap<Node, Integer> _indexedNodes;
 
+    /**
+     * Konstruktor
+     */
     public GraphModel() {
         _nodes = new HashSet<>();
         _edges = new HashSet<>();
@@ -20,25 +23,21 @@ public class GraphModel {
 
     }
 
+    /**
+     *
+     * @param nodes
+     * @param edges
+     */
     public GraphModel(Set<Node> nodes, Set<Edge> edges) {
         _nodes = (nodes == null) ? new HashSet<>() : new HashSet<>(nodes);
         _edges = (edges == null) ? new HashSet<>() : new HashSet<>(edges);
         _indexedNodes = new HashMap<>();
     }
 
-//    public GraphModel addNodes(Set<Node> nodes) {
-//        if (nodes == null) {
-//            throw new NullPointerException("nodes is null");
-//        }
-//        Set<Node> temp = _nodes;
-//        temp.addAll(nodes);
-//
-//        return new GraphModel(
-//            temp,
-//            _edges
-//        );
-//    }
-
+    /**
+     *
+     * @param nodes
+     */
     public void addNodes(Node ...nodes) {
         for (Node node : nodes){
             if(node == null) {
@@ -48,6 +47,10 @@ public class GraphModel {
         }
     }
 
+    /**
+     *
+     * @param edges
+     */
     public void addEdges(Edge ...edges) {
         for (Edge edge : edges) {
             if(edge == null) {
@@ -57,6 +60,10 @@ public class GraphModel {
         }
     }
 
+    /**
+     *
+     * @param line
+     */
     public void addNode(String line) {
         if (line == null) {
             throw new NullPointerException("node is null");
@@ -65,6 +72,14 @@ public class GraphModel {
         _nodes.add(tempNode);
     }
 
+    /**
+     *
+     * @param start
+     * @param end
+     * @param isDirected
+     * @param isWeighted
+     * @param weight
+     */
     public void addEdge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight) {
        Edge edge;
        if (isWeighted){
@@ -75,6 +90,11 @@ public class GraphModel {
        _edges.add(edge);
     }
 
+    /**
+     *
+     * @param node
+     * @param index
+     */
     public void indexNode(Node node, int index) {
         if (!_nodes.contains(node)) {
             throw new IllegalArgumentException("node is not contained in the graph");
@@ -84,6 +104,11 @@ public class GraphModel {
         _indexedNodes.put(node, index);
     }
 
+    /**
+     *
+     * @param node
+     * @return
+     */
     public int getIndexOfNode(Node node) {
         if(node == null) {
             throw new IllegalArgumentException("node is null");
@@ -93,6 +118,11 @@ public class GraphModel {
         return -1;
     }
 
+    /**
+     *
+     * @param node
+     * @return
+     */
     public Set<Node> getNeighbors(Node node) {
         if (!_nodes.contains(node)) {
             throw new IllegalArgumentException("node is not contained in the graph");
@@ -106,6 +136,11 @@ public class GraphModel {
         return neighbors;
     }
 
+    /**
+     *
+     * @param node
+     * @return
+     */
     public Set<Node> getUnindexedNeighbors(Node node) {
         if (!_nodes.contains(node)) {
             throw new IllegalArgumentException("node is not contained in the graph");
@@ -122,6 +157,11 @@ public class GraphModel {
         return neighbors;
     }
 
+    /**
+     *
+     * @param node
+     * @return
+     */
     public Set<Node> getReverseNeighbors(Node node) {
         if (!_nodes.contains(node)) {
             throw new IllegalArgumentException("node is not contained in the graph");
@@ -135,6 +175,12 @@ public class GraphModel {
         return neighbors;
     }
 
+    /**
+     *
+     * @param node
+     * @param index
+     * @return
+     */
     public Node getReverseNeighborWithIndex(Node node, int index) {
         if (!_nodes.contains(node)) {
             throw new IllegalArgumentException("node is not contained in the graph");
@@ -148,6 +194,10 @@ public class GraphModel {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public Set<Node> getSingleNodes() {
         Set<Node> nodes = new HashSet<>();
 

@@ -15,6 +15,7 @@ Code:
 
 Doku:
 - ChatGPT / Gemini ergänzen, kurz Erfahrung damit dokumentieren (wofür genutzt, wie liefs)
+- Quellen durchnummerieren und in der Doku über Zahl referenzieren
 
 
 zu zweitem Praktikum:

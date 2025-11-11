@@ -32,7 +32,12 @@ public class GraphIn {
         return graph;
     }
 
-    //Hilfs-Methode liest Datei zeilenweise ein, verwirft leere Zeilen und gibt Liste zurück
+    /**
+     * Hilfs-Methode liest Datei zeilenweise ein, verwirft leere Zeilen und gibt Liste zurück
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     */
     List<String> readFile(String path) throws FileNotFoundException {
         File file = new File(path);
         Scanner scanner = new Scanner(file);
@@ -48,7 +53,12 @@ public class GraphIn {
 
     List<String> failures = new ArrayList<>();
 
-    //Hilfsmethode übernimmt das pattern matching via RegEx
+    /**
+     * Hilfsmethode übernimmt das pattern matching via RegEx
+     * @param line
+     * @param graph
+     * @return
+     */
     private GraphModel parseLine(String line, GraphModel graph) {
 
         //auf leere Zeile prüfen
@@ -79,6 +89,10 @@ public class GraphIn {
             }
             graphPart = trimmed.substring(0, colonIndex).trim();
         }
+
+        //TODO für zweites Praktikum
+        //(?<target>[a-z]): man kann RegEx-Teile auch direkt in Variablen speichern! Anschauen für Gewicht!
+
 
         //RegEx erstellt mit regex101:
         /**
@@ -137,6 +151,11 @@ public class GraphIn {
         }
         return graph;
     }
+
+    /**
+     *
+     * @return
+     */
 
     public List<String> getFailures() {
         if (failures.isEmpty())
