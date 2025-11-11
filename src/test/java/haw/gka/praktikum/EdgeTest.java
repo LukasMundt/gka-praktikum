@@ -15,6 +15,9 @@ public class EdgeTest {
 
         assertTrue(edge.isOtherNodeReachableFromA(a));
         assertTrue(edge.isOtherNodeReachableFromA(b));
+
+        assertTrue(edge.isAReachableFromOtherNode(a));
+        assertTrue(edge.isAReachableFromOtherNode(b));
     }
 
     @Test
@@ -28,6 +31,9 @@ public class EdgeTest {
 
         assertTrue(edge.isOtherNodeReachableFromA(a));
         assertFalse(edge.isOtherNodeReachableFromA(b));
+
+        assertTrue(edge.isAReachableFromOtherNode(b));
+        assertFalse(edge.isAReachableFromOtherNode(a));
     }
 
     @Test
