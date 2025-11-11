@@ -49,10 +49,6 @@ public class Edge {
         return _weight;
     }
 
-    public Edge getUndirected() {
-        return new Edge(_start, _end, false, _weight);
-    }
-
     public boolean isBReachableFromA(Node a, Node b) {
         if (a == null || b == null) {
             throw new IllegalArgumentException("a == null || b == null");
@@ -106,5 +102,44 @@ public class Edge {
             return _end;
         }
         return _start;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Edge) {
+            Edge otherEdge = (Edge) other;
+            if(!this._isDirected && !otherEdge._isDirected) {
+                // wenn die kante ungerichtet ist, dann sind auch kanten gleich, wo start und ziel vertauscht sind
+                return ((_start.equals(otherEdge._start) && _end.equals(otherEdge._end)) || (_start.equals(otherEdge._end) && _end.equals(otherEdge._start))) // gleiche Knoten
+                        && _isWeighted == otherEdge._isWeighted
+                        && _weight == otherEdge._weight;
+            }
+            return _start.equals(otherEdge._start)
+                    && _end.equals(otherEdge._end)
+                    && _isDirected == otherEdge._isDirected
+                    && _isWeighted == otherEdge._isWeighted
+                    && _weight == otherEdge._weight;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        // Multiplikation mit 31 ist effizient und erzeugt eine gleichmäßige Verteilung
+        if (_isDirected) {
+            result = _start.hashCode() * 31 + _end.hashCode();
+        } else {
+            // ungerichtet: Egal, was Start und was Ende ist
+            result = _start.hashCode() + _end.hashCode();
+        }
+        result = 31 * result + Boolean.hashCode(_isDirected);
+        result = 31 * result + Boolean.hashCode(_isWeighted);
+        result = 31 * result + Float.hashCode(_weight);
+        return result;
+    }
+
+    public String toString() {
+        return "(" + _start.toString() + ", " + _end.toString() + "; directed: " + _isDirected+", isWeighted" + _isWeighted +", weight: "+_weight+ ")";
     }
 }

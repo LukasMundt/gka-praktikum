@@ -6,9 +6,20 @@ import java.util.stream.Collectors;
 
 public class GraphConverter {
     public static GraphModel getUndirectedGraphModel(GraphModel graph) {
-        Set<Edge> undirectedEdges = graph.getEdges().stream()
-                .map(Edge::getUndirected)
-                .collect(Collectors.toSet());
+        Set<Edge> undirectedEdges = new HashSet<>();
+        for (Edge edge : graph.getEdges()) {
+            if(!edge.isDirected()) {
+                undirectedEdges.add(edge);
+            } else {
+                Edge newEdge;
+                if (edge.isWeighted()) {
+                    newEdge = new Edge(edge.getStart(), edge.getEnd(), false, edge.getWeight());
+                } else {
+                    newEdge = new Edge(edge.getStart(), edge.getEnd(), false);
+                }
+                undirectedEdges.add(newEdge);
+            }
+        }
         return new GraphModel(graph.getNodes(), undirectedEdges);
     }
 
@@ -27,4 +38,6 @@ public class GraphConverter {
         }
         return new GraphModel(graph.getNodes(), directedEdges);
     }
+
+
 }

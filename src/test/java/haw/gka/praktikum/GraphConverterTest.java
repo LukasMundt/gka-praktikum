@@ -3,6 +3,7 @@ package haw.gka.praktikum;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -108,6 +109,22 @@ public class GraphConverterTest {
         GraphModel converted = GraphConverter.getUndirectedGraphModel(graphModel);
 
         assertEquals(2, converted.getEdges().size());
+        for (Edge edge : converted.getEdges()) {
+            assertFalse(edge.isDirected());
+        }
+    }
+
+    @Test
+    public void testDirectedGraphToUndirectedWithDoubleEdges() {
+        GraphModel graphModel = new GraphModel();
+        graphModel.addNode("a");
+        graphModel.addNode("b");
+        graphModel.addEdges(new Edge(Node.getNode("a"), Node.getNode("b"), true));
+        graphModel.addEdges(new Edge(Node.getNode("b"), Node.getNode("a"), true));
+
+        GraphModel converted = GraphConverter.getUndirectedGraphModel(graphModel);
+
+        assertEquals(1, converted.getEdges().size());
         for (Edge edge : converted.getEdges()) {
             assertFalse(edge.isDirected());
         }
