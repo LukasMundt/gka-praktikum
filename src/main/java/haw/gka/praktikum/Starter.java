@@ -22,6 +22,8 @@ public class Starter extends Application {
 
     final Button button = new Button ("Graph anzeigen");
     final Button buttonBFS = new Button ("Kürzesten Weg finden");
+    final Button buttonConvertToDirected = new Button("zu gerichtetem Graph konvertieren");
+    final Button buttonConvertToUndirected = new Button("zu ungerichtetem Graph konvertieren");
     final Label notification = new Label ();
 
     public static void main(String[] args) {
@@ -33,7 +35,7 @@ public class Starter extends Application {
         primaryStage.setTitle("Suche dir eine Datei aus.");
         primaryStage.setResizable(true);
 
-        Scene scene = new Scene(new Group(), 450, 250);
+        Scene scene = new Scene(new Group(), 550, 250);
 
         List<String> fileList = Stream.of(new File("src/test/java/resources/").listFiles())
                 .filter(file -> !file.isDirectory())
@@ -173,6 +175,72 @@ public class Starter extends Application {
         });
 
 
+        buttonConvertToDirected.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                String file = (String) filesComboBox.getSelectionModel().getSelectedItem();
+                if(file == null) {
+                    System.err.println("No file selected");
+                    notification.setText("No file selected");
+                    return;
+                }
+
+                try {
+                    GraphIn graphReader = new GraphIn();
+                    String pathIn = "src/test/java/resources/" + file;
+                    GraphModel graph = graphReader.readGraph(pathIn);
+                    System.out.println("Graph erfolgreich eingelesen.");
+                    List<String> failures = graphReader.getFailures();
+                    System.out.println("Datei erfolgreich eingelesen.");
+                    System.out.println("fehlerhaft eingelesene Teilgraphen: "+ failures);
+
+                    GraphModel directedGraph = GraphConverter.getDirectedGraphModel(graph);
+
+                    GraphOut graphWriter = new GraphOut();
+                    String pathOut = "src/test/java/resources/" + file + "Undirected.gka";
+                    graphWriter.writeFile(directedGraph, pathOut);
+
+
+                } catch (IOException e) {
+                    System.err.println("Fehler beim Einlesen der Datei: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        buttonConvertToUndirected.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                String file = (String) filesComboBox.getSelectionModel().getSelectedItem();
+                if(file == null) {
+                    System.err.println("No file selected");
+                    notification.setText("No file selected");
+                    return;
+                }
+
+                try {
+                    GraphIn graphReader = new GraphIn();
+                    String pathIn = "src/test/java/resources/" + file;
+                    GraphModel graph = graphReader.readGraph(pathIn);
+                    System.out.println("Graph erfolgreich eingelesen.");
+                    List<String> failures = graphReader.getFailures();
+                    System.out.println("Datei erfolgreich eingelesen.");
+                    System.out.println("fehlerhaft eingelesene Teilgraphen: "+ failures);
+
+                    GraphModel undirectedGraph = GraphConverter.getUndirectedGraphModel(graph);
+
+                    GraphOut graphWriter = new GraphOut();
+                    String pathOut = "src/test/java/resources/" + file + "Undirected.gka";
+                    graphWriter.writeFile(undirectedGraph, pathOut);
+
+
+                } catch (IOException e) {
+                    System.err.println("Fehler beim Einlesen der Datei: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+
         GridPane grid = new GridPane();
         grid.setVgap(4);
         grid.setHgap(10);
@@ -181,6 +249,8 @@ public class Starter extends Application {
         grid.add(filesComboBox, 1, 0);
         grid.add(button, 2, 0);
         grid.add(buttonBFS, 2, 1);
+        grid.add(buttonConvertToDirected, 2, 2);
+        grid.add(buttonConvertToUndirected, 2, 3);
         grid.add (notification, 1, 3, 3, 1);
 
         Group root = (Group)scene.getRoot();

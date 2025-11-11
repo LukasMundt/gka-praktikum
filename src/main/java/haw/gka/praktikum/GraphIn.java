@@ -95,8 +95,10 @@ public class GraphIn {
         Matcher mUndirected = undirected.matcher(graphPart);
         Matcher mNode = singleNode.matcher(graphPart);
 
-        if (mDirected.matches()){
+        boolean isDirected = false;
 
+        if (mDirected.matches()){
+            isDirected = true;
             //Aufspaltung der Knoten
             String[] parts = graphPart.split("\\s*(?:->|<-)\\s*");
 
