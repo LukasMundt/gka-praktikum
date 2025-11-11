@@ -197,7 +197,8 @@ public class Starter extends Application {
                     GraphModel directedGraph = GraphConverter.getDirectedGraphModel(graph);
 
                     GraphOut graphWriter = new GraphOut();
-                    String pathOut = "src/test/java/resources/" + file + "Directed.gka";
+                    String prefixDir = "Directed_";
+                    String pathOut = "src/test/java/resources/" + prefixDir + file;
                     graphWriter.writeFile(directedGraph, pathOut);
 
 
@@ -230,7 +231,8 @@ public class Starter extends Application {
                     GraphModel undirectedGraph = GraphConverter.getUndirectedGraphModel(graph);
 
                     GraphOut graphWriter = new GraphOut();
-                    String pathOut = "src/test/java/resources/" + file + "Undirected.gka";
+                    String prefixUndir = "Undirected_";
+                    String pathOut = "src/test/java/resources/" + prefixUndir + file;
                     graphWriter.writeFile(undirectedGraph, pathOut);
 
 
