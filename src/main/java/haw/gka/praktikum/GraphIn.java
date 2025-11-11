@@ -33,7 +33,7 @@ public class GraphIn {
     }
 
     //Hilfs-Methode liest Datei zeilenweise ein, verwirft leere Zeilen und gibt Liste zurück
-    private List<String> readFile(String path) throws FileNotFoundException {
+    List<String> readFile(String path) throws FileNotFoundException {
         File file = new File(path);
         Scanner scanner = new Scanner(file);
         List<String> lines = new ArrayList<>();
