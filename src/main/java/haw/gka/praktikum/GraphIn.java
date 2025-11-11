@@ -66,11 +66,13 @@ public class GraphIn {
         //ggf. Gewichtung abtrennen
         String graphPart = trimmed;
         float edgeWeight = 0;
+        boolean hasWeight = false;
         int colonIndex = trimmed.lastIndexOf(':');
         if (colonIndex != -1) {
             try {
                 //Gewichtung speichern
                 edgeWeight = Float.parseFloat(trimmed.substring(colonIndex + 1).trim());
+                hasWeight = true;
 
             } catch (NumberFormatException e) {
                 failures.add("ungültige Gewichtung bei: " + trimmed);
@@ -108,7 +110,7 @@ public class GraphIn {
                 Node startNode = Node.getNode(from);
                 Node endNode = Node.getNode(to);
                 graph.addNodes(startNode, endNode);
-                graph.addEdge(startNode, endNode, true, edgeWeight);
+                graph.addEdge(startNode, endNode, true, hasWeight, edgeWeight);
                 return graph;
             } else {
                 failures.add(trimmed);
@@ -122,7 +124,7 @@ public class GraphIn {
                 Node aNode = Node.getNode(a);
                 Node bNode = Node.getNode(b);
                 graph.addNodes(aNode, bNode);
-                graph.addEdge(aNode, bNode, false, edgeWeight);
+                graph.addEdge(aNode, bNode, false, hasWeight, edgeWeight);
                 return graph;
             }
         } else if (mNode.matches()) {

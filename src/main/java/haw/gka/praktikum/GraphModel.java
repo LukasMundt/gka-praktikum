@@ -65,11 +65,14 @@ public class GraphModel {
         _nodes.add(tempNode);
     }
 
-    public GraphModel addEdge(Node start, Node end, boolean isDirected, float weight) {
-       Edge edge = new Edge(start, end, isDirected, weight);
+    public void addEdge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight) {
+       Edge edge;
+       if (isWeighted){
+           edge = new Edge(start, end, isDirected, weight);
+       } else {
+           edge = new Edge(start, end, isDirected);
+       }
        _edges.add(edge);
-
-        return new GraphModel(_nodes, _edges);
     }
 
     public void indexNode(Node node, int index) {
