@@ -31,7 +31,7 @@ public class GraphOut {
             throw e;
         }
 
-        LogResources.stopTask(path);
+        LogResources.stopTask("Writing Graph to " + path);
 
         System.out.println("Die .gka Datei wird nach " + path + " gespeichert.");
     }
