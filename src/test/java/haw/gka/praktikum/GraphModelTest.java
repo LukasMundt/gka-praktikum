@@ -55,4 +55,29 @@ public class GraphModelTest {
         assertEquals(5, graph.getIndexOfNode(a));
         assertEquals(1, graph.getUnindexedNeighbors(a).size());
     }
+
+    @Test
+    public void testGetReversedNeighbors(){
+        GraphModel graph = new GraphModel();
+        Node a = Node.getNode("a");
+        Node b = Node.getNode("b");
+        graph.addNodes(a, b);
+        graph.addEdges(new Edge(a, b, true));
+
+        assertEquals(1, graph.getReverseNeighbors(b).size());
+        assertEquals(0, graph.getReverseNeighbors(a).size());
+    }
+
+    @Test
+    public void testGetReversedNeighborsWithIndex(){
+        GraphModel graph = new GraphModel();
+        Node a = Node.getNode("a");
+        Node b = Node.getNode("b");
+        graph.addNodes(a, b);
+        graph.addEdges(new Edge(a, b, true));
+
+        graph.indexNode(a, 5);
+
+        assertEquals(a, graph.getReverseNeighborWithIndex(b, 5));
+    }
 }
