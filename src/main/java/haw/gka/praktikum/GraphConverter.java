@@ -2,7 +2,6 @@ package haw.gka.praktikum;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GraphConverter {
     public static GraphModel getUndirectedGraphModel(GraphModel graph) {

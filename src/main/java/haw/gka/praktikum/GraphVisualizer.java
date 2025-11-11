@@ -2,14 +2,14 @@ package haw.gka.praktikum;
 
 import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.graph.implementations.MultiGraph;
 
 public class GraphVisualizer {
 
     public static void displayGraph(GraphModel graph) {
         System.setProperty("org.graphstream.ui", "javafx");
 
-        Graph graphViz = new SingleGraph("GKA Praktikum");
+        Graph graphViz = new MultiGraph("GKA Praktikum");
 
         graph.getNodes().forEach(node -> {
             graphViz.addNode(node.getName());
