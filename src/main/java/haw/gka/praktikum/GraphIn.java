@@ -101,10 +101,9 @@ public class GraphIn {
          * [a-z] matcht einzelne Knoten
          **/
         //Muster erstellen
-        Pattern directed = Pattern.compile("[a-zA-Z0-9]{1,}\\s*(?:->|<-)\\s*[a-zA-Z0-9]{1,}(?:\\s*\\([^)]+\\))?\\s*");
-        Pattern undirected = Pattern.compile("[a-zA-Z0-9]{1,}\\s--\\s[a-zA-Z0-9]{1,}(?:\\s*\\([^)]+\\))?\\s*");
-        //eventuell nicht robust?
-        Pattern singleNode = Pattern.compile("[a-zA-Z0-9]{1,}\\s*");
+        Pattern directed = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*(?:->|<-)\\s*\\p{L}0-9ß]{1,}(?:\\s*\\([^)]+\\))?\\s*");
+        Pattern undirected = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*--\\s*[\\p{L}0-9ß]{1,}(?:\\s*\\([^)]+\\))?\\s*");
+        Pattern singleNode = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*");
 
         //Matcherobjekt enthält Ergebnis der Prüfung
         Matcher mDirected = directed.matcher(graphPart);
