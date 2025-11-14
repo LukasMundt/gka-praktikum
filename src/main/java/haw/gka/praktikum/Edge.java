@@ -1,5 +1,7 @@
 package haw.gka.praktikum;
 
+import java.util.Objects;
+
 /**
  * Repräsentiert eine Kante zwischen zwei Knoten eines Graphen.
  * <p>
@@ -24,6 +26,9 @@ public class Edge {
     /** Gewicht der Kante (0, falls ungewichtet) */
     private final float _weight;
 
+    /** Name der Kante (wenn nicht vorhanden, dann null) */
+    private final String _name;
+
     /**
      * Erstellt eine ungewichtete Kante.
      *
@@ -41,6 +46,7 @@ public class Edge {
         this._isDirected = isDirected;
         this._isWeighted = false;
         this._weight = 0;
+        this._name = null;
     }
 
     /**
@@ -61,6 +67,30 @@ public class Edge {
         this._isDirected = isDirected;
         this._isWeighted = true;
         this._weight = weight;
+        this._name = null;
+    }
+
+    /**
+     * Erstellt eine gewichtete Kante.
+     *
+     * @param start      Startknoten
+     * @param end        Endknoten
+     * @param isDirected true -> gerichtet
+     * @param isWeighted true -> gewichtet (nur dann wird das übergebene Gewicht beachtet)
+     * @param weight     Gewicht der Kante
+     * @param name       Name der Kante (oder null, wenn kein Name)
+     * @throws IllegalArgumentException wenn einer der Knoten null ist
+     */
+    public Edge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight, String name) {
+        if (start == null || end == null) {
+            throw new IllegalArgumentException();
+        }
+        this._start = start;
+        this._end = end;
+        this._isDirected = isDirected;
+        this._isWeighted = isWeighted;
+        this._weight = isWeighted ? weight : 0;
+        this._name = name;
     }
 
     public Node getStart() {
@@ -81,6 +111,15 @@ public class Edge {
 
     public float getWeight() {
         return _weight;
+    }
+
+    /**
+     * Gibt den Namen zurück, null wenn kein Name angegeben ist
+     *
+     * @return Der Name als String oder null
+     */
+    public String getName() {
+        return _name;
     }
 
     /**
@@ -187,13 +226,15 @@ public class Edge {
                 // wenn die kante ungerichtet ist, dann sind auch kanten gleich, wo start und ziel vertauscht sind
                 return ((_start.equals(otherEdge._start) && _end.equals(otherEdge._end)) || (_start.equals(otherEdge._end) && _end.equals(otherEdge._start))) // gleiche Knoten
                         && _isWeighted == otherEdge._isWeighted
-                        && _weight == otherEdge._weight;
+                        && _weight == otherEdge._weight
+                        && Objects.equals(_name, otherEdge._name);
             }
             return _start.equals(otherEdge._start)
                     && _end.equals(otherEdge._end)
                     && _isDirected == otherEdge._isDirected
                     && _isWeighted == otherEdge._isWeighted
-                    && _weight == otherEdge._weight;
+                    && _weight == otherEdge._weight
+                    && Objects.equals(_name, otherEdge._name);
         }
         return false;
     }
@@ -215,6 +256,9 @@ public class Edge {
         } else {
             // ungerichtet: Egal, was Start und was Ende ist
             result = _start.hashCode() + _end.hashCode();
+        }
+        if (_name != null) {
+            result = result * 31 + _name.hashCode();
         }
         result = 31 * result + Boolean.hashCode(_isDirected);
         result = 31 * result + Boolean.hashCode(_isWeighted);

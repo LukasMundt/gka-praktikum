@@ -32,8 +32,11 @@ public class GraphVisualizer {
             try {
                 // Kantenlabel setzt sich aus Start/Ziel und optional Gewicht zusammen
                 String label = idFrom + idTo;
+                if(edge.getName() != null) {
+                    label += " ("+ edge.getName()+")";
+                }
                 if(edge.isWeighted()){
-                    label = label + " : "+edge.getWeight();
+                    label += " : "+edge.getWeight();
                 }
                 graphViz.addEdge(label, idFrom, idTo, edge.isDirected());
             } catch (EdgeRejectedException exception) {

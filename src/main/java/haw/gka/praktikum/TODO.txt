@@ -16,6 +16,7 @@ Code:
 Doku:
 - ChatGPT / Gemini ergänzen, kurz Erfahrung damit dokumentieren (wofür genutzt, wie liefs)
     -> Genutzt für Javadoc Kommentare -> lief gut, aber immer wenig zur Zeit
+    -> wenn man es zur generierung von tests genutzt hat musste man höllisch aufpassen, dass nicht Fehler die man im code gemacht hat übernommen werden (genutzt für equals tests bei edge)
 - Quellen durchnummerieren und in der Doku über Zahl referenzieren
 
 
