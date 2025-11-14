@@ -4,6 +4,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EdgeTest {
+    /**
+     * Testfall: Ungerichtete Kante (Nachbarn)
+     *
+     * Erwartung:
+     *  - Beide Richtungen sind erlaubt.
+     *  - Beide Knoten sind wechselseitig erreichbar.
+     *  - getOtherNode darf in beide Richtungen funktionieren.
+     */
     @Test
     public void testUndirectedNeighbourTest(){
         Node a = new Node("start");
@@ -20,6 +28,16 @@ public class EdgeTest {
         assertTrue(edge.isAReachableFromOtherNode(b));
     }
 
+    /**
+     * Testfall: Gerichtete Kante (Nachbarn)
+     *
+     * Kante: a --> b
+     *
+     * Erwartung:
+     *  - Nur von a nach b erreichbar.
+     *  - Von a aus ist der andere Knoten (b) erreichbar
+     *  - Nur B ist von A aus erreichbar
+     */
     @Test
     public void testDirectedNeighbourTest(){
         Node a = new Node("start");
@@ -36,6 +54,12 @@ public class EdgeTest {
         assertFalse(edge.isAReachableFromOtherNode(a));
     }
 
+    /**
+     * Testfall: Anderen Knoten der Kante ausgeben
+     *
+     * Erwartung:
+     * Für ungerichtete und gerichtete Kanten wird stets der jeweils andere Knoten zurückgegeben.
+     */
     @Test
     public void testGetOtherNodeTest(){
         Node a = new Node("start");

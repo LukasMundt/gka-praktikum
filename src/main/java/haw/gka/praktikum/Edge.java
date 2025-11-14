@@ -1,12 +1,37 @@
 package haw.gka.praktikum;
 
+/**
+ * Repräsentiert eine Kante zwischen zwei Knoten eines Graphen.
+ * <p>
+ * Eine Kante kann gerichtet oder ungerichtet sowie gewichtet oder ungewichtet sein.
+ * Die Klasse stellt Funktionen bereit, um zu prüfen, ob bestimmte Knoten
+ * entlang dieser Kante erreicht werden können.
+ * </p>
+ */
 public class Edge {
+    /** Startknoten der Kante (bei ungerichteten Kanten ohne besondere Bedeutung) */
     private final Node _start;
+
+    /** Endknoten der Kante (bei ungerichteten Kanten ohne besondere Bedeutung) */
     private final Node _end;
+
+    /** Gibt an, ob die Kante gerichtet ist */
     private final boolean _isDirected;
+
+    /** Gibt an, ob die Kante ein Gewicht besitzt */
     private final boolean _isWeighted;
+
+    /** Gewicht der Kante (0, falls ungewichtet) */
     private final float _weight;
 
+    /**
+     * Erstellt eine ungewichtete Kante.
+     *
+     * @param start      Startknoten
+     * @param end        Endknoten
+     * @param isDirected true → gerichtete Kante, false → ungerichtete Kante
+     * @throws IllegalArgumentException wenn einer der Knoten null ist
+     */
     public Edge(Node start, Node end, boolean isDirected) {
         if (start == null || end == null) {
             throw new IllegalArgumentException();
@@ -18,6 +43,15 @@ public class Edge {
         this._weight = 0;
     }
 
+    /**
+     * Erstellt eine gewichtete Kante.
+     *
+     * @param start      Startknoten
+     * @param end        Endknoten
+     * @param isDirected true -> gerichtet
+     * @param weight     Gewicht der Kante
+     * @throws IllegalArgumentException wenn einer der Knoten null ist
+     */
     public Edge(Node start, Node end, boolean isDirected, float weight) {
         if (start == null || end == null) {
             throw new IllegalArgumentException();
@@ -49,6 +83,14 @@ public class Edge {
         return _weight;
     }
 
+    /**
+     * Prüft, ob Knoten b von Knoten a über diese Kante erreicht werden kann.
+     *
+     * @param a Ausgangsknoten
+     * @param b Zielknoten
+     * @return true, wenn b entlang dieser Kante von a aus erreichbar ist
+     * @throws IllegalArgumentException wenn einer der Knoten nicht Teil der Kante ist
+     */
     public boolean isBReachableFromA(Node a, Node b) {
         if (a == null || b == null) {
             throw new IllegalArgumentException("a == null || b == null");
@@ -59,12 +101,21 @@ public class Edge {
         }
 
         if(this._isDirected) {
+            // wenn die kante gerichtet ist, dann muss a der start und b das ende sein, damit b von a aus erreichbar ist
             return this._start.equals(a) && this._end.equals(b);
         }
+        // bei einer ungerichteten Kante ist es egal, was start und was ziel ist
         return this._start.equals(a) && this._end.equals(b) ||
                 this._end.equals(a) && this._start.equals(b);
     }
 
+    /**
+     * Prüft, ob von einem Knoten a aus der andere Knoten dieser Kante erreichbar ist.
+     * Berücksichtigt dabei die Richtung (falls gerichtet).
+     *
+     * @param a Ausgangsknoten
+     * @return true, wenn der andere Knoten erreichbar ist
+     */
     public boolean isOtherNodeReachableFromA(Node a) {
         if(a == null){
             throw new IllegalArgumentException("a == null");
@@ -73,11 +124,20 @@ public class Edge {
         }
 
         if(this._isDirected) {
+            // wenn die kante gerichtet ist, dann muss a der startknoten sein, damit der andere Knoten von a aus erreichbar ist
             return a.equals(_start);
         }
+        // bei einer ungerichteten Kante ist es egal, ob a Start- oder Endknoten der Kante ist
         return this._start.equals(a) || this._end.equals(a);
     }
 
+    /**
+     * Prüft, ob der gegebene Knoten a von dem jeweils anderen Knoten aus erreichbar ist.
+     * Dies ist die "umgekehrte" Richtung zu {@link #isOtherNodeReachableFromA(Node)}.
+     *
+     * @param a Zielknoten
+     * @return true, wenn a vom anderen Knoten der Kante erreicht werden kann
+     */
     public boolean isAReachableFromOtherNode(Node a) {
         if(a == null){
             throw new IllegalArgumentException("a == null");
@@ -86,11 +146,20 @@ public class Edge {
         }
 
         if(this._isDirected) {
+            // wenn die Kante gerichtet ist, dann muss a der Endknoten sein
             return a.equals(_end);
         }
+        // bei einer ungerichteten Kante ist es egal, a kann Start- und End-Knoten sein
         return this._start.equals(a) || this._end.equals(a);
     }
 
+    /**
+     * Gibt den jeweils anderen Knoten der Kante zurück.
+     *
+     * @param node einer der beiden Knoten der Kante
+     * @return der jeweils andere Knoten
+     * @throws IllegalArgumentException wenn der Knoten nicht Teil der Kante ist
+     */
     public Node getOtherNode(Node node) {
         if(node == null){
             throw new IllegalArgumentException("node == null");
@@ -104,6 +173,12 @@ public class Edge {
         return _start;
     }
 
+    /**
+     * Vergleicht diese Kante mit einer anderen.
+     * <p>
+     * Für ungerichtete Kanten gilt: Kanten sind auch dann gleich, wenn Start und Ende vertauscht sind.
+     * </p>
+     */
     @Override
     public boolean equals(Object other) {
         if (other instanceof Edge) {
@@ -123,6 +198,14 @@ public class Edge {
         return false;
     }
 
+    /**
+     * Berechnet den Hashcode der Kante.
+     * <p>
+     * Für ungerichtete Kanten wird die Reihenfolge von Start/Ende ignoriert.
+     * Multiplikation mit 31 ist ein etablierter Standard,
+     * da 31 eine Primzahl ist und eine breite Hash-Verteilung erzeugt.
+     * </p>
+     */
     @Override
     public int hashCode() {
         int result;

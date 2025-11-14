@@ -33,6 +33,10 @@ public class BreadthFirstSearch {
         } else if(graph.getNodes().isEmpty()){
             // wenn der Graph keine Knoten hat
             return new ArrayList<>();
+        } else if(!graph.getNodes().contains(start)) {
+            // wenn der Startknoten nicht im Graphen vorkommt
+            System.out.println("Start-Node not found in graph: " + start.getName());
+            return new ArrayList<>();
         }
 
         // Start mit 0 indizieren und fügt ihn der Queue hinzu

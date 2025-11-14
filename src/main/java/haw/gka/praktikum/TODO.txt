@@ -15,6 +15,7 @@ Code:
 
 Doku:
 - ChatGPT / Gemini ergänzen, kurz Erfahrung damit dokumentieren (wofür genutzt, wie liefs)
+    -> Genutzt für Javadoc Kommentare -> lief gut, aber immer wenig zur Zeit
 - Quellen durchnummerieren und in der Doku über Zahl referenzieren
 
 

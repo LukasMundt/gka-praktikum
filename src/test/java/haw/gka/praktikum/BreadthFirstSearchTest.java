@@ -7,9 +7,14 @@ import java.util.List;
 
 public class BreadthFirstSearchTest {
     /**
+     * Testfall: Zwei voneinander getrennte Komponenten.
+     *
      *  a   c
      *  |   |
      *  b   d
+     *
+     * Erwartung:
+     * BFS findet keinen Pfad zwischen a und c → Ergebnisliste ist leer.
      */
     @Test
     public void testNoConnection() {
@@ -26,10 +31,17 @@ public class BreadthFirstSearchTest {
     }
 
     /**
+     * Testfall: Gerichteter Graph, in dem der Zielknoten nicht erreichbar ist.
+     *
      *     b
      *    ^ ^
      *   /   \
      *  a     c
+     *
+     * Richtung der Kanten: a→b und c→b
+     *
+     * Erwartung:
+     * Von b aus gelangt man nicht zu c → Ergebnisliste ist leer.
      */
     @Test
     public void testConnectionDirected() {
@@ -102,13 +114,29 @@ public class BreadthFirstSearchTest {
         assertEquals(Node.getNode("z"), result.getLast());
     }
 
+    /**
+     * Testfall: Einer der beiden Knoten (Start oder Ziel) existiert nicht im Graphen.
+     *
+     * Erwartung:
+     * Für beide Varianten (Start existiert nicht oder Ziel existiert nicht)
+     * darf kein Pfad existieren → Ergebnisliste ist leer.
+     */
     @Test
     public void testNonExistingNodes() {
         GraphModel graphModel = new GraphModel();
         graphModel.addNode("a");
         graphModel.addNode("b");
 
+        // Ziel existiert nicht
         List<Node> result = BreadthFirstSearch.search(graphModel, Node.getNode("a"), Node.getNode("z"));
         assertTrue(result.isEmpty());
+
+        // Start existiert nicht
+        List<Node> result2 = BreadthFirstSearch.search(graphModel, Node.getNode("z"), Node.getNode("a"));
+        assertTrue(result2.isEmpty());
+
+        // Start und Ziel existieren nicht
+        List<Node> result3 = BreadthFirstSearch.search(graphModel, Node.getNode("z"), Node.getNode("y"));
+        assertTrue(result3.isEmpty());
     }
 }
