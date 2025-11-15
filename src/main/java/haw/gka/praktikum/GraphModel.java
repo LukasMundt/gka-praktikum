@@ -95,8 +95,9 @@ public class GraphModel {
      * @param isDirected true → gerichtete Kante
      * @param isWeighted true → gewichtete Kante (Gewicht wird genutzt)
      * @param weight     Gewicht der Kante (nur relevant bei isWeighted)
+     * @param edgeName
      */
-    public void addEdge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight) {
+    public void addEdge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight, String edgeName) {
        Edge edge;
        // wenn gewichtet wird eine gewichtete Kante hinzugefügt
        if (isWeighted){
@@ -227,8 +228,6 @@ public class GraphModel {
         return allNodes;
     }
 
-
-
     /**
      * @return Menge aller Knoten
      */
@@ -243,13 +242,5 @@ public class GraphModel {
         return _edges;
     }
 
-    /**
-     * entfernt alle Inhalte aus dem Modell
-     */
-    public void clear() {
-        _nodes.clear();
-        _edges.clear();
-        _indexedNodes.clear();
-    }
 }
 

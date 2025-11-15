@@ -16,6 +16,11 @@ import org.graphstream.graph.implementations.MultiGraph;
  */
 public class GraphVisualizer {
 
+    /**
+     * Anzeige des übergebenen Graphen.
+     *
+     * @param graph der zu visualisierende Graph
+     */
     public static void displayGraph(GraphModel graph) {
         System.setProperty("org.graphstream.ui", "javafx");
 

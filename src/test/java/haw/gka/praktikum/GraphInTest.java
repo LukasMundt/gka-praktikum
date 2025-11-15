@@ -62,8 +62,8 @@ public class GraphInTest {
         empty = graphReader.readGraph(emptyTestFile);
 
         expected.addNodes(nodeA, nodeB, nodeC);
-        expected.addEdge(nodeA, nodeB, true, false, 0);
-        expected.addEdge(nodeB, nodeA, true, false, 0);
+        expected.addEdge(nodeA, nodeB, true, false, 0, null);
+        expected.addEdge(nodeB, nodeA, true, false, 0, null);
 
         //prüft, ob eine leere Datei ohne Fehler / Programmabbruch verarbeitet wird
         assertFalse(expected.getEdges().isEmpty(), "das Graphmodell darf nicht leer sein");
@@ -78,9 +78,9 @@ public class GraphInTest {
     @Test
     void testReadFile_Directed() throws IOException {
         expected.addNodes(nodeA, nodeB, nodeC);
-        expected.addEdge(nodeA, nodeB, true, false, 0);
-        expected.addEdge(nodeB, nodeA, true, false, 0);
-        expected.addEdge(nodeA, nodeC, true, false, 0);
+        expected.addEdge(nodeA, nodeB, true, false, 0, "e");
+        expected.addEdge(nodeB, nodeA, true, false, 0, "f");
+        expected.addEdge(nodeA, nodeC, true, false, 0, "g");
 
         unexpected.addNodes(nodeA, nodeC);
 
@@ -96,9 +96,9 @@ public class GraphInTest {
     @Test
     void testReadFile_UnDirected() throws IOException {
         expected.addNodes(nodeA, nodeB, nodeC);
-        expected.addEdge(nodeA, nodeB, false, false, 0);
-        expected.addEdge(nodeB, nodeC, false, false, 0);
-        expected.addEdge(nodeA, nodeC, false, false, 0);
+        expected.addEdge(nodeA, nodeB, false, false, 0, null);
+        expected.addEdge(nodeB, nodeC, false, false, 0, null);
+        expected.addEdge(nodeA, nodeC, false, false, 0, null);
 
         GraphModel actualUnDir = graphReader.readGraph(testFileUnDir);
 
@@ -116,7 +116,7 @@ public class GraphInTest {
 
         expected.addNodes(nodeX, nodeY, nodeZ);
         // Annahme: X -- Y führt zu einer ungerichteten Kante (false) ohne Gewichtung
-        expected.addEdge(nodeX, nodeY, false, false, 0);
+        expected.addEdge(nodeX, nodeY, false, false, 0, "e");
 
         GraphModel actual = graphReader.readGraph(testMixedSolo);
 

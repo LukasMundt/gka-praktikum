@@ -15,8 +15,8 @@ import java.util.Set;
 public class GraphOut {
     /**
      * Methode, die gegebenes Graphmodel in Datei schreibt
-     * @param g
-     * @param path
+     * @param g der Graph, der in Datei geschrieben werden soll
+     * @param path der Pfad / Dateiname der Ausgabedatei
      * @throws IOException
      */
     public void writeFile(GraphModel g, String path) throws IOException {
@@ -44,8 +44,8 @@ public class GraphOut {
     /**
      * Hilfsmethode, die Graphen (eigentlich: Kanten, diese beinhalten Knoteninfos) formatiert
      * und ausgibt
-     * @param edges
-     * @param writer
+     * @param edges ein Set Kanten (inklusive aller Knoteninfos)
+     * @param writer Java-Klasse, die Objekte als Text ausgibt
      */
     private void writeGraphs(HashSet<Edge> edges, PrintWriter writer) {
         for (Edge edge : edges) {
@@ -63,8 +63,8 @@ public class GraphOut {
 
     /**
      * Hilfsmethode, die Knoten ohne Kanten ausgibt
-     * @param nodes
-     * @param writer
+     * @param nodes Singleknoten ohne Kanten
+     * @param writer Java-Klasse, die Objekte als Text ausgibt
      */
     private void writeSingleNodes(Set<Node> nodes, PrintWriter writer){
         for (Node node : nodes) {

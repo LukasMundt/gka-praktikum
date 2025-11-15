@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Startet die GUI des Programms
+ */
 public class Starter extends Application {
 
     final Button button = new Button ("Graph anzeigen");
@@ -27,6 +30,7 @@ public class Starter extends Application {
     final Label notification = new Label ();
 
     /**
+     * Mainmethode, um die GUI zu starten
      *
      * @param args
      */
@@ -35,6 +39,7 @@ public class Starter extends Application {
     }
 
     /**
+     * TODO
      *
      * @param primaryStage
      */

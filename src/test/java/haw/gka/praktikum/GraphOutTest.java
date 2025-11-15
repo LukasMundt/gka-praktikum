@@ -35,8 +35,8 @@ public class GraphOutTest {
         Node c = new Node("C");
 
         graph.addNodes(a, b, c);
-        graph.addEdge(a, b, true, false, 0);
-        graph.addEdge(b, c, false, true, 4.2f);
+        graph.addEdge(a, b, true, false, 0, null);
+        graph.addEdge(b, c, false, true, 4.2f, null);
 
         graphOut.writeFile(graph, testFileDir.toString());
         List<String> actualLines = Files.readAllLines(testFileDir);
@@ -59,7 +59,7 @@ public class GraphOutTest {
         Node z = new Node("Z");
 
         graph.addNodes(x, y, z);
-        graph.addEdge(x, y, true, false, 0);
+        graph.addEdge(x, y, true, false, 0, "a");
 
         graphOut.writeFile(graph, testFileDir.toString());
         List<String> actualLines = Files.readAllLines(testFileDir);

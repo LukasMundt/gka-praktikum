@@ -16,7 +16,14 @@ import java.util.regex.Pattern;
  *
  */
 public class GraphIn {
-    //Methode nimmt Datei entgegen, liest zeilenweise ein und parst Inhalt, um Graphen zu extrahieren
+
+    /**
+     * nimmt Datei entgegen, liest zeilenweise ein und parst Inhalt, um Graphen zu extrahieren
+     *
+     * @param path
+     * @return der Gesamtgraph, ergänzt um alle Teilgraphen aus der Datei
+     * @throws IOException
+     */
     public GraphModel readGraph(String path) throws IOException {
         LogResources.startTask("Reading graph from " + path);
         //Datei einlesen
@@ -29,8 +36,10 @@ public class GraphIn {
             parseLine(l, graph);
         }
 
-        if (graph.getNodes().isEmpty()) {
-            System.err.println("es konnten keine Graphen geparst werden, evtl. ist die Datei leer");        }
+        //Fehlermeldung, wenn keine Zeilen geparst werden konnten
+        if (lines.isEmpty()) {
+            System.err.println("es konnten keine Graphen geparst werden, evtl. ist die Datei leer oder defekt");
+        }
 
         LogResources.stopTask("Reading graph from " + path);
 
@@ -40,8 +49,8 @@ public class GraphIn {
 
     /**
      * Hilfs-Methode liest Datei zeilenweise ein, verwirft leere Zeilen und gibt Liste zurück
-     * @param path
-     * @return
+     * @param path der Dateipfad
+     * @return der Dateiinhalt als Liste
      * @throws FileNotFoundException
      */
     List<String> readFile(String path) throws FileNotFoundException {
@@ -54,6 +63,7 @@ public class GraphIn {
             lines.add(line);
         }
         scanner.close();
+
         return lines;
     }
 
@@ -61,9 +71,9 @@ public class GraphIn {
 
     /**
      * Hilfsmethode übernimmt das pattern matching via RegEx
-     * @param line
-     * @param graph
-     * @return
+     * @param line eine Zeile aus der Datei
+     * @param graph der Gesamtgraph
+     * @return der Gesamtgraph, der um die neue Zeile (Teilgraph) ergänzt wird
      */
     private GraphModel parseLine(String line, GraphModel graph) {
 
@@ -97,21 +107,17 @@ public class GraphIn {
             graphPart = trimmed.substring(0, colonIndex).trim();
         }
 
-
-        //TODO für zweites Praktikum
-        //(?<target>[a-z]): man kann RegEx-Teile auch direkt in Variablen speichern! Anschauen für Gewicht!
-
-
         //RegEx erstellt mit regex101:
         /**
-         * [a-z]{1,}\s*(?:->|<-)\s*[a-z]{1,} matcht gerichtete Graphen in beide Richtungen, mit beliebig vielen Leerzeichen
-         * [a-z]{1,}\s\-\-\s[a-z]{1,} matcht ungerichtete Graphen mit zwei Knoten
-         * [a-z] matcht einzelne Knoten
+         *
          **/
         //Muster erstellen
-        Pattern directed = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*(?:->|<-)\\s*[\\p{L}0-9ß]{1,}(?:\\s*\\([^)]+\\))?\\s*");
-        Pattern undirected = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*--\\s*[\\p{L}0-9ß]{1,}(?:\\s*\\([^)]+\\))?\\s*");
-        Pattern singleNode = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*");
+        Pattern directed = Pattern.compile("(?<startNode>[\\p{L}0-9ß]{1,})\\s*(?:->|<-)\\s*(?<endNode>[\\p{L}0-9ß]{1,})\\s*(?<edgeName>\\([^)]+\\))?\\s*");
+        Pattern undirected = Pattern.compile("(?<nodeA>[\\p{L}0-9ß]{1,})\\s*--\\s*(?<nodeB>[\\p{L}0-9ß]{1,})\\s*(?<edgeName>\\([^)]+\\))?\\s*");
+        Pattern singleNode = Pattern.compile("(?<node>[\\p{L}0-9ß]{1,})\\s*");
+
+        //um Named Capturing Group aus RegEx zu nutzen
+        String edgeName = null;
 
         //Matcherobjekt enthält Ergebnis der Prüfung
         Matcher mDirected = directed.matcher(graphPart);
@@ -120,36 +126,52 @@ public class GraphIn {
 
         boolean isDirected = false;
 
-        if (mDirected.matches()){
+        if (mDirected.matches()) {
             isDirected = true;
-            //Aufspaltung der Knoten
-            String[] parts = graphPart.split("\\s*(?:->|<-)\\s*");
 
-            if (parts.length == 2) {
-                String from = parts[0].trim();
-                String to = parts[1].trim();
-                Node startNode = Node.getNode(from);
-                Node endNode = Node.getNode(to);
-                graph.addNodes(startNode, endNode);
-                graph.addEdge(startNode, endNode, true, hasWeight, edgeWeight);
-                return graph;
+            // Die Knotennamen aus den benannten Gruppen auslesen
+            String startNodeStr = mDirected.group("startNode");
+            String endNodeStr = mDirected.group("endNode");
+
+            //Kantenname auslesen
+            edgeName = mDirected.group("edgeName");
+            if (edgeName != null) {
+                edgeName = edgeName.replaceAll("^\\(|\\)$", "");
             }
+
+            //Knoten und Kanten zusammenstellen
+            Node startNode = Node.getNode(startNodeStr);
+            Node endNode = Node.getNode(endNodeStr);
+            graph.addNodes(startNode, endNode);
+            graph.addEdge(startNode, endNode, true, hasWeight, edgeWeight, edgeName);
+
+            return graph;
+
         } else if (mUndirected.matches()) {
-            //extract nodes
-            String[] parts = graphPart.split("\\s*--\\s*");
 
-            if (parts.length == 2) {
-                String a = parts[0].trim();
-                String b = parts[1].trim();
-                Node aNode = Node.getNode(a);
-                Node bNode = Node.getNode(b);
-                graph.addNodes(aNode, bNode);
-                graph.addEdge(aNode, bNode, false, hasWeight, edgeWeight);
-                return graph;
+            // Die Knotennamen aus den benannten Gruppen auslesen
+            String nodeAStr = mUndirected.group("nodeA");
+            String nodeBStr = mUndirected.group("nodeB");
+
+            //Kantenname auslesen
+            edgeName = mUndirected.group("edgeName");
+            if (edgeName != null) {
+                edgeName = edgeName.replaceAll("^\\(|\\)$", "");
             }
+
+            //Knoten und Kanten zusammenstellen
+            Node aNode = Node.getNode(nodeAStr);
+            Node bNode = Node.getNode(nodeBStr);
+            graph.addNodes(aNode, bNode);
+            graph.addEdge(aNode, bNode, false, hasWeight, edgeWeight, edgeName);
+
+            return graph;
+
         } else if (mNode.matches()) {
             // add single node
-            graph.addNode(trimmed);
+            String nodeStr = mNode.group("node");
+            graph.addNode(nodeStr);
+
             return graph;
         } else {
             //put line in List<String> failures
@@ -158,10 +180,10 @@ public class GraphIn {
 
         return graph;
     }
-
     /**
+     * Liste sammelt Zeilen, die nicht geparst werden konnten
      *
-     * @return
+     * @return Liste der fehlerhaften Zeilen
      */
 
     public List<String> getFailures() {
