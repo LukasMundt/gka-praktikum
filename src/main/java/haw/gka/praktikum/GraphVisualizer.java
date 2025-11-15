@@ -1,7 +1,9 @@
 package haw.gka.praktikum;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
 
 /**
@@ -18,10 +20,12 @@ public class GraphVisualizer {
         System.setProperty("org.graphstream.ui", "javafx");
 
         Graph graphViz = new MultiGraph("GKA Praktikum");
+        graphViz.setAttribute("ui.layout", "springbox");
 
         // Knoten hinzufügen
         graph.getNodes().forEach(node -> {
-            graphViz.addNode(node.getName());
+            Node n = graphViz.addNode(node.getName());
+            n.setAttribute("ui.label", node.getName());
         });
 
 
@@ -31,22 +35,26 @@ public class GraphVisualizer {
             String idTo = edge.getEnd().getName();
             try {
                 // Kantenlabel setzt sich aus Start/Ziel und optional Gewicht zusammen
-                String label = idFrom + idTo;
+                String id = idFrom + idTo;
+                String label = "";
                 if(edge.getName() != null) {
-                    label += " ("+ edge.getName()+")";
+                    id = edge.getName();
+                    label = edge.getName();
                 }
                 if(edge.isWeighted()){
-                    label += " : "+edge.getWeight();
+                    id += edge.getWeight();
+                    label += (!label.isEmpty() ?" (":"(")+((edge.getWeight() % 1 == 0)?Integer.toString((int)edge.getWeight()):edge.getWeight())+")";
                 }
-                graphViz.addEdge(label, idFrom, idTo, edge.isDirected());
+                Edge e = graphViz.addEdge(id, idFrom, idTo, edge.isDirected());
+                e.setAttribute("ui.label", label);
+                if(edge.isWeighted()){
+                    e.setAttribute("weight", edge.getWeight());
+                }
+
             } catch (EdgeRejectedException exception) {
                 System.out.println(exception.getMessage());
             }
         });
-
-        // Labels hinzufügen (Namen von Kanten und Knoten werden angezeigt)
-        graphViz.nodes().forEach(n -> n.setAttribute("ui.label", n.getId()));
-        graphViz.edges().forEach(edge -> edge.setAttribute("ui.label", edge.getId()));
 
         // styles für die Darstellung
         graphViz.setAttribute("ui.stylesheet",
