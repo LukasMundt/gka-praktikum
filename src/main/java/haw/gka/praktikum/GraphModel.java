@@ -95,17 +95,10 @@ public class GraphModel {
      * @param isDirected true → gerichtete Kante
      * @param isWeighted true → gewichtete Kante (Gewicht wird genutzt)
      * @param weight     Gewicht der Kante (nur relevant bei isWeighted)
-     * @param edgeName
+     * @param edgeName   Name der Kante (wenn kein Name, dann null)
      */
     public void addEdge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight, String edgeName) {
-       Edge edge;
-       // wenn gewichtet wird eine gewichtete Kante hinzugefügt
-       if (isWeighted){
-           edge = new Edge(start, end, isDirected, weight);
-       } else {
-           edge = new Edge(start, end, isDirected);
-       }
-       _edges.add(edge);
+       _edges.add(new Edge(start, end, isDirected, isWeighted, weight, edgeName));
     }
 
     /**

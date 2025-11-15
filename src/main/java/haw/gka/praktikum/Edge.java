@@ -89,7 +89,7 @@ public class Edge {
         this._end = end;
         this._isDirected = isDirected;
         this._isWeighted = isWeighted;
-        this._weight = isWeighted ? weight : 0;
+        this._weight = isWeighted ? weight : 0.0f;
         this._name = name;
     }
 

@@ -43,7 +43,7 @@ public class GraphVisualizer {
                 String id = idFrom + idTo;
                 String label = "";
                 if(edge.getName() != null) {
-                    id = edge.getName();
+                    id += edge.getName();
                     label = edge.getName();
                 }
                 if(edge.isWeighted()){

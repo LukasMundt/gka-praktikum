@@ -78,9 +78,9 @@ public class GraphInTest {
     @Test
     void testReadFile_Directed() throws IOException {
         expected.addNodes(nodeA, nodeB, nodeC);
-        expected.addEdge(nodeA, nodeB, true, false, 0, "e");
-        expected.addEdge(nodeB, nodeA, true, false, 0, "f");
-        expected.addEdge(nodeA, nodeC, true, false, 0, "g");
+        expected.addEdge(nodeA, nodeB, true, false, 0, null);
+        expected.addEdge(nodeB, nodeA, true, false, 0, null);
+        expected.addEdge(nodeA, nodeC, true, false, 0, null);
 
         unexpected.addNodes(nodeA, nodeC);
 
@@ -116,7 +116,7 @@ public class GraphInTest {
 
         expected.addNodes(nodeX, nodeY, nodeZ);
         // Annahme: X -- Y führt zu einer ungerichteten Kante (false) ohne Gewichtung
-        expected.addEdge(nodeX, nodeY, false, false, 0, "e");
+        expected.addEdge(nodeX, nodeY, false, false, 0, null);
 
         GraphModel actual = graphReader.readGraph(testMixedSolo);
 
