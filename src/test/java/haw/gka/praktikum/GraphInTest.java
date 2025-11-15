@@ -16,9 +16,12 @@ public class GraphInTest {
     String testFileDir;
     String testFileUnDir;
     String testMixedSolo;
+    String emptyTestFile;
 
     GraphIn graphReader;
     GraphModel expected;
+    GraphModel unexpected;
+    GraphModel empty;
 
     Node nodeA = new Node("A");
     Node nodeB = new Node("B");
@@ -31,10 +34,12 @@ public class GraphInTest {
         testFileDir = "src/test/java/resources/TestFileDir.gka";
         testFileUnDir = "src/test/java/resources/TestFileUnDir.gka";
         testMixedSolo = "src/test/java/resources/TestFileSolo.gka";
+        emptyTestFile = "src/test/java/resources/empty.gka";
 
         //stellt neue Instanzen der jeweiligen Klassen bereit
         graphReader = new GraphIn();
         expected = new GraphModel();
+        unexpected = new GraphModel();
     }
 
     @Test
@@ -50,7 +55,24 @@ public class GraphInTest {
 
         assertNotNull(actualDir, "GraphModel darf nicht Null sein");
         assertNotNull(actualUnDir, "GraphModel darf nicht Null sein");
+    }
 
+    @Test
+    void testReadFile_Empty() throws IOException {
+        empty = graphReader.readGraph(emptyTestFile);
+
+        expected.addNodes(nodeA, nodeB, nodeC);
+        expected.addEdge(nodeA, nodeB, true, false, 0);
+        expected.addEdge(nodeB, nodeA, true, false, 0);
+
+        //prüft, ob eine leere Datei ohne Fehler / Programmabbruch verarbeitet wird
+        assertFalse(expected.getEdges().isEmpty(), "das Graphmodell darf nicht leer sein");
+        assertTrue(empty.getEdges().isEmpty(), "das GraphModell muss leer sein");
+    }
+
+    @Test
+    void testReadNonexistentFile() {
+        assertThrows(IOException.class, () -> graphReader.readFile("noFile.gka"));
     }
 
     @Test
@@ -60,10 +82,15 @@ public class GraphInTest {
         expected.addEdge(nodeB, nodeA, true, false, 0);
         expected.addEdge(nodeA, nodeC, true, false, 0);
 
+        unexpected.addNodes(nodeA, nodeC);
+
         GraphModel actualDir = graphReader.readGraph(testFileDir);
 
+        //prüfen, ob der erwartete Inhalt geparst wird
         assertEquals(expected.getNodes(), actualDir.getNodes(), "Knotenlisten müssen übereinstimmen");
-        assertEquals(expected.getEdges(), actualDir.getEdges());
+        assertEquals(expected.getEdges(), actualDir.getEdges(), "Kantenlisten müssen übereinstimmen");
+        //prüft auf Ungleichheit der Knotenlisten
+        assertNotEquals(unexpected.getNodes(), actualDir.getNodes(), "Knotenlisten dürfen nicht übereinstimmen");
     }
 
     @Test
@@ -77,11 +104,6 @@ public class GraphInTest {
 
         assertEquals(expected.getNodes(), actualUnDir.getNodes(), "Knotenlisten müssen übereinstimmen");
         assertEquals(expected.getEdges(), actualUnDir.getEdges());
-    }
-
-    @Test
-    void testReadNonexistentFile() {
-        assertThrows(IOException.class, () -> graphReader.readFile("noFile.gka"));
     }
 
     @Test

@@ -28,7 +28,13 @@ public class GraphIn {
         for (String l : lines) {
             parseLine(l, graph);
         }
+
+        if (graph.getNodes().isEmpty()) {
+            System.err.println("es konnten keine Graphen geparst werden, evtl. ist die Datei leer");        }
+
         LogResources.stopTask("Reading graph from " + path);
+
+
         return graph;
     }
 
@@ -149,6 +155,7 @@ public class GraphIn {
             //put line in List<String> failures
             failures.add(line);
         }
+
         return graph;
     }
 

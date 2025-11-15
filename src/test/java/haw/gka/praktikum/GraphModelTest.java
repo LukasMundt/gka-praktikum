@@ -13,14 +13,23 @@ public class GraphModelTest {
     @Test
     public void testAddingNodes() {
         GraphModel graph = new GraphModel();
+
+        //using addNode()
         Node a = graph.addNode("a");
-
         Node b = graph.addNode("b");
-        graph.addNodes(b);
 
-        assertEquals(2, graph.getNodes().size());
+        //using addNodes()
+        Node k = new Node("k");
+        Node l = new Node("l");
+        graph.addNodes(k, l);
+
+        Node z = new Node("z");
+
+        assertEquals(4, graph.getNodes().size());
         assertTrue(graph.getNodes().contains(a));
         assertTrue(graph.getNodes().contains(b));
+        assertTrue(graph.getNodes().contains(k));
+        assertFalse(graph.getNodes().contains(z));
     }
 
     /**
@@ -127,11 +136,13 @@ public class GraphModelTest {
         GraphModel graph = new GraphModel();
         Node a = Node.getNode("a");
         Node b = Node.getNode("b");
-        graph.addNodes(a, b);
+        Node c = Node.getNode("c");
+        graph.addNodes(a, b, c);
         graph.addEdges(new Edge(a, b, true));
 
         assertEquals(1, graph.getReverseNeighbors(b).size());
         assertEquals(0, graph.getReverseNeighbors(a).size());
+        assertTrue(graph.getReverseNeighbors(c).isEmpty());
     }
 
     /**

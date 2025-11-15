@@ -27,6 +27,7 @@ public class BreadthFirstSearchTest {
         graphModel.addEdges(new Edge(Node.getNode("c"), Node.getNode("d"), false));
 
         List<Node> result = BreadthFirstSearch.search(graphModel, Node.getNode("a"), Node.getNode("c"));
+
         assertTrue(result.isEmpty());
     }
 
