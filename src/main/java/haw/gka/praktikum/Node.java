@@ -45,6 +45,7 @@ public class Node {
         _name = name;
     }
 
+
     /**
      * Gibt den Namen des Knotens zurück.
      *
@@ -77,5 +78,12 @@ public class Node {
     @Override
     public int hashCode() {
         return _name.hashCode();
+    }
+
+    /**
+     * Löscht die Liste der Nodes.
+     */
+    public static void resetNodeCache() {
+        _nodes.clear();
     }
 }

@@ -14,10 +14,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         GraphModel graph = null;
-        String pathIn = "src/test/java/resources/graph03.gka";
+        String pathIn = "src/test/java/resources/directed1.gka";
         GraphIn graphReader = new GraphIn();
 
-        String pathOut = "src/test/java/resources/graphOUT1.gka";
+        String pathOut = "src/test/java/resources/graphOUT5.gka";
         GraphOut graphWriter = new GraphOut();
 
         //Testfile einlesen

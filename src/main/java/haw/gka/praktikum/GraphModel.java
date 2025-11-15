@@ -27,7 +27,6 @@ public class GraphModel {
         _nodes = new HashSet<>();
         _edges = new HashSet<>();
         _indexedNodes = new HashMap<>();
-
     }
 
     /**
@@ -243,4 +242,14 @@ public class GraphModel {
     public HashSet<Edge> getEdges() {
         return _edges;
     }
+
+    /**
+     * entfernt alle Inhalte aus dem Modell
+     */
+    public void clear() {
+        _nodes.clear();
+        _edges.clear();
+        _indexedNodes.clear();
+    }
 }
+

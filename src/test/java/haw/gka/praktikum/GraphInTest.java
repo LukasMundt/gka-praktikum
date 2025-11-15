@@ -2,14 +2,7 @@ package haw.gka.praktikum;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -20,25 +13,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphInTest {
 
-    ClassLoader classLoader = getClass().getClassLoader();
-    File testFileDir;
-    File testFileUnDir;
-    File testMixedSolo;
-    GraphIn graphIn;
+    String testFileDir;
+    String testFileUnDir;
+    String testMixedSolo;
 
-    GraphModel expected = new GraphModel();
+    GraphIn graphReader;
+    GraphModel expected;
 
     Node nodeA = new Node("A");
     Node nodeB = new Node("B");
     Node nodeC = new Node("C");
 
+
     @BeforeEach
     void setup() throws IOException {
         // Stellt sicher, dass testFile korrekt auf eine existierende Datei verweist
-       this.testFileDir = Paths.get("src/test/java/resources/TestFileDir.gka").toFile();
-        this.testFileUnDir = Paths.get("src/test/java/resources/TestFileUnDir.gka").toFile();
-        this.testMixedSolo = Paths.get("src/test/java/resources/TestFileSolo.gka").toFile();
-       this.graphIn = new GraphIn();
+        testFileDir = "src/test/java/resources/TestFileDir.gka";
+        testFileUnDir = "src/test/java/resources/TestFileUnDir.gka";
+        testMixedSolo = "src/test/java/resources/TestFileSolo.gka";
+
+        //stellt neue Instanzen der jeweiligen Klassen bereit
+        graphReader = new GraphIn();
+        expected = new GraphModel();
     }
 
     @Test
@@ -46,8 +42,11 @@ public class GraphInTest {
 
         expected.addNodes(nodeA, nodeB, nodeC);
 
-        GraphModel actualDir = graphIn.readGraph(testFileDir.toString());
-        GraphModel actualUnDir = graphIn.readGraph(testFileUnDir.toString());
+        GraphModel actualDir = null;
+        GraphModel actualUnDir = null;
+
+        actualDir = graphReader.readGraph(testFileDir);
+        actualUnDir = graphReader.readGraph(testFileUnDir);
 
         assertNotNull(actualDir, "GraphModel darf nicht Null sein");
         assertNotNull(actualUnDir, "GraphModel darf nicht Null sein");
@@ -56,10 +55,12 @@ public class GraphInTest {
 
     @Test
     void testReadFile_Directed() throws IOException {
-
         expected.addNodes(nodeA, nodeB, nodeC);
+        expected.addEdge(nodeA, nodeB, true, false, 0);
+        expected.addEdge(nodeB, nodeA, true, false, 0);
+        expected.addEdge(nodeA, nodeC, true, false, 0);
 
-        GraphModel actualDir = graphIn.readGraph(testFileDir.toString());
+        GraphModel actualDir = graphReader.readGraph(testFileDir);
 
         assertEquals(expected.getNodes(), actualDir.getNodes(), "Knotenlisten müssen übereinstimmen");
         assertEquals(expected.getEdges(), actualDir.getEdges());
@@ -67,10 +68,12 @@ public class GraphInTest {
 
     @Test
     void testReadFile_UnDirected() throws IOException {
-
         expected.addNodes(nodeA, nodeB, nodeC);
+        expected.addEdge(nodeA, nodeB, false, false, 0);
+        expected.addEdge(nodeB, nodeC, false, false, 0);
+        expected.addEdge(nodeA, nodeC, false, false, 0);
 
-        GraphModel actualUnDir = graphIn.readGraph(testFileUnDir.toString());
+        GraphModel actualUnDir = graphReader.readGraph(testFileUnDir);
 
         assertEquals(expected.getNodes(), actualUnDir.getNodes(), "Knotenlisten müssen übereinstimmen");
         assertEquals(expected.getEdges(), actualUnDir.getEdges());
@@ -78,7 +81,7 @@ public class GraphInTest {
 
     @Test
     void testReadNonexistentFile() {
-        assertThrows(IOException.class, () -> graphIn.readFile("noFile.gka"));
+        assertThrows(IOException.class, () -> graphReader.readFile("noFile.gka"));
     }
 
     @Test
@@ -93,18 +96,10 @@ public class GraphInTest {
         // Annahme: X -- Y führt zu einer ungerichteten Kante (false) ohne Gewichtung
         expected.addEdge(nodeX, nodeY, false, false, 0);
 
-        GraphModel actual = graphIn.readGraph(testMixedSolo.toString());
+        GraphModel actual = graphReader.readGraph(testMixedSolo);
 
-        // Es muss nur Node Z in der erwarteten Menge sein
+        // Es muss Node Z in der erwarteten Menge sein
         assertTrue(actual.getNodes().contains(nodeZ), "Der Solitärknoten Z muss vorhanden sein.");
         assertEquals(expected.getEdges(), actual.getEdges(), "Die ungerichtete Kante X--Y muss vorhanden sein.");
     }
-
-
-
-
-
-
-
-
 }

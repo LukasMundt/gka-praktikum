@@ -87,8 +87,10 @@ public class GraphIn {
             } catch (NumberFormatException e) {
                 failures.add("ungültige Gewichtung bei: " + trimmed);
             }
+            //graphPart OHNE ": Gewichtung"
             graphPart = trimmed.substring(0, colonIndex).trim();
         }
+
 
         //TODO für zweites Praktikum
         //(?<target>[a-z]): man kann RegEx-Teile auch direkt in Variablen speichern! Anschauen für Gewicht!
@@ -101,7 +103,7 @@ public class GraphIn {
          * [a-z] matcht einzelne Knoten
          **/
         //Muster erstellen
-        Pattern directed = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*(?:->|<-)\\s*\\p{L}0-9ß]{1,}(?:\\s*\\([^)]+\\))?\\s*");
+        Pattern directed = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*(?:->|<-)\\s*[\\p{L}0-9ß]{1,}(?:\\s*\\([^)]+\\))?\\s*");
         Pattern undirected = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*--\\s*[\\p{L}0-9ß]{1,}(?:\\s*\\([^)]+\\))?\\s*");
         Pattern singleNode = Pattern.compile("[\\p{L}0-9ß]{1,}\\s*");
 
@@ -125,12 +127,11 @@ public class GraphIn {
                 graph.addNodes(startNode, endNode);
                 graph.addEdge(startNode, endNode, true, hasWeight, edgeWeight);
                 return graph;
-            } else {
-                failures.add(trimmed);
             }
         } else if (mUndirected.matches()) {
-            //extract nodes and double the undirected edge into zwo directed ones
-            String[] parts = graphPart.split("\\s*\\-\\-\\s*");
+            //extract nodes
+            String[] parts = graphPart.split("\\s*--\\s*");
+
             if (parts.length == 2) {
                 String a = parts[0].trim();
                 String b = parts[1].trim();
@@ -141,7 +142,7 @@ public class GraphIn {
                 return graph;
             }
         } else if (mNode.matches()) {
-            // try single node
+            // add single node
             graph.addNode(trimmed);
             return graph;
         } else {
