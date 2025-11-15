@@ -1,18 +1,11 @@
 Nachbessern von GKA-1
 
 bis Ende der Woche:
-Tests / Doku:
-- Testtabellen vereinheitlichen, Abb. durch kurze Beschreibung ersetzen
-- restliche Tests in Doku einfügen (GraphModel,...)
-
 Tests / Code:
 - kommentieren
-- noch ein paar Fälle ergänzen, negative Werte etc. (Berenike)
 
 Code:
 - Blöcke mit Zeilenkommentar versehen
-- Funktionen mit JavaDov kommentieren
-- läuft Graph03? (GraphIn)
 
 Doku:
 - ChatGPT / Gemini ergänzen, kurz Erfahrung damit dokumentieren (wofür genutzt, wie liefs)
@@ -22,4 +15,5 @@ Doku:
 
 
 zu zweitem Praktikum:
-- Gewicht der Graphen auch in Regex einbauen
+- Gewicht der Graphen auch in Regex einbauen (wie bei Nacharbeitung f+r Kanten und Knoten als
+Variable aus dem Regex realisieren)

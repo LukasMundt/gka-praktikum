@@ -108,9 +108,6 @@ public class GraphIn {
         }
 
         //RegEx erstellt mit regex101:
-        /**
-         *
-         **/
         //Muster erstellen
         Pattern directed = Pattern.compile("(?<startNode>[\\p{L}0-9ß]{1,})\\s*(?:->|<-)\\s*(?<endNode>[\\p{L}0-9ß]{1,})\\s*(?<edgeName>\\([^)]+\\))?\\s*");
         Pattern undirected = Pattern.compile("(?<nodeA>[\\p{L}0-9ß]{1,})\\s*--\\s*(?<nodeB>[\\p{L}0-9ß]{1,})\\s*(?<edgeName>\\([^)]+\\))?\\s*");
