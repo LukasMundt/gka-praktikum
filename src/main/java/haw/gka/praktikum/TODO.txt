@@ -1,19 +1,24 @@
-Nachbessern von GKA-1
-
-bis Ende der Woche:
-Tests / Code:
-- kommentieren
-
-Code:
-- Blöcke mit Zeilenkommentar versehen
+generell dran denken:
 
 Doku:
-- ChatGPT / Gemini ergänzen, kurz Erfahrung damit dokumentieren (wofür genutzt, wie liefs)
-    -> Genutzt für Javadoc Kommentare -> lief gut, aber immer wenig zur Zeit
-    -> wenn man es zur generierung von tests genutzt hat musste man höllisch aufpassen, dass nicht Fehler die man im code gemacht hat übernommen werden (genutzt für equals tests bei edge)
 - Quellen in der Doku über Zahl referenzieren
 
+Code:
+- Methoden mit JavaDoc kommentieren
+- Inline-Kommentar je Block
+- auch Tests kommentieren!
 
-zu zweitem Praktikum:
+
+
+
+Aufgabe 2:
+- Algorithmen implementieren
+    - Kruskal
+    - Prim Variante a oder b
+
+- Graphengenerator
+
+
+Nacharbeit:
 - Gewicht der Graphen auch in Regex einbauen (wie bei Nacharbeitung f+r Kanten und Knoten als
-Variable aus dem Regex realisieren)
+Variable aus dem Regex realisieren) [Berenike]
