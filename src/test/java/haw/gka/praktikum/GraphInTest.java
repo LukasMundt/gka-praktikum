@@ -2,7 +2,9 @@ package haw.gka.praktikum;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -26,7 +28,6 @@ public class GraphInTest {
     Node nodeA = new Node("A");
     Node nodeB = new Node("B");
     Node nodeC = new Node("C");
-
 
     @BeforeEach
     void setup() throws IOException {
@@ -96,9 +97,9 @@ public class GraphInTest {
     @Test
     void testReadFile_UnDirected() throws IOException {
         expected.addNodes(nodeA, nodeB, nodeC);
-        expected.addEdge(nodeA, nodeB, false, false, 0, null);
-        expected.addEdge(nodeB, nodeC, false, false, 0, null);
-        expected.addEdge(nodeA, nodeC, false, false, 0, null);
+        expected.addEdge(nodeA, nodeB, false, false, 1, null);
+        expected.addEdge(nodeB, nodeC, false, false, 1, null);
+        expected.addEdge(nodeA, nodeC, false, false, 1, null);
 
         GraphModel actualUnDir = graphReader.readGraph(testFileUnDir);
 
@@ -115,13 +116,19 @@ public class GraphInTest {
         Node nodeZ = Node.getNode("Z");
 
         expected.addNodes(nodeX, nodeY, nodeZ);
-        // Annahme: X -- Y führt zu einer ungerichteten Kante (false) ohne Gewichtung
-        expected.addEdge(nodeX, nodeY, false, false, 0, null);
+        // Annahme: X -- Y führt zu einer ungerichteten Kante (false) ohne
+        // Gewichtung
+        expected.addEdge(nodeX, nodeY, false, false, 1, null);
 
         GraphModel actual = graphReader.readGraph(testMixedSolo);
+        System.out.println(actual.getNodes());
 
         // Es muss Node Z in der erwarteten Menge sein
-        assertTrue(actual.getNodes().contains(nodeZ), "Der Solitärknoten Z muss vorhanden sein.");
-        assertEquals(expected.getEdges(), actual.getEdges(), "Die ungerichtete Kante X--Y muss vorhanden sein.");
+        assertTrue(actual.getNodes().contains(nodeX), "Der Knoten X " +
+                "muss vorhanden sein.");
+        assertTrue(actual.getNodes().contains(nodeZ), "Der Solitärknoten Z " +
+                "muss vorhanden sein.");
+        assertEquals(expected.getEdges(), actual.getEdges(), "Die " +
+                "ungerichtete Kante X--Y muss vorhanden sein.");
     }
 }

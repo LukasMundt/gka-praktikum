@@ -45,7 +45,7 @@ public class Edge {
         this._end = end;
         this._isDirected = isDirected;
         this._isWeighted = false;
-        this._weight = 0;
+        this._weight = 0; //inkorrekt, muss eigentlich 1 sein
         this._name = null;
     }
 

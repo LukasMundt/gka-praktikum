@@ -46,7 +46,7 @@ public class GraphVisualizer {
                     id += edge.getName();
                     label = edge.getName();
                 }
-                if(edge.isWeighted()){
+                if(edge.isWeighted()){ //
                     id += edge.getWeight();
                     label += (!label.isEmpty() ?" (":"(")+((edge.getWeight() % 1 == 0)?Integer.toString((int)edge.getWeight()):edge.getWeight())+")";
                 }
