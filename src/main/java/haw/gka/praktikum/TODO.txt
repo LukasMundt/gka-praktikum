@@ -17,8 +17,3 @@ Aufgabe 2:
     - Prim Variante a oder b
 
 - Graphengenerator
-
-
-Nacharbeit:
-- Gewicht der Graphen auch in Regex einbauen (wie bei Nacharbeitung f+r Kanten und Knoten als
-Variable aus dem Regex realisieren) [Berenike]
