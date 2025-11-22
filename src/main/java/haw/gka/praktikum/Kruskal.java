@@ -1,5 +1,8 @@
 package haw.gka.praktikum;
 
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * Algorithmus von Kruskal:
  * Eingabe: Eine Menge E der Kanten mit ihren Längen.
@@ -18,4 +21,35 @@ public class Kruskal {
      * - Ergebnis: minimaler Spannbaum und sein Gesamtgewicht
      * - JUnit-Tests, die Alg. mit Graphen aus Generator testen (umfassend)
      */
+
+    //in: gewichtete Kanten; kommen am Ende aus Generator
+    private final HashSet<Edge> _edges = new HashSet<>();
+
+    public void searchSpanningTree(HashSet<Edge> _edges) {
+
+        //call: sortEdges(), return: sortedList
+
+        //return: Menge von Edges (Minimalgerüst)
+
+    }
+
+    //sortiert die Kanten der Eingabe nach steigender Länge (größer
+    // werdender float Wert), nummeriert sie danach
+    public void sortEdges() {
+
+
+        //return: sortedList (klein nach groß) TODO wirklich Liste?
+    }
+
+
+    float totalWeight;
+
+    //summiert Gewichte der Kanten aus MInimalgerüst
+    public float getTotalWeight(List sortedList) {
+        for (int i = 0; i <= sortedList.length(); i++) {
+            //edgeWeight += edgeWeight;
+        }
+        return totalWeight;
+    }
+
 }
