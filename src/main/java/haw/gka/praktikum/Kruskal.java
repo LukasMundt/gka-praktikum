@@ -1,5 +1,7 @@
 package haw.gka.praktikum;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -22,32 +24,54 @@ public class Kruskal {
      * - JUnit-Tests, die Alg. mit Graphen aus Generator testen (umfassend)
      */
 
-    //in: gewichtete Kanten; kommen am Ende aus Generator
-    private final HashSet<Edge> _edges = new HashSet<>();
+    //in: gewichtete Kanten resp. Graph; kommen am Ende aus Generator
+    public List<Edge> searchSpanningTree(GraphModel graph) {
+        //check if null TODO
 
-    public void searchSpanningTree(HashSet<Edge> _edges) {
+        //Edges aus GraphModell holen
+        HashSet<Edge> edges = graph.getEdges();
 
-        //call: sortEdges(), return: sortedList
+        //Kanten sortieren lassen
+        List<Edge> sortedEdges = sortEdges(edges);
 
-        //return: Menge von Edges (Minimalgerüst)
+        List<Edge> minSpanningTree = null;
+        //Kanten suchen, bis alle Knoten erreicht wurden
+        for (int i = 0; i <= sortedEdges.size(); i++) {
+            // check if Node is unvisited (?) TODO
+            //if not in F, put Kante in F
 
+        }
+
+        return minSpanningTree;
     }
 
     //sortiert die Kanten der Eingabe nach steigender Länge (größer
     // werdender float Wert), nummeriert sie danach
-    public void sortEdges() {
+    //dafür Edges comparable machen
+    public List<Edge> sortEdges(HashSet<Edge> edges) {
+        //check if null
 
+        //von HashSet (Menge) zu Liste (sortierbar)
+        List<Edge> sortedEdges = new ArrayList<>(edges);
 
-        //return: sortedList (klein nach groß) TODO wirklich Liste?
+        //da Edges comparable gemacht wurde, geht hier sort()
+        Collections.sort(sortedEdges);
+
+        return sortedEdges;
     }
 
 
     float totalWeight;
 
-    //summiert Gewichte der Kanten aus MInimalgerüst
-    public float getTotalWeight(List sortedList) {
-        for (int i = 0; i <= sortedList.length(); i++) {
-            //edgeWeight += edgeWeight;
+    //summiert Gewichte der Kanten aus Minimalgerüst
+    public float getTotalWeight(List<Edge> minSpanningTree) {
+        //check if null
+
+        //getWeight of each Edge in minSpanningTree
+
+
+        for (int i = 0; i <= minSpanningTree.size(); i++) {
+            //totalWeight += edgeWeight;
         }
         return totalWeight;
     }

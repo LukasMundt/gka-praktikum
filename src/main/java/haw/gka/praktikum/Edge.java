@@ -10,23 +10,35 @@ import java.util.Objects;
  * entlang dieser Kante erreicht werden können.
  * </p>
  */
-public class Edge {
-    /** Startknoten der Kante (bei ungerichteten Kanten ohne besondere Bedeutung) */
+public class Edge implements Comparable<Edge> {
+    /**
+     * Startknoten der Kante (bei ungerichteten Kanten ohne besondere Bedeutung)
+     */
     private final Node _start;
 
-    /** Endknoten der Kante (bei ungerichteten Kanten ohne besondere Bedeutung) */
+    /**
+     * Endknoten der Kante (bei ungerichteten Kanten ohne besondere Bedeutung)
+     */
     private final Node _end;
 
-    /** Gibt an, ob die Kante gerichtet ist */
+    /**
+     * Gibt an, ob die Kante gerichtet ist
+     */
     private final boolean _isDirected;
 
-    /** Gibt an, ob die Kante ein Gewicht besitzt */
+    /**
+     * Gibt an, ob die Kante ein Gewicht besitzt
+     */
     private final boolean _isWeighted;
 
-    /** Gewicht der Kante (0, falls ungewichtet) */
+    /**
+     * Gewicht der Kante (0, falls ungewichtet) FIXME sollte das nicht 1 sein?
+     */
     private final float _weight;
 
-    /** Name der Kante (wenn nicht vorhanden, dann null) */
+    /**
+     * Name der Kante (wenn nicht vorhanden, dann null)
+     */
     private final String _name;
 
     /**
@@ -45,7 +57,7 @@ public class Edge {
         this._end = end;
         this._isDirected = isDirected;
         this._isWeighted = false;
-        this._weight = 0; //inkorrekt, muss eigentlich 1 sein
+        this._weight = 0; // FIXME inkorrekt, muss eigentlich 1 sein
         this._name = null;
     }
 
@@ -133,13 +145,13 @@ public class Edge {
     public boolean isBReachableFromA(Node a, Node b) {
         if (a == null || b == null) {
             throw new IllegalArgumentException("a == null || b == null");
-        } else if(!a.equals(_start) && !a.equals(_end)){
+        } else if (!a.equals(_start) && !a.equals(_end)) {
             throw new IllegalArgumentException("The node a is not part of this edge.");
-        } else if(!b.equals(_start) && !b.equals(_end)){
+        } else if (!b.equals(_start) && !b.equals(_end)) {
             throw new IllegalArgumentException("The node b is not part of this edge.");
         }
 
-        if(this._isDirected) {
+        if (this._isDirected) {
             // wenn die kante gerichtet ist, dann muss a der start und b das ende sein, damit b von a aus erreichbar ist
             return this._start.equals(a) && this._end.equals(b);
         }
@@ -156,13 +168,13 @@ public class Edge {
      * @return true, wenn der andere Knoten erreichbar ist
      */
     public boolean isOtherNodeReachableFromA(Node a) {
-        if(a == null){
+        if (a == null) {
             throw new IllegalArgumentException("a == null");
-        } else if(!a.equals(_start) && !a.equals(_end)){
+        } else if (!a.equals(_start) && !a.equals(_end)) {
             return false;
         }
 
-        if(this._isDirected) {
+        if (this._isDirected) {
             // wenn die kante gerichtet ist, dann muss a der startknoten sein, damit der andere Knoten von a aus erreichbar ist
             return a.equals(_start);
         }
@@ -178,13 +190,13 @@ public class Edge {
      * @return true, wenn a vom anderen Knoten der Kante erreicht werden kann
      */
     public boolean isAReachableFromOtherNode(Node a) {
-        if(a == null){
+        if (a == null) {
             throw new IllegalArgumentException("a == null");
-        } else if(!a.equals(_start) && !a.equals(_end)){
+        } else if (!a.equals(_start) && !a.equals(_end)) {
             return false;
         }
 
-        if(this._isDirected) {
+        if (this._isDirected) {
             // wenn die Kante gerichtet ist, dann muss a der Endknoten sein
             return a.equals(_end);
         }
@@ -200,13 +212,13 @@ public class Edge {
      * @throws IllegalArgumentException wenn der Knoten nicht Teil der Kante ist
      */
     public Node getOtherNode(Node node) {
-        if(node == null){
+        if (node == null) {
             throw new IllegalArgumentException("node == null");
-        } else if(!node.equals(_start) && !node.equals(_end)){
+        } else if (!node.equals(_start) && !node.equals(_end)) {
             throw new IllegalArgumentException("The node is not part of this edge.");
         }
 
-        if(node.equals(_start)){
+        if (node.equals(_start)) {
             return _end;
         }
         return _start;
@@ -222,7 +234,7 @@ public class Edge {
     public boolean equals(Object other) {
         if (other instanceof Edge) {
             Edge otherEdge = (Edge) other;
-            if(!this._isDirected && !otherEdge._isDirected) {
+            if (!this._isDirected && !otherEdge._isDirected) {
                 // wenn die kante ungerichtet ist, dann sind auch kanten gleich, wo start und ziel vertauscht sind
                 return ((_start.equals(otherEdge._start) && _end.equals(otherEdge._end)) || (_start.equals(otherEdge._end) && _end.equals(otherEdge._start))) // gleiche Knoten
                         && _isWeighted == otherEdge._isWeighted
@@ -267,6 +279,11 @@ public class Edge {
     }
 
     public String toString() {
-        return "(" + _start.toString() + ", " + _end.toString() + "; directed: " + _isDirected+", isWeighted" + _isWeighted +", weight: "+_weight+ ")";
+        return "(" + _start.toString() + ", " + _end.toString() + "; directed: " + _isDirected + ", isWeighted" + _isWeighted + ", weight: " + _weight + ")";
+    }
+
+    @Override
+    public int compareTo(Edge other) {
+        return Float.compare(this._weight, other._weight);
     }
 }
