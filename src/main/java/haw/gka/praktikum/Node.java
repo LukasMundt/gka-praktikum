@@ -12,10 +12,14 @@ import java.util.Map;
  * </p>
  */
 public class Node {
-    /** Der Name des Knotens */
+    /**
+     * Der Name des Knotens
+     */
     private final String _name;
 
-    /** Statische Map, die sicherstellt, dass jeder Knotenname nur einmal existiert. */
+    /**
+     * Statische Map, die sicherstellt, dass jeder Knotenname nur einmal existiert.
+     */
     private static Map<String, Node> _nodes = new HashMap<>();
 
     /**
@@ -30,7 +34,7 @@ public class Node {
         if (name == null) {
             throw new IllegalArgumentException("name == null");
         }
-        if(!_nodes.containsKey(name)) {
+        if (!_nodes.containsKey(name)) {
             _nodes.put(name, new Node(name));
         }
         return _nodes.get(name);
@@ -85,5 +89,10 @@ public class Node {
      */
     public static void resetNodeCache() {
         _nodes.clear();
+    }
+
+    @Override
+    public String toString() {
+        return this._name;
     }
 }

@@ -258,6 +258,8 @@ public class Edge implements Comparable<Edge> {
      * Multiplikation mit 31 ist ein etablierter Standard,
      * da 31 eine Primzahl ist und eine breite Hash-Verteilung erzeugt.
      * </p>
+     *
+     * @return der HashCode als int
      */
     @Override
     public int hashCode() {
@@ -278,12 +280,66 @@ public class Edge implements Comparable<Edge> {
         return result;
     }
 
-    public String toString() {
+    /**
+     * Gibt eine vollständige und detaillierte String-Repräsentation dieser Kante zurück,
+     * die alle Attribute wie Start- und Endknoten, Gewichtung, Gerichtetheit und
+     * den gewichteten Status beinhaltet.
+     *
+     * @return ausführlicher String, der alle Informationen der Kante enthält
+     */
+    public String fullInformation() {
         return "(" + _start.toString() + ", " + _end.toString() + "; directed: " + _isDirected + ", isWeighted" + _isWeighted + ", weight: " + _weight + ")";
     }
 
+
+    /**
+     * Verglichen wird das Gewicht dieser sowie einer übergebenen other Kante
+     * (primär). Bei gleichem Gewicht wird alphabetisch sortiert (sekundär).
+     * Gibt das Ergebnis des Vergleichs zurück: -1 (this ist kleiner), 0
+     * (this und other haben das gleiche Gewicht, 1 (this ist größer).
+     *
+     * @param other - die zu vergleichende Kante
+     * @return int_Ergebnis des Vergleichs
+     */
     @Override
     public int compareTo(Edge other) {
-        return Float.compare(this._weight, other._weight);
+        int weightComparison = Float.compare(this._weight, other._weight);
+
+        //Gewicht unterschiedlich? direkt zurückgeben
+        if (weightComparison != 0) {
+            return weightComparison;
+
+            //alphabetischer Vergleich, wenn Gewicht gleich
+        } else {
+
+            //sekundäre Sortierung alphabetisch, bei gleichem Gewicht
+            String name1_this = this._start.toString();
+            String name2_this = this._end.toString();
+
+            // Knoten einer Kante alphabetisch sortieren (rs statt sr)
+            String edgeName_this = (name1_this.compareTo(name2_this) < 0)
+                    ? name1_this + name2_this
+                    : name2_this + name1_this;
+
+            // dasselbe für die Vergleichskante
+            String name1_other = other._start.toString();
+            String name2_other = other._end.toString();
+
+            String edgeName_other = (name1_other.compareTo(name2_other) < 0)
+                    ? name1_other + name2_other
+                    : name2_other + name1_other;
+
+            return edgeName_this.compareTo(edgeName_other);
+        }
+    }
+
+    /**
+     * Gibt eine gekürzte String-Repräsentation der Kante zurück, die nur die
+     * Knotennamen sowie das Gewicht zurückgibt.
+     *
+     * @return String mit den Knoten der Kante sowie dem Gewicht
+     */
+    public String toString() {
+        return _start.toString() + _end.toString() + ": " + _weight;
     }
 }

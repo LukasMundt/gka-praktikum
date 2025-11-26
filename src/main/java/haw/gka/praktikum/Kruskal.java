@@ -1,32 +1,50 @@
 package haw.gka.praktikum;
 
+import haw.gka.praktikum.LogResources.LogResources;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 /**
- * Algorithmus von Kruskal:
- * Eingabe: Eine Menge E der Kanten mit ihren Längen.
- * Ausgabe: Eine Teilmenge F der Kantenmenge E
- * <p>
- * - Nummeriere die Kanten e1...e|E| nach steigender Länge. Setze F := {}
- * - Für i := 1,..., |E|:
- * Falls F vereinigt mit {ei} nicht die Kantenmenge eines Kreises in G
- * enthält, setze F := F vereinigt mit {ei}
+ * aus der Aufgabe:
+ * - Algorithmus implementieren und testen
+ * - Laufzeit ermitteln (kurz gewinnt) TODO
+ * - Ergebnis: minimaler Spannbaum und sein Gesamtgewicht
+ * - JUnit-Tests, die Alg. mit Graphen aus Generator testen (umfassend) TODO
+ * wenn Generator da
+ *
  */
 public class Kruskal {
-    /**
-     * aus der Aufgabe:
-     * - Algorithmus implementieren und testen
-     * - Laufzeit ermitteln (kurz gewinnt)
-     * - Ergebnis: minimaler Spannbaum und sein Gesamtgewicht
-     * - JUnit-Tests, die Alg. mit Graphen aus Generator testen (umfassend)
-     */
 
-    //in: gewichtete Kanten resp. Graph; kommen am Ende aus Generator
-    public List<Edge> searchSpanningTree(GraphModel graph) {
-        //check if null TODO
+
+    /**
+     * Implementierung des Kruskal-Algorithmus:
+     * Eingabe: Eine Menge E der Kanten mit ihren Längen.
+     * Ausgabe: Eine Teilmenge F der Kantenmenge E
+     * Nummeriere / sortiere die Kanten e1...e|E| nach steigender Länge.
+     * Setze F := {}
+     * Für i := 1,..., |E|:
+     * Falls F vereinigt mit {ei} nicht die Kantenmenge eines Kreises in G
+     * enthält, setze F := F vereinigt mit {ei}
+     * Berechnet den minimalen Spannbaum eines gewichteten, ungerichteten
+     * Graphs.
+     *
+     * @param graph Eine Instanz graph der GraphModel-Klasse, entweder aus
+     *              einer .gka Datei ausgelesen oder vom GraphGenerator erzeugt
+     * @return eine Liste von Kanten, die den minimalen Spannbaum von
+     * graph enthält
+     * @throws NullPointerException wenn übergebenes GraphModell null ist
+     */
+    public List<Edge> searchSpanningTree(GraphModel graph) throws NullPointerException {
+        //start Logging FIXME
+        LogResources.startTask("Running Kruskal on graph");
+
+        //check if null
+        if (graph == null) {
+            throw new NullPointerException("Graph darf nicht null sein.");
+        }
 
         //Edges aus GraphModell holen
         HashSet<Edge> edges = graph.getEdges();
@@ -34,44 +52,94 @@ public class Kruskal {
         //Kanten sortieren lassen
         List<Edge> sortedEdges = sortEdges(edges);
 
-        List<Edge> minSpanningTree = null;
-        //Kanten suchen, bis alle Knoten erreicht wurden
-        for (int i = 0; i <= sortedEdges.size(); i++) {
-            // check if Node is unvisited (?) TODO
-            //if not in F, put Kante in F
+        //alle Knoten des Graphen ausgeben
+        List<Node> nodesList = new ArrayList<>(graph.getNodes());
 
+        //Initialisierung der DSU-Logik
+        DSU dsu = new DSU(nodesList);
+
+        //Spannbaum suchen
+        List<Edge> minSpanningTree = new ArrayList<>(); //entspricht F
+
+        //Kanten von billig nach teuer durchgehen, bis alle Knoten erreicht
+        // wurden
+        for (int i = 0; i < sortedEdges.size(); i++) {
+
+            Edge currentEdge = sortedEdges.get(i);
+            Node startNode = currentEdge.getStart();
+            Node endNode = currentEdge.getEnd();
+
+            //find() gibt Repräsentanten / root der Mengen zurück, zu denen
+            // die Knoten gehören
+            Node rootStart = dsu.find(startNode);
+            Node rootEnd = dsu.find(endNode);
+
+            //Kante soll keinen Kreis bilden (Start == Ende)
+            if (rootStart != rootEnd) {
+                //kein Kreis: put currentEdge in F
+                minSpanningTree.add(currentEdge);
+
+                //Sets der beiden Knoten vereinigen (DSU-Logik)
+                dsu.union(startNode, endNode);
+
+                //Abbruch, wenn alle Kanten gefunden wurden (die keinen Kreis
+                // bilden)
+                if (minSpanningTree.size() == nodesList.size() - 1) {
+                    break;
+                }
+            } //else Kreis, dann fällt Kante raus
         }
+        //Stop Logging
+        LogResources.stopTask("Running Kruskal on graph");
 
         return minSpanningTree;
     }
 
-    //sortiert die Kanten der Eingabe nach steigender Länge (größer
-    // werdender float Wert), nummeriert sie danach
-    //dafür Edges comparable machen
-    public List<Edge> sortEdges(HashSet<Edge> edges) {
+    /**
+     * Hilfsmethode, sortiert die übergebene Menge von Kanten in aufsteigender
+     * Reihenfolge basierend auf ihrem Gewicht (sekundär alphabetisch).
+     *
+     * @param edges eine Menge Kanten, die aus einem Graphen extrahiert wurden
+     * @return eine nach aufsteigendem Gewicht sortierte Liste an Kanten
+     * @throws NullPointerException, wenn übergebene Liste null ist
+     */
+    public List<Edge> sortEdges(HashSet<Edge> edges) throws NullPointerException {
         //check if null
+        if (edges == null) {
+            throw new NullPointerException("Die übergebenen Kanten dürfen " +
+                    "nicht null sein.");
+        }
 
         //von HashSet (Menge) zu Liste (sortierbar)
         List<Edge> sortedEdges = new ArrayList<>(edges);
+        System.out.println(sortedEdges);
 
         //da Edges comparable gemacht wurde, geht hier sort()
+        //compareTo() in Edge vergleicht Gewicht!
         Collections.sort(sortedEdges);
 
         return sortedEdges;
     }
 
-
-    float totalWeight;
-
-    //summiert Gewichte der Kanten aus Minimalgerüst
-    public float getTotalWeight(List<Edge> minSpanningTree) {
+    /**
+     * Summiert Gewichte der Kanten aus Minimalgerüst
+     *
+     * @param minSpanningTree ein mit searchSpanningTree ermittelter Spannbaum
+     * @return das Gesamtgewicht als Float
+     * @throws NullPointerException wenn übergebener Spannbaum null ist
+     */
+    public float getTotalWeight(List<Edge> minSpanningTree) throws NullPointerException {
         //check if null
+        if (minSpanningTree == null) {
+            throw new NullPointerException("der Spannbaum darf nicht null " +
+                    "sein");
+        }
+        float totalWeight = 0.0f;
 
         //getWeight of each Edge in minSpanningTree
-
-
-        for (int i = 0; i <= minSpanningTree.size(); i++) {
-            //totalWeight += edgeWeight;
+        for (int i = 0; i < minSpanningTree.size(); i++) {
+            Edge currentEdge = minSpanningTree.get(i);
+            totalWeight += currentEdge.getWeight();
         }
         return totalWeight;
     }

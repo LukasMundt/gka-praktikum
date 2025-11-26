@@ -1,39 +1,36 @@
 package praktikum1;
 
+import haw.gka.praktikum.Edge;
 import haw.gka.praktikum.GraphIn;
 import haw.gka.praktikum.GraphModel;
-import haw.gka.praktikum.GraphOut;
+import haw.gka.praktikum.Kruskal;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 /**
- * starting point to use the other classes / methods implemented
+ * for development uses only
  */
 public class Main {
 
     public static void main(String[] args) throws IOException {
         GraphModel graph = null;
-        String pathIn = "src/test/java/resources/directed.gka";
+        String pathIn = "src/test/java/resources/Test_Kruskal.gka";
         GraphIn graphReader = new GraphIn();
 
-        String pathOut = "src/test/java/resources/graphOUT5.gka";
-        GraphOut graphWriter = new GraphOut();
+        Kruskal kruskal = new Kruskal();
 
-        //Testfile einlesen
-        try {
-            graph = graphReader.readGraph(pathIn);
-            List<String> failures = graphReader.getFailures();
-            System.out.println("Datei erfolgreich eingelesen.");
-            System.out.println();
-            System.out.println("fehlerhaft eingelesene Teilgraphen: "+ failures);
+        graph = graphReader.readGraph(pathIn);
+        HashSet<Edge> edges = graph.getEdges();
+        List<Edge> sortedEdges = kruskal.sortEdges(edges);
+        System.out.println(sortedEdges);
 
-        } catch (IOException e) {
-            System.err.println("Fehler beim Einlesen der Datei: " + e.getMessage());
-            e.printStackTrace();
-        }
+        List<Edge> minSpanningTree = kruskal.searchSpanningTree(graph);
+        float totalWeight = kruskal.getTotalWeight(minSpanningTree);
 
-        graphWriter.writeFile(graph, pathOut);
+        System.out.println("Minimaler Spannbaum: " + minSpanningTree);
+        System.out.println("Gesamtgewicht:" + totalWeight);
 
 
     }
