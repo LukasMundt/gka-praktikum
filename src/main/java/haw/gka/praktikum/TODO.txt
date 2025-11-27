@@ -2,23 +2,45 @@ generell dran denken:
 
 Doku:
 - Quellen in der Doku über Zahl referenzieren
+- Tests in einheitlichen Tabellen
 
 Code:
 - Methoden mit JavaDoc kommentieren
 - Inline-Kommentar je Block
 - auch Tests kommentieren!
 
-
-
+##########################################################
 
 Aufgabe 2:
 - Algorithmen implementieren
-    - Kruskal, ausprobiert mit Beispiel aus Vorlesung
+    - Kruskal: done (zwei Alternativen bzw. 1 Optimierung, mal testen, was das
+    ausmacht in der Laufzeit bei großen Graphen)
+        ausprobiert mit Beispiel aus Vorlesung:
         - meine Version: Time elapsed: 4ms
                          Memory elapsed: 0.005072
         - optimierte Version:Time elapsed: 3ms
                              Memory elapsed: 0.005072
+        - TODO
+            negative Tests
+            Test in Verbindung mit Graphgenerator?
+            Doku dazu schreiben
 
     - Prim Variante a oder b
 
-- Graphengenerator
+- Graphengenerator: steht grob
+    TODO:
+    - vollständige Graphen generieren können (optional)
+    - Namen verbessern: momentan random aaa-zzz, schöner: a-z, aa-zz, aaa-zzz
+    mit aufeinander folgenden Namen
+    - gleiche Kanten zwischen Knoten nur mit anderem Gewicht NICHT hinzufügen
+    - Tests schreiben
+    - fertig kommentieren
+    - Doku dazu schreiben
+    - Graphen aus der Aufgabe generieren
+        - Kruskal und Prim darauf laufen lassen und vergleichen ==> DOKU
+
+- Logging
+    TODO
+    - negativer Speicherverbrauch, verschwindet der bei größeren Graphen?
+    (damit wir den nicht in der Doku haben)
+    ansonsten nochmal anfassen und anders lösen
