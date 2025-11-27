@@ -31,8 +31,8 @@ public class LogResources {
 
         System.out.println("\n-------------------------------");
         System.out.println("Task Name: " + taskName);
-        System.out.println("Time elapsed: " + timeElapsed+"ms");
-        System.out.println("Memory elapsed: " + (double)memoryElapsed/1_000_000);
+        System.out.println("Time elapsed: " + timeElapsed + " ms");
+        System.out.println("Memory elapsed: " + (double) memoryElapsed / 1_000_000 + " MB");
         System.out.println("-------------------------------");
     }
 }

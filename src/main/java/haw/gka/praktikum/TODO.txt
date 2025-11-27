@@ -13,7 +13,12 @@ Code:
 
 Aufgabe 2:
 - Algorithmen implementieren
-    - Kruskal
+    - Kruskal, ausprobiert mit Beispiel aus Vorlesung
+        - meine Version: Time elapsed: 4ms
+                         Memory elapsed: 0.005072
+        - optimierte Version:Time elapsed: 3ms
+                             Memory elapsed: 0.005072
+
     - Prim Variante a oder b
 
 - Graphengenerator

@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class Kruskal {
 
-
     /**
      * Implementierung des Kruskal-Algorithmus:
      * Eingabe: Eine Menge E der Kanten mit ihren Längen.
@@ -38,7 +37,6 @@ public class Kruskal {
      * @throws NullPointerException wenn übergebenes GraphModell null ist
      */
     public List<Edge> searchSpanningTree(GraphModel graph) throws NullPointerException {
-        //start Logging FIXME
         LogResources.startTask("Running Kruskal on graph");
 
         //check if null
