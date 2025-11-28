@@ -242,8 +242,8 @@ public class GraphModel {
     }
 
     /**
-     * Prüft, ob der Graph eine Kante zwischen zwei gegebenen Knoten hat, in
-     * beide Richtungen (AB oder BA)
+     * Prüft, ob der Graph eine Kante zwischen zwei gegebenen Knoten hat,
+     * in beide Richtungen (AB oder BA)
      *
      * @param A Knoten A
      * @param B Knoten B
@@ -251,7 +251,7 @@ public class GraphModel {
      */
     public boolean hasEdgeBetween(Node A, Node B) {
         for (Edge edge : getEdges()) {
-            // Prüft Kante ab oder Kante ba
+            // Prüft, ob Kante ab oder Kante ba vorhanden
             if ((edge.getStart().equals(A) && edge.getEnd().equals(B)) ||
                     (edge.getStart().equals(B) && edge.getEnd().equals(A))) {
                 return true;

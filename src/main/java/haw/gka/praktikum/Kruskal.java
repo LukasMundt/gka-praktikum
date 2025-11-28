@@ -8,12 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * aus der Aufgabe:
- * - Algorithmus implementieren und testen
+ * Implementation des Kruskal-Algorithmus, gibt minimalen Spannbaum und
+ * dessen Gesamtgewicht aus
  * - Laufzeit ermitteln (kurz gewinnt) TODO
- * - Ergebnis: minimaler Spannbaum und sein Gesamtgewicht
  * - JUnit-Tests, die Alg. mit Graphen aus Generator testen (umfassend) TODO
- * wenn Generator da
  *
  */
 public class Kruskal {
@@ -44,10 +42,10 @@ public class Kruskal {
             throw new NullPointerException("Graph darf nicht null sein.");
         }
 
-        //Edges aus GraphModell holen
+        //Edges aus übergebenem Graph holen
         HashSet<Edge> edges = graph.getEdges();
 
-        //Kanten sortieren lassen
+        //Kanten sortieren lassen, Hilfsmethode dieser Klasse
         List<Edge> sortedEdges = sortEdges(edges);
 
         //alle Knoten des Graphen ausgeben
@@ -59,8 +57,8 @@ public class Kruskal {
         //Spannbaum suchen
         List<Edge> minSpanningTree = new ArrayList<>(); //entspricht F
 
-        //Kanten von billig nach teuer durchgehen, bis alle Knoten erreicht
-        // wurden
+        //Kanten von billig nach teuer durchgehen,
+        // bis alle Knoten erreicht wurden
         for (int i = 0; i < sortedEdges.size(); i++) {
 
             Edge currentEdge = sortedEdges.get(i);
@@ -72,7 +70,8 @@ public class Kruskal {
             Node rootStart = dsu.find(startNode);
             Node rootEnd = dsu.find(endNode);
 
-            //Kante soll keinen Kreis bilden (Start == Ende)
+            //Kante darf keinen Kreis bilden (Start == Ende), die beiden
+            // Mengen nicht zu einem solchen zusammenschließen
             if (rootStart != rootEnd) {
                 //kein Kreis: put currentEdge in F
                 minSpanningTree.add(currentEdge);
@@ -85,7 +84,7 @@ public class Kruskal {
                 if (minSpanningTree.size() == nodesList.size() - 1) {
                     break;
                 }
-            } //else Kreis, dann fällt Kante raus
+            } //else bildet Kreis, dann fällt Kante raus
         }
         //Stop Logging
         LogResources.stopTask("Running Kruskal on graph");

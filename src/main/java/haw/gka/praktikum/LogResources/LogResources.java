@@ -20,6 +20,10 @@ public class LogResources {
         Runtime runtime = Runtime.getRuntime();
         runtime.gc();
         long memory = runtime.totalMemory() - runtime.freeMemory();
+        //avoid negative (impossible) memory usage
+        if (memory < 0) {
+            memory = 0;
+        }
 
         Task task = _tasks.get(taskName);
         if (task != null) {

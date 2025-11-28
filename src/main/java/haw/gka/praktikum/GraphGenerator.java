@@ -5,51 +5,57 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Überlegen Sie sich dazu eine allgemeine Konstruktion eines ungerichteten Graphen
- * für eine vorgegebene Anzahl von Knoten und Kanten mit beliebigen, aber unter-
- * schiedlichen, nicht-negativen Kantengewichten.
+ * Generator für einen ungerichteten Graphen mit einer vorgegebenen Anzahl von
+ * Knoten und Kanten mit beliebigen, aber unterschiedlichen, nicht-negativen
+ * Kantengewichten.
  */
-//TODO fertig kommentieren
 public class GraphGenerator {
-//Input: x Knoten, y Kanten
-    // Output: GraphModel mit x Knoten, y Kanten
-    // Kanten sind gewichtet, nicht gerichtet
 
-    private final int nodesNr;
-    private final int edgesNr;
+    /**
+     * Konstruktor für den Generator
+     *
+     * @throws IllegalArgumentException
+     */
+    public GraphGenerator() throws IllegalArgumentException {
+    }
 
+    /**
+     * Die Methode generiert gemäß der übergebenen Parameter einen
+     * ungerichteten Graphen mit zufällig gewählten Gewichten.
+     *
+     * @param nodesNr int Anzahl der Knoten
+     * @param edgesNr int Anzahl der Kanten
+     * @return GraphModel der erstellte Graph
+     */
+    public GraphModel generateGraph(int nodesNr, int edgesNr) {
 
-    public GraphGenerator(int nodesNr, int edgesNr) throws IllegalArgumentException {
-        //Kantenmenge eines vollständigen Graphens bestimmen
+        //Kantenmenge eines vollständigen Graphens bestimmen als obere Grenze
         int maxEdges = (nodesNr * (nodesNr - 1)) / 2;
+
         //ungültige Eingaben abfangen
         if (nodesNr < 1 || edgesNr < 0 || nodesNr < edgesNr || edgesNr > maxEdges) {
             throw new IllegalArgumentException("die Knoten- und/oder " +
                     "Kantenanzahl ist nicht sinnvoll gewählt");
         }
 
-        this.nodesNr = nodesNr;
-        this.edgesNr = edgesNr;
-    }
-
-    public GraphModel generateGraph() {
+        //Graph generieren, in den die Nodes und Edges gespeichert werden
         GraphModel generatedGraph = new GraphModel();
+
         // nodesNr Nodes anlegen
         for (int i = 1; i <= nodesNr; i++) {
-            // brauchen random Bezeichnung
-            String newNode = generateString();
+            // brauchen Bezeichnung
+            String newNode = "n_" + i;
 
             //dem Graphen hinzufügen
             generatedGraph.addNode(newNode);
         }
-        //for dev
-        System.out.println("es wurden folgende Knoten generiert: " + generatedGraph.getNodes().toString());
 
-        // mit diesen Nodes insgesamt y Edges bilden (auch: vollständiger Graph)
+        // mit diesen Nodes insgesamt edgesNr Edges bilden
+        // (auch: vollständiger Graph)
 
         //von HashSet (Menge) zu Liste (sortierbar)
         List<Node> allNodes = new ArrayList<>(generatedGraph.getNodes());
-        //Zähler für erstellte Kanten
+        //Zähler für bereits erstellte Kanten
         int j = 0;
         while (j < edgesNr) {
             //zufällige Auswahl aus Knoten-Liste
@@ -62,14 +68,12 @@ public class GraphGenerator {
             //Zufallsgewicht generieren lassen
             float genWeight = generateFloat();
 
-            Edge ab = null;
-            Edge ba = null;
+            Edge ab;
             //prüfen, ob die ausgewählten Knoten gleich sind
             if (nodeA != nodeB) {
                 //Kante AB zusammenstellen mit
                 // folgenden Parametern:
                 ab = new Edge(nodeA, nodeB, false, true, genWeight, null);
-                //ba = new Edge(nodeB, nodeA, false, true, genWeight, null);
 
                 //prüfen, ob Kante (oder gedrehtes Äquivalent) bereits
                 // vorhanden ist (auch mit anderem Gewicht)
@@ -79,40 +83,23 @@ public class GraphGenerator {
                 }
             }
         }
-        //for dev
-        System.out.println(generatedGraph.getEdges());
-
         return generatedGraph;
     }
 
     /**
-     * Erstmal ein QuickFix für die KnotenNamen,
-     * TODO eleganter wäre natürlich erst a-z, dann aa-zz etc. und für
-     * beliebige Größe
+     * Hilfsmethode, um einen zufälligen FLoat zu generieren und auf eine
+     * Zahl zwischen 1.0 und 10.0 umzurechnen (auf zwei Nachkommastellen
+     * gerundet)
      *
-     * @return String ein generierter String von fester Länge (default 3)
+     * @return float zufällig generierter und formatierter Wert
      */
-    private String generateString() {
-        int leftLimit = 97; // letter 'a'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 3; // 26³ Möglichkeiten (17.576)
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-
-        //für die oben festgelegte Stringlänge random chars a-z wählen und zu
-        // String zusammenbauen
-        for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int)
-                    (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
-        }
-        return buffer.toString();
-    }
-
     public float generateFloat() {
         Random random = new Random();
+        //erzeugt float zw. 0.0 und 1.0, * 10, da ganzzahlige Darstellung für
+        // Kanten-Gewicht geeigneter
         float randomFloat = (random.nextFloat() * 10);
 
+        //round, um Nachkommastellen loszuwerden
         return Math.round(randomFloat);
     }
 }

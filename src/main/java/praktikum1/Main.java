@@ -32,9 +32,9 @@ public class Main {
 //        System.out.println("Gesamtgewicht:" + totalWeight);
 
 
-        GraphGenerator generator = new GraphGenerator(3, 3);
+        GraphGenerator generator = new GraphGenerator();
 
-        GraphModel genGraph = generator.generateGraph();
+        GraphModel genGraph = generator.generateGraph(3, 3);
         List<Edge> minSpanningTree = kruskal.searchSpanningTree(genGraph);
         float totalWeight = kruskal.getTotalWeight(minSpanningTree);
 

@@ -29,10 +29,8 @@ Aufgabe 2:
 
 - Graphengenerator: steht grob
     TODO:
-    - vollständige Graphen generieren können (optional)
     - Namen verbessern: momentan random aaa-zzz, schöner: a-z, aa-zz, aaa-zzz
     mit aufeinander folgenden Namen
-    - gleiche Kanten zwischen Knoten nur mit anderem Gewicht NICHT hinzufügen
     - Tests schreiben
     - fertig kommentieren
     - Doku dazu schreiben

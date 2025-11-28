@@ -340,6 +340,6 @@ public class Edge implements Comparable<Edge> {
      * @return String mit den Knoten der Kante sowie dem Gewicht
      */
     public String toString() {
-        return _start.toString() + _end.toString() + ": " + _weight;
+        return _start.toString() + " " + _end.toString() + ": " + _weight;
     }
 }

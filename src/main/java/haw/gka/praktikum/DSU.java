@@ -25,16 +25,6 @@ public class DSU {
         }
     }
 
-//
-//    public DSU(int n) {
-//        parent = new int[n];
-//        rank = new int[n];
-//        for (int i = 0; i < n; i++) {
-//            parent[i] = i;
-//            rank[i] = 1;
-//        }
-//    }
-
     /**
      * Repräsentant (Parent von sich selbst) des Sets ist immer root, daher
      * rekursives Suchen nach root
