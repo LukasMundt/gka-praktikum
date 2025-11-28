@@ -20,14 +20,17 @@ public class GraphGenerator {
 
 
     public GraphGenerator(int nodesNr, int edgesNr) throws IllegalArgumentException {
-        if (nodesNr < 1 || edgesNr < 0) {
-            throw new IllegalArgumentException();
+        //Kantenmenge eines vollständigen Graphens bestimmen
+        int maxEdges = (nodesNr * (nodesNr - 1)) / 2;
+        //ungültige Eingaben abfangen
+        if (nodesNr < 1 || edgesNr < 0 || nodesNr < edgesNr || edgesNr > maxEdges) {
+            throw new IllegalArgumentException("die Knoten- und/oder " +
+                    "Kantenanzahl ist nicht sinnvoll gewählt");
         }
 
         this.nodesNr = nodesNr;
         this.edgesNr = edgesNr;
     }
-
 
     public GraphModel generateGraph() {
         GraphModel generatedGraph = new GraphModel();
@@ -43,33 +46,36 @@ public class GraphGenerator {
         System.out.println("es wurden folgende Knoten generiert: " + generatedGraph.getNodes().toString());
 
         // mit diesen Nodes insgesamt y Edges bilden (auch: vollständiger Graph)
-        // Muster:
-        // Edge generatedEdge = new Edge(NodeA, NodeB, false, true, randomFloat);
+
         //von HashSet (Menge) zu Liste (sortierbar)
         List<Node> allNodes = new ArrayList<>(generatedGraph.getNodes());
-
-        for (int j = 1; j <= edgesNr; j++) {
-            int rIndexA = new Random().nextInt(allNodes.size() - 1);
-            int rIndexB = new Random().nextInt(allNodes.size() - 1);
+        //Zähler für erstellte Kanten
+        int j = 0;
+        while (j < edgesNr) {
+            //zufällige Auswahl aus Knoten-Liste
+            int rIndexA = new Random().nextInt(allNodes.size());
+            int rIndexB = new Random().nextInt(allNodes.size());
 
             Node nodeA = allNodes.get(rIndexA);
             Node nodeB = allNodes.get(rIndexB);
 
+            //Zufallsgewicht generieren lassen
             float genWeight = generateFloat();
 
             Edge ab = null;
             Edge ba = null;
-            //prüfen, ob die Knoten gleich sind
+            //prüfen, ob die ausgewählten Knoten gleich sind
             if (nodeA != nodeB) {
-                //Kante AB und gespiegelte Kopie BA zusammenstellen mit
+                //Kante AB zusammenstellen mit
                 // folgenden Parametern:
                 ab = new Edge(nodeA, nodeB, false, true, genWeight, null);
-                ba = new Edge(nodeB, nodeA, false, true, genWeight, null);
+                //ba = new Edge(nodeB, nodeA, false, true, genWeight, null);
 
                 //prüfen, ob Kante (oder gedrehtes Äquivalent) bereits
-                // vorhanden ist
-                if (!generatedGraph.getEdges().contains(ab) || !generatedGraph.getEdges().contains(ba)) {
+                // vorhanden ist (auch mit anderem Gewicht)
+                if (!generatedGraph.hasEdgeBetween(nodeA, nodeB)) {
                     generatedGraph.addEdges(ab);
+                    j++;
                 }
             }
         }

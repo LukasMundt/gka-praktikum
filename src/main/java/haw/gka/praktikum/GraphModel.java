@@ -13,11 +13,17 @@ import java.util.Set;
  * </p>
  */
 public class GraphModel {
-    /** Menge aller Knoten im Graphen */
+    /**
+     * Menge aller Knoten im Graphen
+     */
     private final HashSet<Node> _nodes;
-    /** Menge aller Kanten im Graphen */
+    /**
+     * Menge aller Kanten im Graphen
+     */
     private final HashSet<Edge> _edges;
-    /** Indizes zu allen Knoten im Graphen */
+    /**
+     * Indizes zu allen Knoten im Graphen
+     */
     private final HashMap<Node, Integer> _indexedNodes;
 
     /**
@@ -47,9 +53,9 @@ public class GraphModel {
      * @param nodes Knoten, die hinzugefügt werden sollen
      * @throws NullPointerException wenn einer der Knoten null ist
      */
-    public void addNodes(Node ...nodes) {
-        for (Node node : nodes){
-            if(node == null) {
+    public void addNodes(Node... nodes) {
+        for (Node node : nodes) {
+            if (node == null) {
                 throw new NullPointerException("node is null");
             }
             _nodes.add(node);
@@ -62,9 +68,9 @@ public class GraphModel {
      * @param edges Kanten, die hinzugefügt werden sollen
      * @throws NullPointerException wenn eine der Kanten null ist
      */
-    public void addEdges(Edge ...edges) {
+    public void addEdges(Edge... edges) {
         for (Edge edge : edges) {
-            if(edge == null) {
+            if (edge == null) {
                 throw new NullPointerException("edge is null");
             }
             _edges.add(edge);
@@ -98,7 +104,7 @@ public class GraphModel {
      * @param edgeName   Name der Kante (wenn kein Name, dann null)
      */
     public void addEdge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight, String edgeName) {
-       _edges.add(new Edge(start, end, isDirected, isWeighted, weight, edgeName));
+        _edges.add(new Edge(start, end, isDirected, isWeighted, weight, edgeName));
     }
 
     /**
@@ -111,8 +117,8 @@ public class GraphModel {
     public void indexNode(Node node, int index) {
         if (!_nodes.contains(node)) {
             throw new IllegalArgumentException("node is not contained in the graph");
-        } else if(_indexedNodes.containsKey(node)) {
-            System.err.println("Node already indexed: "+node.getName()+"; Resetting index.");
+        } else if (_indexedNodes.containsKey(node)) {
+            System.err.println("Node already indexed: " + node.getName() + "; Resetting index.");
         }
         _indexedNodes.put(node, index);
     }
@@ -124,9 +130,9 @@ public class GraphModel {
      * @return BFS-Index oder -1, wenn der Knoten keinen Index besitzt
      */
     public int getIndexOfNode(Node node) {
-        if(node == null) {
+        if (node == null) {
             throw new IllegalArgumentException("node is null");
-        } else if(_indexedNodes.containsKey(node)) {
+        } else if (_indexedNodes.containsKey(node)) {
             return _indexedNodes.get(node);
         }
         // wenn der Knoten nicht indiziert ist, wird -1 zurückgegeben
@@ -147,9 +153,9 @@ public class GraphModel {
 
         for (Edge edge : _edges) {
             // wenn der andere Knoten von a aus erreichbar ist und noch nicht indiziert ist, wird er dem Ergebnis hinzugefügt
-            if(edge.isOtherNodeReachableFromA(node)) {
+            if (edge.isOtherNodeReachableFromA(node)) {
                 Node otherNode = edge.getOtherNode(node);
-                if(!_indexedNodes.containsKey(otherNode)) {
+                if (!_indexedNodes.containsKey(otherNode)) {
                     neighbors.add(otherNode);
                 }
             }
@@ -171,7 +177,7 @@ public class GraphModel {
         Set<Node> neighbors = new HashSet<>();
         for (Edge edge : _edges) {
             // wenn der übergebene Knoten von dem anderen Knoten der aktuellen Kante aus erreichbar ist, wird er dem Ergebnis hinzugefügt
-            if(edge.isAReachableFromOtherNode(node)) {
+            if (edge.isAReachableFromOtherNode(node)) {
                 neighbors.add(edge.getOtherNode(node));
             }
         }
@@ -192,7 +198,7 @@ public class GraphModel {
         Set<Node> neighbors = getReverseNeighbors(node);
         for (Node neighbor : neighbors) {
             // wenn erster Nachbar mit richtigem Index gefunden wird dieser zurückgegeben
-            if(index == getIndexOfNode(neighbor)) {
+            if (index == getIndexOfNode(neighbor)) {
                 return neighbor;
             }
         }
@@ -233,6 +239,25 @@ public class GraphModel {
      */
     public HashSet<Edge> getEdges() {
         return _edges;
+    }
+
+    /**
+     * Prüft, ob der Graph eine Kante zwischen zwei gegebenen Knoten hat, in
+     * beide Richtungen (AB oder BA)
+     *
+     * @param A Knoten A
+     * @param B Knoten B
+     * @return boolean Kante vorhanden oder nicht
+     */
+    public boolean hasEdgeBetween(Node A, Node B) {
+        for (Edge edge : getEdges()) {
+            // Prüft Kante ab oder Kante ba
+            if ((edge.getStart().equals(A) && edge.getEnd().equals(B)) ||
+                    (edge.getStart().equals(B) && edge.getEnd().equals(A))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
