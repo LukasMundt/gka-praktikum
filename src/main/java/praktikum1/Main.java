@@ -34,7 +34,7 @@ public class Main {
 
         GraphGenerator generator = new GraphGenerator();
 
-        GraphModel genGraph = generator.generateGraph(3, 3);
+        GraphModel genGraph = generator.generateGraph(-3, 3);
         List<Edge> minSpanningTree = kruskal.searchSpanningTree(genGraph);
         float totalWeight = kruskal.getTotalWeight(minSpanningTree);
 

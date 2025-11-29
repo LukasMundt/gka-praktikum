@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * - JUnit-Tests, die Alg. mit Graphen aus Generator testen (umfassend)
@@ -55,15 +54,17 @@ public class KruskalTest {
         List<Edge> expectedSpanningTree = new ArrayList<>();
         expectedSpanningTree.add(e1); //rs
         expectedSpanningTree.add(e2); //rv
-        expectedSpanningTree.add(e4); //st
+        expectedSpanningTree.add(e3); //st
         expectedSpanningTree.add(e6); //uv
 
         GraphModel actualGraph = graphReader.readGraph(testFileKruskal);
-        // List<Edge> actualSpanningTree = searchSpanningTree(actualGraph);
 
-        // assertEquals(expectedSpanningTree, actualSpanningTree, "Inhalte " +
-        //       "müssen gleich sein");
+        List<Edge> actualSpanningTree = kruskal.searchSpanningTree(actualGraph);
+
+        assertEquals(expectedSpanningTree, actualSpanningTree, "Inhalte " +
+                "müssen gleich sein");
     }
+
 
     @Test
     void testSortEdges() throws IOException {
@@ -106,4 +107,19 @@ public class KruskalTest {
         assertEquals(expectedWeight, actualWeight, "Gewicht muss " +
                 "übereinstimmen");
     }
+
+    @Test
+    void testThrowsNullPointerException() {
+        GraphModel graph = null;
+        HashSet<Edge> edges = null;
+        List<Edge> minSpanningTree = null;
+
+        assertThrows(NullPointerException.class,
+                () -> kruskal.searchSpanningTree(graph));
+        assertThrows(NullPointerException.class,
+                () -> kruskal.sortEdges(edges));
+        assertThrows(NullPointerException.class,
+                () -> kruskal.getTotalWeight(minSpanningTree));
+    }
+
 }
