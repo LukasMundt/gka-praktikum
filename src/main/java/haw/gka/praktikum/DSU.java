@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Disjoint Data Set, Datenstruktur für Union-Find resp. Kruskal-Algorithmus;
  * übernommen aus
- * <a href="https://www.geeksforgeeksorg/dsa/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/"/a>
+ * <a href="https://www.geeksforgeeks.org/dsa/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/"/a>
  * und erweitert / auf Graphenstruktur angepasst
  */
 public class DSU {

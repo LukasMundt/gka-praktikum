@@ -34,6 +34,8 @@ public class Starter extends Application {
 
     /** Button zum Anzeigen des Graphen */
     final Button _buttonDisplay = new Button("Graph anzeigen");
+    /** Button zum Anzeigen des Minimalen Spannbaums */
+    final Button _buttonDisplaySpanningTree = new Button("Minimalen Spannbaum anzeigen");
 
     /** Button zum Öffnen des BFS-Fensters */
     final Button _buttonBFS = new Button("Kürzesten Weg finden");
@@ -85,6 +87,7 @@ public class Starter extends Application {
         this.configureBFSButton(_filesComboBox);
         this.configureConvertToDirected(_filesComboBox);
         this.configureConvertToUndirected(_filesComboBox);
+        this.configureDisplayMinimalSpanningTree(_filesComboBox);
 
         // Grundlayout
         GridPane grid = new GridPane();
@@ -98,6 +101,7 @@ public class Starter extends Application {
         grid.add(_buttonBFS, 2, 1);
         grid.add(_buttonConvertToDirected, 2, 2);
         grid.add(_buttonConvertToUndirected, 2, 3);
+        grid.add(_buttonDisplaySpanningTree, 2, 4);
         grid.add (_notification, 1, 3, 3, 1);
 
         ((Group)scene.getRoot()).getChildren().add(grid);
@@ -152,6 +156,31 @@ public class Starter extends Application {
             GraphModel graph = this.getSelectedGraph(filesComboBox);
             if(graph != null){
                 GraphVisualizer.displayGraph(graph);
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    private void configureDisplayMinimalSpanningTree(ComboBox<String> filesComboBox) {
+        _buttonDisplaySpanningTree.setOnAction(event -> {
+            GraphModel graph = this.getSelectedGraph(filesComboBox);
+
+            if(graph != null){
+                // Minimalen Spannbaum mit Prim erzeugen
+                GraphModel mstPrim = Prim.getMinimalSpanningTree(graph);
+
+                // Minimalen Spannbaum mit Kruskal erzeugen
+                List<Edge> mstEdgesKruskal = (new Kruskal()).searchSpanningTree(graph);
+                System.out.println("Kante Kruskal: "+mstEdgesKruskal.toString());
+                GraphModel mstKruskal = new GraphModel();
+                mstKruskal.addEdges(mstEdgesKruskal.toArray(new Edge[0]));
+
+                // Graphen anzeigen
+                GraphVisualizer.displayGraph(graph, "Normal");
+                GraphVisualizer.displayGraph(mstPrim, "Prim");
+                GraphVisualizer.displayGraph(mstKruskal, "Kruskal");
             }
         });
     }
