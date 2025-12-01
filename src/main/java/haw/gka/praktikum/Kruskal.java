@@ -81,9 +81,9 @@ public class Kruskal {
 
                 //Abbruch, wenn alle Kanten gefunden wurden (die keinen Kreis
                 // bilden)
-                if (minSpanningTree.size() == nodesList.size() - 1) {
-                    break;
-                }
+//                if (minSpanningTree.size() == nodesList.size() - 1) {
+//                    break;
+//                }
             } //else bildet Kreis, dann fällt Kante raus
         }
         //Stop Logging

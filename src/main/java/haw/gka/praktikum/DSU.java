@@ -35,9 +35,7 @@ public class DSU {
     public Node find(Node node) {
         //wenn Knoten nicht eigener Parent, weitermachen
         if (parent.get(node) != node) {
-            node = parent.get(node);
-            //Pfadkomprimierung zur Optimierung, Laufzeiten vergleichen TODO
-            // parent.put(node, find(parent.get(node)));
+            parent.put(node, find(parent.get(node)));
         }
         return parent.get(node);
     }
