@@ -2,6 +2,7 @@ package haw.gka.praktikum;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,6 +26,10 @@ public class GraphModel {
      * Indizes zu allen Knoten im Graphen
      */
     private final HashMap<Node, Integer> _indexedNodes;
+    /**
+     * Adjazenz-Map - Speichert zu jedem Knoten die mit ihm verbundenen Kanten
+     */
+    private final Map<Node, Set<Edge>> _adjacency;
 
     /**
      * Erzeugt ein leeres Graphmodell.
@@ -33,6 +38,7 @@ public class GraphModel {
         _nodes = new HashSet<>();
         _edges = new HashSet<>();
         _indexedNodes = new HashMap<>();
+        _adjacency = new HashMap<>();
     }
 
     /**
@@ -45,6 +51,15 @@ public class GraphModel {
         _nodes = (nodes == null) ? new HashSet<>() : new HashSet<>(nodes);
         _edges = (edges == null) ? new HashSet<>() : new HashSet<>(edges);
         _indexedNodes = new HashMap<>();
+        _adjacency = new HashMap<>();
+
+        // Jede Kante der Adjazenz-Map hinzufügen
+        if (edges != null) {
+            edges.forEach(edge -> {
+                _adjacency.computeIfAbsent(edge.getStart(), k -> new HashSet<>()).add(edge);
+                _adjacency.computeIfAbsent(edge.getEnd(), k -> new HashSet<>()).add(edge);
+            });
+        }
     }
 
     /**
@@ -74,6 +89,14 @@ public class GraphModel {
                 throw new NullPointerException("edge is null");
             }
             _edges.add(edge);
+
+            // versucht die Knoten der Kante hinzuzufügen -> danach auf jeden Fall enthalten
+            _nodes.add(edge.getStart());
+            _nodes.add(edge.getEnd());
+
+            // Fügt Kante der Adjazenz-Map hinzu
+            _adjacency.computeIfAbsent(edge.getStart(), k -> new HashSet<>()).add(edge);
+            _adjacency.computeIfAbsent(edge.getEnd(), k -> new HashSet<>()).add(edge);
         }
     }
 
@@ -104,7 +127,16 @@ public class GraphModel {
      * @param edgeName   Name der Kante (wenn kein Name, dann null)
      */
     public void addEdge(Node start, Node end, boolean isDirected, boolean isWeighted, float weight, String edgeName) {
-        _edges.add(new Edge(start, end, isDirected, isWeighted, weight, edgeName));
+        Edge edge = new Edge(start, end, isDirected, isWeighted, weight, edgeName);
+        _edges.add(edge);
+
+        // versucht die Knoten der Kante hinzuzufügen -> danach auf jeden Fall enthalten
+        _nodes.add(start);
+        _nodes.add(end);
+
+        // Fügt Kante der Adjazenz-Map hinzu
+        _adjacency.computeIfAbsent(edge.getStart(), k -> new HashSet<>()).add(edge);
+        _adjacency.computeIfAbsent(edge.getEnd(), k -> new HashSet<>()).add(edge);
     }
 
     /**
@@ -239,6 +271,13 @@ public class GraphModel {
      */
     public HashSet<Edge> getEdges() {
         return _edges;
+    }
+
+    /**
+     * @return Adjazenz-Map
+     */
+    public Map<Node, Set<Edge>> getAdjacency() {
+        return _adjacency;
     }
 
     /**
