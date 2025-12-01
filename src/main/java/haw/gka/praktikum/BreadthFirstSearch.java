@@ -21,6 +21,21 @@ public class BreadthFirstSearch {
      * Start ist Ziel -> Liste der Laenge 1 (Start)
      */
     public static List<Node> search(GraphModel graphModel, Node start, Node end) {
+        return BreadthFirstSearch.search(graphModel, start, end, false);
+    }
+
+    /**
+     * Sucht in dem gegebenen Graphen den kürzesten Weg zwischen dem Start- und dem Zielknoten
+     *
+     * @param graphModel Der zu traversierende Graph
+     * @param start Der Startpunkt
+     * @param end Das Ziel, zu dem der kürzeste Weg gesucht werden soll
+     * @param verbose Ob viel während der Laufzeit auf der Konsole ausgegeben werden soll
+     * @return Liste der an dem kürzesten Weg beteiligten Knoten. (Von Start zum Ziel)
+     * keine Verbindung -> leere Liste
+     * Start ist Ziel -> Liste der Laenge 1 (Start)
+     */
+    public static List<Node> search(GraphModel graphModel, Node start, Node end, boolean verbose) {
         LogResources.startTask("BreadthFirstSearch");
         // Graph kopieren um den eingegebenen Graphen noch an anderen Stellen unverändert verwenden zu können
         GraphModel graph = new GraphModel(graphModel.getNodes(), graphModel.getEdges());
@@ -66,7 +81,9 @@ public class BreadthFirstSearch {
             for (Node node : neighbors) {
                 graph.indexNode(node, index+1);
                 nodesToHandle.add(node);
-                System.out.println("Found node: " + node.getName()+"; marked with:" +(index+1));
+                if (verbose) {
+                    System.out.println("Found node: " + node.getName()+"; marked with:" +(index+1));
+                }
             }
         }
 
@@ -80,7 +97,7 @@ public class BreadthFirstSearch {
         }
 
         // suche den kürzesten Weg aus dem traversierten Graphen raus
-        List<Node> result = findPathFromTraversedGraph(graph, start, end);
+        List<Node> result = findPathFromTraversedGraph(graph, start, end, verbose);
         LogResources.stopTask("BreadthFirstSearch");
         return result;
     }
@@ -91,9 +108,10 @@ public class BreadthFirstSearch {
      * @param graph Der traversierte Graph
      * @param start Der Startpunkt
      * @param end Das Ziel, zu dem der kürzeste Weg gesucht werden soll (hier starten wir von hier aus)
+     * @param verbose Ob viel während der Laufzeit auf der Konsole ausgegeben werden soll
      * @return Liste der an dem kürzesten Weg beteiligten Knoten. (Von Start zum Ziel)
      */
-    private static List<Node> findPathFromTraversedGraph(GraphModel graph, Node start, Node end) {
+    private static List<Node> findPathFromTraversedGraph(GraphModel graph, Node start, Node end, boolean verbose) {
         List<Node> resultList = new ArrayList<>();
 
         // Ziel-Knoten wurde nicht indiziert -> Ziel wurde nicht gefunden
@@ -108,7 +126,9 @@ public class BreadthFirstSearch {
 
         // Suche der jeweiligen Nachbarn des aktuellen Knoten mit Index (n-1) -> neuer aktueller Knoten und vorne an Weg angefügt
         while (index != 1) {
-            System.out.printf("\nSuche Nachbarn mit Index %d von %s.\n", index-1, current.getName());
+            if (verbose) {
+                System.out.printf("\nSuche Nachbarn mit Index %d von %s.\n", index-1, current.getName());
+            }
             current = graph.getReverseNeighborWithIndex(current, index-1);
             resultList.addFirst(current);
             index--;
