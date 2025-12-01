@@ -3,6 +3,7 @@ package haw.gka.praktikum;
 import haw.gka.praktikum.LogResources.LogResources;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Prim {
     private final GraphModel _inputGraph;
@@ -39,12 +40,9 @@ public class Prim {
         Prim prim = new Prim(inputGraph, resultGraph);
 
         // alle Nodes zu priority queue hinzufügen (Nachbarn inkl. Prio und noch nicht erreichbare Knoten mit Fallback Priorität)
-        // todo: optimieren
         prim._nodePriorityQueue.addAll(prim.getUnincludedNeighborNodesOfAWithPriority(firstNode));
         prim._nodePriorityQueue.addAll(prim.getUnincludedAndUnpriorizedNodesPrioritized(fallbackPriority));
 
-
-        //prim.printPrioQueue();
 
         prim.executeAlgorithm();
 
@@ -56,7 +54,13 @@ public class Prim {
         // check if working + make stable if nodes are not connected to the
         while (!_resultGraph.getNodes().equals(_inputGraph.getNodes())) {
             PrioritizedNode prioNode = _nodePriorityQueue.poll();
-            _nodePriorityQueue.remove(prioNode);
+
+            if (prioNode == null) break;
+
+            // Wenn schon benutzt → ignorieren (durch poll schon gelöscht)
+            if (_resultGraph.getNodes().contains(prioNode.getNode())) {
+                continue; // nächste PQ-Eintrag
+            }
 
             _resultGraph.addNodes(prioNode.getNode());
             if (prioNode.getConnectingEdge() != null) {
@@ -67,7 +71,6 @@ public class Prim {
             // alle neu erreichbaren Knoten, die noch nicht im Graphen enthalten sind, priorisiert der Queue hinzufügen
             List<PrioritizedNode> prioritizedNodes = this.getUnincludedNeighborNodesOfAWithPriority(prioNode.getNode());
             _nodePriorityQueue.addAll(prioritizedNodes);
-            // this.printPrioQueue();
         }
     }
 
@@ -82,7 +85,7 @@ public class Prim {
                 .filter(edge -> edge.isOtherNodeReachableFromA(a))
                 .map(edge -> new PrioritizedNode(edge.getOtherNode(a), edge, edge.getWeight()))
                 .filter(prioritizedNode -> !_resultGraph.getNodes().contains(prioritizedNode.getNode()))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private List<PrioritizedNode> getUnincludedAndUnpriorizedNodesPrioritized(float fallbackPriority) {
@@ -90,9 +93,9 @@ public class Prim {
                 .getNodes()
                 .stream()
                 .filter(node -> !_resultGraph.getNodes().contains(node))
-                //.filter(node -> !_nodePriorityQueue.contains(new PrioritizedNode(node, null, 0)))
+                // .filter(node -> !_nodePriorityQueue.contains(new PrioritizedNode(node, null, 0)))
                 .map(node -> new PrioritizedNode(node, null, fallbackPriority))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private void printPrioQueue() {
