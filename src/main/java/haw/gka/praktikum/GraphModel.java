@@ -113,6 +113,7 @@ public class GraphModel {
         }
         Node tempNode = Node.getNode(line);
         _nodes.add(tempNode);
+        _adjacency.computeIfAbsent(tempNode, k -> new HashSet<>());
         return tempNode;
     }
 
@@ -299,5 +300,11 @@ public class GraphModel {
         return false;
     }
 
+    public float getTotalWeight() {
+        return _edges
+                .stream()
+                .map(Edge::getWeight)
+                .reduce(0.0f, Float::sum);
+    }
 }
 

@@ -62,7 +62,7 @@ public class Prim {
         if (inputGraph == null) throw new IllegalArgumentException("Input graph is null");
         if (inputGraph.getNodes().isEmpty()) throw new IllegalArgumentException("Input graph is empty (not null)");
         if (firstNode == null) throw new IllegalArgumentException("First node is null");
-        if (inputGraph.getNodes().contains(firstNode)) throw new IllegalArgumentException("First node is not contained in graph");
+        if (!inputGraph.getNodes().contains(firstNode)) throw new IllegalArgumentException("First node is not contained in graph");
 
         // Resourcen logging starten
         LogResources.startTask("Prim");
@@ -92,6 +92,7 @@ public class Prim {
 
         // Resourcen logging beenden
         LogResources.stopTask("Prim");
+        System.out.println("Gesamtgewicht des Spannbaums: "+prim._resultGraph.getTotalWeight());
         return prim._resultGraph;
     }
 

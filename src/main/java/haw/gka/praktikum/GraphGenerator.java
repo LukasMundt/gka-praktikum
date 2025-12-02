@@ -1,8 +1,8 @@
 package haw.gka.praktikum;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import haw.gka.praktikum.LogResources.LogResources;
+
+import java.util.*;
 
 /**
  * Generator für einen ungerichteten Graphen mit einer vorgegebenen Anzahl von
@@ -11,6 +11,7 @@ import java.util.Random;
  */
 public class GraphGenerator {
 
+    private final Random _random = new Random();
     /**
      * Konstruktor für den Generator
      *
@@ -28,12 +29,13 @@ public class GraphGenerator {
      * @return GraphModel der erstellte Graph
      */
     public GraphModel generateGraph(int nodesNr, int edgesNr) {
-
+        LogResources.startTask("Generate Graph");
         //Kantenmenge eines vollständigen Graphens bestimmen als obere Grenze
-        int maxEdges = (nodesNr * (nodesNr - 1)) / 2;
+        long maxEdges = ((long)nodesNr * ((long)nodesNr - 1)) / 2;
+        System.out.println("maxEdges: " + maxEdges);
 
         //ungültige Eingaben abfangen
-        if (nodesNr < 1 || edgesNr < 0 || nodesNr < edgesNr || edgesNr > maxEdges) {
+        if (nodesNr < 1 || edgesNr < 0 || edgesNr > maxEdges) {
             throw new IllegalArgumentException("die Knoten- und/oder " +
                     "Kantenanzahl ist nicht sinnvoll gewählt");
         }
@@ -57,10 +59,11 @@ public class GraphGenerator {
         List<Node> allNodes = new ArrayList<>(generatedGraph.getNodes());
         //Zähler für bereits erstellte Kanten
         int j = 0;
+        int miss = 0;
         while (j < edgesNr) {
             //zufällige Auswahl aus Knoten-Liste
-            int rIndexA = new Random().nextInt(allNodes.size());
-            int rIndexB = new Random().nextInt(allNodes.size());
+            int rIndexA = _random.nextInt(allNodes.size());
+            int rIndexB = _random.nextInt(allNodes.size());
 
             Node nodeA = allNodes.get(rIndexA);
             Node nodeB = allNodes.get(rIndexB);
@@ -80,9 +83,13 @@ public class GraphGenerator {
                 if (!generatedGraph.hasEdgeBetween(nodeA, nodeB)) {
                     generatedGraph.addEdges(ab);
                     j++;
+                } else{
+                    miss++;
                 }
             }
         }
+        LogResources.stopTask("Generate Graph");
+        System.out.println("Failed tries: "+miss+", Edges: "+edgesNr);
         return generatedGraph;
     }
 
@@ -94,10 +101,9 @@ public class GraphGenerator {
      * @return float zufällig generierter und formatierter Wert
      */
     public float generateFloat() {
-        Random random = new Random();
         //erzeugt float zw. 0.0 und 1.0, * 10, da ganzzahlige Darstellung für
         // Kanten-Gewicht geeigneter
-        float randomFloat = (random.nextFloat() * 10);
+        float randomFloat = (_random.nextFloat() * 10);
 
         //round, um Nachkommastellen loszuwerden
         return Math.round(randomFloat);
