@@ -59,37 +59,44 @@ public class GraphGenerator {
         List<Node> allNodes = new ArrayList<>(generatedGraph.getNodes());
         //Zähler für bereits erstellte Kanten
         int j = 0;
-        int miss = 0;
-        while (j < edgesNr) {
-            //zufällige Auswahl aus Knoten-Liste
-            int rIndexA = _random.nextInt(allNodes.size());
-            int rIndexB = _random.nextInt(allNodes.size());
 
+        // Adjazenzliste
+        HashMap<Integer, HashSet<Integer>> usedIndexes = new HashMap<>();
+
+        while (j < edgesNr) {
+            // zufällige Auswahl aus Knoten-Liste
+            int rIndexA = _random.nextInt(nodesNr);
+            Set<Integer> usedIndexesA = usedIndexes.getOrDefault(rIndexA, new HashSet<>());
+
+            int rIndexB = _random.nextInt(nodesNr);
+
+            // Generierung von Zufallszahlen solange Kante schon existiert oder Start gleich Ziel
+            while (usedIndexesA.contains(rIndexB) || rIndexA == rIndexB) {
+                rIndexB = _random.nextInt(nodesNr);
+            }
+
+            // Knoten generieren
             Node nodeA = allNodes.get(rIndexA);
             Node nodeB = allNodes.get(rIndexB);
 
             //Zufallsgewicht generieren lassen
             float genWeight = generateFloat();
 
-            Edge ab;
-            //prüfen, ob die ausgewählten Knoten gleich sind
-            if (nodeA != nodeB) {
-                //Kante AB zusammenstellen mit
-                // folgenden Parametern:
-                ab = new Edge(nodeA, nodeB, false, true, genWeight, null);
+            // Kante AB zusammenstellen mit folgenden Parametern:
+            Edge ab = new Edge(nodeA, nodeB, false, true, genWeight, null);
 
-                //prüfen, ob Kante (oder gedrehtes Äquivalent) bereits
-                // vorhanden ist (auch mit anderem Gewicht)
-                if (!generatedGraph.hasEdgeBetween(nodeA, nodeB)) {
-                    generatedGraph.addEdges(ab);
-                    j++;
-                } else{
-                    miss++;
-                }
-            }
+            // Kante hinzufügen
+            generatedGraph.addEdges(ab);
+
+            // Kante in lokale Adjazenzliste eintragen
+            usedIndexes.computeIfAbsent(rIndexA, k -> new HashSet<>()).add(rIndexB);
+            usedIndexes.computeIfAbsent(rIndexB, k -> new HashSet<>()).add(rIndexA);
+
+            // Index generierter Kanten hochzählen
+            j++;
         }
         LogResources.stopTask("Generate Graph");
-        System.out.println("Failed tries: "+miss+", Edges: "+edgesNr);
+        System.out.println("Edges count"+generatedGraph.getEdges().size());
         return generatedGraph;
     }
 
