@@ -51,7 +51,7 @@ public class Kruskal {
         //alle Knoten des Graphen ausgeben
         List<Node> nodesList = new ArrayList<>(graph.getNodes());
 
-        //Initialisierung der DSU-Logik
+        //Initialisierung der DSU-Logik (Disjoint Dataset, Search - Union)
         DSU dsu = new DSU(nodesList);
 
         //Spannbaum suchen
@@ -80,7 +80,7 @@ public class Kruskal {
                 dsu.union(startNode, endNode);
 
                 //Abbruch, wenn alle Kanten gefunden wurden (die keinen Kreis
-                // bilden)
+                // bilden) führt zu Fehler
 //                if (minSpanningTree.size() == nodesList.size() - 1) {
 //                    break;
 //                }

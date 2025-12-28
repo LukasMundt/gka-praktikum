@@ -12,6 +12,7 @@ import java.util.*;
 public class GraphGenerator {
 
     private final Random _random = new Random();
+
     /**
      * Konstruktor für den Generator
      *
@@ -31,7 +32,7 @@ public class GraphGenerator {
     public GraphModel generateGraph(int nodesNr, int edgesNr) {
         LogResources.startTask("Generate Graph");
         //Kantenmenge eines vollständigen Graphens bestimmen als obere Grenze
-        long maxEdges = ((long)nodesNr * ((long)nodesNr - 1)) / 2;
+        long maxEdges = ((long) nodesNr * ((long) nodesNr - 1)) / 2;
         System.out.println("maxEdges: " + maxEdges);
 
         //ungültige Eingaben abfangen
