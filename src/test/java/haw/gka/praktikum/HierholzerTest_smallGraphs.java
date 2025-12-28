@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 /**
- * - JUnit-Tests, die Alg. mit Graphen a) aus Dateien und b) aus Generator
+ * - JUnit-Tests, die Alg. mit kleinen Graphen aus Dateien
  * testen (umfassend)
  * - jeder Schritt, den der Alg macht -> eine Methode
  * - pos. und neg. Tests
  */
-public class HierholzerTest {
+public class HierholzerTest_smallGraphs {
     Hierholzer hierholzer = new Hierholzer();
     String eulerkreis;
     String keinEulerkreisUngeradeGrade;
@@ -36,7 +36,15 @@ public class HierholzerTest {
     }
 
     @Test
-    void testGraphIsUndirected() {
+    void testGraphIsUndirected_Positive() {
+        assertTrue(hierholzer.isUndirected(eulerkreis), "Test failed: Graph " +
+                "is not undirected.");
+    }
+
+    @Test
+    void testGraphIsUndirected_Negative() {
+        assertFalse(hierholzer.isUndirected(gerichtet), "Test failed: " +
+                "Directed graph should not be recognized as undirected.");
     }
 
     @Test
@@ -44,7 +52,15 @@ public class HierholzerTest {
     }
 
     @Test
+    void testGraphIsUnconnected() {
+    }
+
+    @Test
     void testGraphHasEvenGrades() {
+    }
+
+    @Test
+    void testGraphHasUnevenGrades() {
     }
 
     @Test
@@ -53,6 +69,10 @@ public class HierholzerTest {
 
         // assertThrows(NullPointerException.class,
         //        () ->  //enter method on(graph));
+    }
+
+    @Test
+    void testFindsEulerCircle() {
     }
 
 
