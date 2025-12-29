@@ -45,7 +45,6 @@ public class GraphIn {
 
         LogResources.stopTask("Reading graph from " + path);
 
-
         return graph;
     }
 

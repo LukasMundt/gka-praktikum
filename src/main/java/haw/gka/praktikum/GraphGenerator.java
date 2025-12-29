@@ -29,6 +29,8 @@ public class GraphGenerator {
      * @param edgesNr int Anzahl der Kanten
      * @return GraphModel der erstellte Graph
      */
+    //TODO 3. Parameter übergeben für "alle Knotengrade even" und
+    // Code um Funktionalität erweitern
     public GraphModel generateGraph(int nodesNr, int edgesNr) {
         LogResources.startTask("Generate Graph");
         //Kantenmenge eines vollständigen Graphens bestimmen als obere Grenze
@@ -97,7 +99,7 @@ public class GraphGenerator {
             j++;
         }
         LogResources.stopTask("Generate Graph");
-        System.out.println("Edges count"+generatedGraph.getEdges().size());
+        System.out.println("Edges count" + generatedGraph.getEdges().size());
         return generatedGraph;
     }
 

@@ -22,5 +22,6 @@ generiert - oder als erstes im Algorithmus darauf prüfen und ggf. Alg
 zurückweisen? könnte dann aber lange dauern, bis man einen passenden generiert
 - Fleury-Alg.
 - Hierholzer-Alg.
+    - nur Methodensignaturen angelegt, damit die Tests nicht meckern
 - Tests durchführen und dokumentieren
 - abschließende Beantwortung Vor- und Nachteile von test driven implementation
