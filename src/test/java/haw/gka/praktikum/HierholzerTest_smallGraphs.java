@@ -1,11 +1,11 @@
 package haw.gka.praktikum;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -14,40 +14,57 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * - pos. und neg. Tests
  */
 
-//Input und erwarteter Output, Vergleich
 public class HierholzerTest_smallGraphs {
     Hierholzer hierholzer = new Hierholzer();
 
     GraphIn graphReader = new GraphIn();
+    //folgende Pfade führen zu Graphen mit Eulerkreis
+    String path_eulercircle = "src/test/java/resources/euler/Eulerkreis.gka";
+    String path_euler_cities = "src/test/java/resources/euler/cities.gka";
+    String path_euler_sorted = "src/test/java/resources/euler" +
+            "/Euler_already_sorted.gka";
 
-    String path_eulerkreis = "src/test/java/resources/Eulerkreis.gka";
-    String path_keinEulerkreisUngeradeGrade = "src/test/java/resources" +
+    //folgende Pfade führen zu Graphen ohne Eulerkreis
+    String path_unevenDegrees = "src/test/java/resources" +
             "/undirected.gka";
-    String path_keinEulerkreisGeradeGrade = "src/test/java/resources" +
-            "/keinEulerkreis" +
-            ".gka"; //ist auch unzusammenhängend
-    String path_unzusammenhängend = "src/test/java/resources/TestFileSolo.gka";
-    //hat Soloknoten
-    String path_gerichtet = "src/test/java/resources/directed.gka";
+    String path_evenDegrees_unconnected = "src/test/java/resources/euler" +
+            "/keinEulerkreis.gka";
+    String path_unconnected_solo = "src/test/java/resources/euler" +
+            "/TestFileSolo.gka";
+    String path_directed = "src/test/java/resources/euler/directed.gka";
 
 
     @Test
-    void testSearchEulerCircle_Error_Directed() throws IOException {
-        //wirf einen Fehler, wenn du einen gerichteteten Graphen bekommst
-        GraphModel gerichtet = graphReader.readGraph(path_gerichtet);
+    void testSearchEulerCircle_Error_GraphIsDirected() throws IOException {
+        GraphModel directed = graphReader.readGraph(path_directed);
 
-        //nachgucken, wie Fehler geworfen werden
-        assertThrows(IOException.class, (Executable) hierholzer.searchEulerCircle(gerichtet));
-    }
-
-    //Test für directed replizieren für unconnected und uneven Knotengrade
-    // und Solo-Knoten
-    @Test
-    void testGraphIsUnconnected() {
+        assertThrows(IOException.class,
+                () -> hierholzer.searchEulerCircle(directed));
     }
 
     @Test
-    void testGraphHasUnevenGrades() {
+    void testSearchEulerCircle_Error_GraphIsUnconnected() throws IOException {
+        GraphModel unconnected = graphReader.readGraph(path_evenDegrees_unconnected);
+
+        assertThrows(IOException.class,
+                () -> hierholzer.searchEulerCircle(unconnected));
+    }
+
+    @Test
+    void testSearchEulerCircle_Error_GraphHasSoloNodes() throws IOException {
+        GraphModel unconnected_solo =
+                graphReader.readGraph(path_unconnected_solo);
+
+        assertThrows(IOException.class,
+                () -> hierholzer.searchEulerCircle(unconnected_solo));
+    }
+
+    @Test
+    void testSearchEulerCircle_Error_GraphHasUnevenDegrees() throws IOException {
+        GraphModel unevenDegrees = graphReader.readGraph(path_unevenDegrees);
+
+        assertThrows(IOException.class,
+                () -> hierholzer.searchEulerCircle(unevenDegrees));
     }
 
     @Test
@@ -55,25 +72,40 @@ public class HierholzerTest_smallGraphs {
         GraphModel graph_is_null = null;
 
         assertThrows(IOException.class,
-                (Executable) hierholzer.searchEulerCircle(graph_is_null));
+                () -> hierholzer.searchEulerCircle(graph_is_null));
     }
 
-    //TODO utils Methode, die prüft, ob gegebener Graph ein Eulerkreis ist,
-    // gibt true false zurück
+    /**
+     * Die folgenden Tests testen den tatsächlichen Algorithmus und sollen
+     * Eulerkreise finden
+     *
+     * @throws IOException
+     */
     @Test
     void testFindsEulerCircle_Small() throws IOException {
-        GraphModel candidate = graphReader.readGraph(path_eulerkreis);
+        GraphModel candidate = graphReader.readGraph(path_eulercircle);
 
         GraphModel actual_eulerkreis = hierholzer.searchEulerCircle(candidate);
-        //TODO mit utils Methode prüfen, ob EUlerkreis korrekt gebaut wurde
-        // assertTrue(checkEulerkreis(actual_eulerkreis));
+
+        assertTrue(hierholzer.checkEulerCircle(actual_eulerkreis));
     }
 
-    //weitere Tests mit Randfällen für weitere Tests
     @Test
-    void testFindsEulerCircle_Big() {
+    void testFindsEulerCircle_AlreadySorted() throws IOException {
+        GraphModel candidate = graphReader.readGraph(path_euler_sorted);
+
+        GraphModel actual_eulerkreis = hierholzer.searchEulerCircle(candidate);
+
+        assertTrue(hierholzer.checkEulerCircle(actual_eulerkreis));
     }
 
-    // Test mit Kantengewichten
-    // Test mit Städtenamen
+    @Test
+    void testFindsEulerCircle_Nodenames_Weights() throws IOException {
+        GraphModel candidate = graphReader.readGraph(path_euler_cities);
+
+        GraphModel actual_eulerkreis = hierholzer.searchEulerCircle(candidate);
+
+        assertTrue(hierholzer.checkEulerCircle(actual_eulerkreis));
+    }
+    //TODO noch weitere Randfälle?
 }
