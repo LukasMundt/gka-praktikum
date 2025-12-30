@@ -29,7 +29,7 @@ public class GraphGenerator {
      * @param edgesNr int Anzahl der Kanten
      * @return GraphModel der erstellte Graph
      */
-    //TODO 3. Parameter übergeben für "alle Knotengrade even" und
+    //TODO 3. Parameter übergeben für "alle Knotengrade even" (even == true) und
     // Code um Funktionalität erweitern
     public GraphModel generateGraph(int nodesNr, int edgesNr) {
         LogResources.startTask("Generate Graph");
