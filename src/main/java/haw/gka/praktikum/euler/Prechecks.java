@@ -5,6 +5,7 @@ import haw.gka.praktikum.GraphModel;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Klasse, die prüft, ob ein gegebener Graph die Vorraussetzungen erfüllt, um
@@ -46,7 +47,20 @@ public class Prechecks {
                     " enthalten für Eulerkreis.");
         }
 
-        //TODO Test für gerade Knotengrade
+        //TODO Test für gerade Knotengrade -> müsste so passen
+        for(Set<Edge> edgesOfNode : graph.getAdjacency().values()) {
+            int degree = edgesOfNode.size();
+
+            for (Edge edge : edgesOfNode) {
+                if(edge.getStart().equals(edge.getEnd())) {
+                    degree++;
+                }
+            }
+            if(degree % 2 != 0){
+                throw new IllegalArgumentException("Nicht alle Knoten des Graphen" +
+                        " haben einen geraden Knotengrad.");
+            }
+        }
 
         return true;
     }
