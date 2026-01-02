@@ -57,6 +57,8 @@ public class Hierholzer {
         return eulerCircle;
     }
 
+    //TODO kann die auch für beide Algorithmen sein und eine eigene Klasse
+    // haben?
     public static boolean checkEulerCircle(GraphModel candidate) {
         //muss Weg sein, also die Kanten miteinander verbunden sein
         // und start gleich endNode
