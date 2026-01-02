@@ -99,7 +99,7 @@ public class GraphGenerator {
             j++;
         }
         LogResources.stopTask("Generate Graph");
-        System.out.println("Edges count" + generatedGraph.getEdges().size());
+        System.out.println("Edges count: " + generatedGraph.getEdges().size());
         return generatedGraph;
     }
 

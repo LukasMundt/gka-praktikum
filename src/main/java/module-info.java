@@ -9,4 +9,5 @@ module gka {
 
     exports haw.gka.praktikum;
     exports haw.gka.praktikum.LogResources;
+    exports haw.gka.praktikum.euler;
 }

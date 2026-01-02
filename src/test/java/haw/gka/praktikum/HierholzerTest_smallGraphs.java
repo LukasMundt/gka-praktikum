@@ -1,9 +1,12 @@
 package haw.gka.praktikum;
 
+import haw.gka.praktikum.euler.Hierholzer;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static haw.gka.praktikum.euler.Hierholzer.checkEulerCircle;
+import static haw.gka.praktikum.euler.Hierholzer.searchEulerCircle;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,6 +26,7 @@ public class HierholzerTest_smallGraphs {
     String path_euler_cities = "src/test/java/resources/euler/cities.gka";
     String path_euler_sorted = "src/test/java/resources/euler" +
             "/Euler_already_sorted.gka";
+    String path_euler_minimum = "src/test/java/resources/euler/minimum.gka";
 
     //folgende Pfade führen zu Graphen ohne Eulerkreis
     String path_unevenDegrees = "src/test/java/resources" +
@@ -32,6 +36,7 @@ public class HierholzerTest_smallGraphs {
     String path_unconnected_solo = "src/test/java/resources/euler" +
             "/TestFileSolo.gka";
     String path_directed = "src/test/java/resources/euler/directed.gka";
+    String path_too_small = "src/test/java/resources/euler/smallGraph.gka";
 
 
     @Test
@@ -39,7 +44,15 @@ public class HierholzerTest_smallGraphs {
         GraphModel directed = graphReader.readGraph(path_directed);
 
         assertThrows(IOException.class,
-                () -> hierholzer.searchEulerCircle(directed));
+                () -> searchEulerCircle(directed));
+    }
+
+    @Test
+    void testSearchEulerCircle_Error_graphIsTooSmall() throws IOException {
+        GraphModel tooSmall = graphReader.readGraph(path_too_small);
+
+        assertThrows(IOException.class,
+                () -> searchEulerCircle(tooSmall));
     }
 
     @Test
@@ -47,7 +60,7 @@ public class HierholzerTest_smallGraphs {
         GraphModel unconnected = graphReader.readGraph(path_evenDegrees_unconnected);
 
         assertThrows(IOException.class,
-                () -> hierholzer.searchEulerCircle(unconnected));
+                () -> searchEulerCircle(unconnected));
     }
 
     @Test
@@ -56,7 +69,7 @@ public class HierholzerTest_smallGraphs {
                 graphReader.readGraph(path_unconnected_solo);
 
         assertThrows(IOException.class,
-                () -> hierholzer.searchEulerCircle(unconnected_solo));
+                () -> searchEulerCircle(unconnected_solo));
     }
 
     @Test
@@ -64,7 +77,7 @@ public class HierholzerTest_smallGraphs {
         GraphModel unevenDegrees = graphReader.readGraph(path_unevenDegrees);
 
         assertThrows(IOException.class,
-                () -> hierholzer.searchEulerCircle(unevenDegrees));
+                () -> searchEulerCircle(unevenDegrees));
     }
 
     @Test
@@ -72,7 +85,7 @@ public class HierholzerTest_smallGraphs {
         GraphModel graph_is_null = null;
 
         assertThrows(IOException.class,
-                () -> hierholzer.searchEulerCircle(graph_is_null));
+                () -> searchEulerCircle(graph_is_null));
     }
 
     /**
@@ -85,27 +98,27 @@ public class HierholzerTest_smallGraphs {
     void testFindsEulerCircle_Small() throws IOException {
         GraphModel candidate = graphReader.readGraph(path_eulercircle);
 
-        GraphModel actual_eulerkreis = hierholzer.searchEulerCircle(candidate);
+        GraphModel actual_eulerkreis = searchEulerCircle(candidate);
 
-        assertTrue(hierholzer.checkEulerCircle(actual_eulerkreis));
+        assertTrue(checkEulerCircle(actual_eulerkreis));
     }
 
     @Test
     void testFindsEulerCircle_AlreadySorted() throws IOException {
         GraphModel candidate = graphReader.readGraph(path_euler_sorted);
 
-        GraphModel actual_eulerkreis = hierholzer.searchEulerCircle(candidate);
+        GraphModel actual_eulerkreis = searchEulerCircle(candidate);
 
-        assertTrue(hierholzer.checkEulerCircle(actual_eulerkreis));
+        assertTrue(checkEulerCircle(actual_eulerkreis));
     }
 
     @Test
     void testFindsEulerCircle_Nodenames_Weights() throws IOException {
         GraphModel candidate = graphReader.readGraph(path_euler_cities);
 
-        GraphModel actual_eulerkreis = hierholzer.searchEulerCircle(candidate);
+        GraphModel actual_eulerkreis = searchEulerCircle(candidate);
 
-        assertTrue(hierholzer.checkEulerCircle(actual_eulerkreis));
+        assertTrue(checkEulerCircle(actual_eulerkreis));
     }
     //TODO noch weitere Randfälle?
 }

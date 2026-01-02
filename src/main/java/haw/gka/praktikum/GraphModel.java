@@ -306,5 +306,18 @@ public class GraphModel {
                 .map(Edge::getWeight)
                 .reduce(0.0f, Float::sum);
     }
+
+    /**
+     * Prüft, ob eine Kante (und damit der Graph) gerichtet ist
+     *
+     * @return boolean true, wenn Kante(n) gerichtet sind
+     */
+    public boolean getDirectionOfGraph() {
+        for (Edge edge : getEdges()) {
+            // Prüft, ob Kante gerichtet ist
+            return edge.isDirected();
+        }
+        return false;
+    }
 }
 

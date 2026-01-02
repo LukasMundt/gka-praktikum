@@ -1,5 +1,6 @@
 package haw.gka.praktikum;
 
+import haw.gka.praktikum.euler.Hierholzer;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
