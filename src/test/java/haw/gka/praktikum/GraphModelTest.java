@@ -166,4 +166,90 @@ public class GraphModelTest {
 
         assertEquals(a, graph.getReverseNeighborWithIndex(b, 5));
     }
+
+    /**
+     * Testfall: Prüfung, ob ein Graph zusammenhängend ist.
+     *
+     * Szenario 1:
+     *  - Graph mit zwei isolierten Knoten a und b (keine Kanten).
+     *
+     * Erwartung:
+     *  - Der Graph ist NICHT zusammenhängend, da keine Verbindung zwischen a und b existiert.
+     * ----------------------------------------------------------------------------------
+     * Szenario 2:
+     *  - Graph mit drei Knoten a1, b1, c1
+     *  - Kanten: a1 - b1 (ungerichtet) und b1 - c1 (ungerichtet)
+     *  - Bildet eine Kette: a1 - b1 - c1
+     *
+     * Erwartung:
+     *  - Der Graph ist zusammenhängend, da alle Knoten über einen Pfad erreichbar sind.
+     */
+    @Test
+    public void testIsGraphConnected() {
+        GraphModel graph = new GraphModel();
+        Node a = Node.getNode("a");
+        Node b = Node.getNode("b");
+        graph.addNodes(a, b);
+
+        assertFalse(graph.isGraphConnected());
+
+        GraphModel graph1 = new GraphModel();
+        Node a1 = Node.getNode("a");
+        Node b1 = Node.getNode("b");
+        Node c1 = Node.getNode("c");
+        graph.addNodes(a1, b1, c1);
+        Edge ab1 = new Edge(a1, b1, false);
+        Edge bc1 = new Edge(b1, c1, false);
+        graph1.addEdges(ab1, bc1);
+
+        assertTrue(graph1.isGraphConnected());
+    }
+
+    /**
+     * Testfall: Prüfung, ob eine Kante eine Brückenkante ist.
+     *
+     * Eine Brückenkante ist eine Kante, deren Entfernung den Graphen in
+     * zwei oder mehr unzusammenhängende Komponenten aufspaltet.
+     *
+     * Szenario 1:
+     *  - Graph mit zwei Knoten a und b
+     *  - Eine einzige Kante: a - b (ungerichtet)
+     *
+     * Erwartung:
+     *  - Die Kante ab ist eine Brücke, da ihre Entfernung zwei isolierte Knoten
+     *    zurücklässt und der Graph somit nicht mehr zusammenhängend ist.
+     * ----------------------------------------------------------------------------------
+     * Szenario 2:
+     *  - Graph mit drei Knoten a1, b1, c1
+     *  - Kanten: a1 - b1, b1 - c1, a1 - c1 (alle ungerichtet)
+     *  - Bildet ein Dreieck (vollständiger Graph K₃)
+     *
+     * Erwartung:
+     *  - Die Kante a1 - b1 ist KEINE Brücke, da nach ihrer Entfernung immer noch
+     *    ein Pfad von a1 nach b1 existiert (über c1: a1 - c1 - b1).
+     *  - Der Graph bleibt zusammenhängend.
+     */
+    @Test
+    public void testIsEdgeABridge(){
+        GraphModel graph = new GraphModel();
+        Node a = Node.getNode("a");
+        Node b = Node.getNode("b");
+        graph.addNodes(a, b);
+        Edge ab = new Edge(a, b, false);
+        graph.addEdges(ab);
+
+        assertTrue(graph.isEdgeABridge(ab));
+
+        GraphModel graph1 = new GraphModel();
+        Node a1 = Node.getNode("a");
+        Node b1 = Node.getNode("b");
+        Node c1 = Node.getNode("c");
+        graph.addNodes(a1, b1, c1);
+        Edge ab1 = new Edge(a1, b1, false);
+        Edge bc1 = new Edge(b1, c1, false);
+        Edge ac1 = new Edge(a1, c1, false);
+        graph1.addEdges(ab1, bc1, ac1);
+
+        assertFalse(graph1.isEdgeABridge(ab1));
+    }
 }

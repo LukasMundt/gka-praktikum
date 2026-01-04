@@ -1,9 +1,6 @@
 package haw.gka.praktikum;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Repräsentiert ein Graphmodell mit Knoten und Kanten.
@@ -141,6 +138,20 @@ public class GraphModel {
     }
 
     /**
+     * Entfernt die angegebene Kante aus dem Graphen.
+     *
+     * @param edge Kante die entfernt werden soll
+     */
+    public void removeEdge(Edge edge) {
+        // Kante entfernen
+        _edges.remove(edge);
+
+        // Verbindung aus der Adjazenzliste löschen
+        _adjacency.get(edge.getStart()).remove(edge);
+        _adjacency.get(edge.getEnd()).remove(edge);
+    }
+
+    /**
      * Weist einem Knoten einen Index (Ebene) zu.
      *
      * @param node  Knoten
@@ -184,7 +195,10 @@ public class GraphModel {
         }
         Set<Node> neighbors = new HashSet<>();
 
-        for (Edge edge : _edges) {
+        // mit dem Knoten verbundene Kanten
+        Set<Edge> adjacentEdges = _adjacency.getOrDefault(node, new HashSet<>());
+
+        for (Edge edge : adjacentEdges) {
             // wenn der andere Knoten von a aus erreichbar ist und noch nicht indiziert ist, wird er dem Ergebnis hinzugefügt
             if (edge.isOtherNodeReachableFromA(node)) {
                 Node otherNode = edge.getOtherNode(node);
@@ -208,7 +222,11 @@ public class GraphModel {
             throw new IllegalArgumentException("node is not contained in the graph");
         }
         Set<Node> neighbors = new HashSet<>();
-        for (Edge edge : _edges) {
+
+        // mit dem Knoten verbundene Kanten
+        Set<Edge> adjacentEdges = _adjacency.getOrDefault(node, new HashSet<>());
+
+        for (Edge edge : adjacentEdges) {
             // wenn der übergebene Knoten von dem anderen Knoten der aktuellen Kante aus erreichbar ist, wird er dem Ergebnis hinzugefügt
             if (edge.isAReachableFromOtherNode(node)) {
                 neighbors.add(edge.getOtherNode(node));
@@ -275,6 +293,14 @@ public class GraphModel {
     }
 
     /**
+     * Entfernt alle Kanten aus dem Graphen.
+     */
+    public void clearEdges() {
+        _edges.clear();
+        _adjacency.clear();
+    }
+
+    /**
      * @return Adjazenz-Map
      */
     public Map<Node, Set<Edge>> getAdjacency() {
@@ -318,6 +344,48 @@ public class GraphModel {
             return edge.isDirected();
         }
         return false;
+    }
+
+    /**
+     * Prüft, ob der Graph zusammenhängend ist.
+     *
+     * @return Wahrheitswert, ob der Graph zusammenhängt
+     */
+    public boolean isGraphConnected() {
+        boolean isConnected = true;
+
+        for (Node node : this.getNodes()) {
+            for (Node otherNode : this.getNodes()) {
+                // Wenn die Knoten gleich oder direkt verbunden direkt nächsten Knoten checken
+                if (node.equals(otherNode)) continue;
+                if (_adjacency.containsKey(node) && _adjacency.get(node).stream().anyMatch(edge -> edge.getOtherNode(node).equals(otherNode))) continue;
+
+                // wenn kein Weg gefunden, dann hängt Graph nicht zusammen
+                List<Node> result = BreadthFirstSearch.search(this, node, otherNode);
+                if(result.isEmpty()){
+                    isConnected = false;
+                    break;
+                }
+            }
+        }
+
+        return isConnected;
+    }
+
+    /**
+     * Prüft, ob eine Kante eine Brückenkante ist, durch Simulation. Die Kante
+     * wird entfernt und geprüft, ob der Graph noch zusammenhängend ist. Wenn
+     * ja, kann es sich nicht um eine Brücken-Kante gehandelt haben.
+     *
+     * @param edge Kante, die überprüft werden soll
+     * @return Ob die Kante eine Brücken-Kante ist
+     */
+    public boolean isEdgeABridge(Edge edge) {
+        GraphModel simulatedGraph = new GraphModel(new HashSet<>(_nodes), new HashSet<>(_edges));
+
+        simulatedGraph.removeEdge(edge);
+
+        return !simulatedGraph.isGraphConnected();
     }
 }
 
