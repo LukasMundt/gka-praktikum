@@ -3,6 +3,7 @@ package haw.gka.praktikum;
 import haw.gka.praktikum.LogResources.LogResources;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Generator für einen ungerichteten Graphen mit einer vorgegebenen Anzahl von
@@ -72,10 +73,13 @@ public class GraphGenerator {
 
 
         if (generatedGraph.getEdges().size() > edgesNr) {
-            // relativ aufwändig
-            this.removeExcessEdges(generatedGraph, edgesNr, connected);
+            this.removeExcessEdges(generatedGraph, edgesNr, connected, adjacencyList);
         } else if (generatedGraph.getEdges().size() < edgesNr) {
             this.addRemainingEdges(generatedGraph, edgesNr, adjacencyList);
+        }
+
+        if(allNodeDegreesEven){
+            this.makeAllNodeDegreesEven(generatedGraph, adjacencyList, connected);
         }
 
         // todo: Alle Knoten des Graphen mit geradem grad ausstatten
@@ -201,7 +205,7 @@ public class GraphGenerator {
         }
     }
 
-    private void removeExcessEdges(GraphModel generatedGraph, int edgesNr, boolean connected) {
+    private void removeExcessEdges(GraphModel generatedGraph, int edgesNr, boolean connected, Map<Integer, HashSet<Integer>> adjacencyList) {
         List<Edge> allEdges = new ArrayList<>(generatedGraph.getEdges());
 
         int excessEdges = allEdges.size() - edgesNr;
@@ -215,13 +219,66 @@ public class GraphGenerator {
                 continue;
             }
 
+            Node nodeA = edge.getStart();
+            int indexA = Integer.parseInt(nodeA.getName().substring(2));
+
+            Node nodeB = edge.getEnd();
+            int indexB = Integer.parseInt(nodeB.getName().substring(2));
+
             generatedGraph.removeEdge(edge);
             allEdges.remove(rIndex);
+            adjacencyList.get(indexA).remove(indexB);
+            adjacencyList.get(indexB).remove(indexA);
         }
 
         if(allEdges.size() > edgesNr){
             throw new IllegalArgumentException("Failure: Konnte den Graphen nicht herstellen, ohne ihn zu trennen.");
         }
+    }
+
+    private void makeAllNodeDegreesEven(GraphModel graph,
+                                        Map<Integer, HashSet<Integer>> adjacencyList,
+                                        boolean connected) {
+
+        List<Integer> oddNodes = adjacencyList.keySet()
+                .stream()
+                .filter(i -> adjacencyList.get(i).size() % 2 != 0)
+                .collect(Collectors.toList());
+
+        if (oddNodes.size() % 2 != 0) {
+            throw new IllegalStateException("Ungerade Anzahl ungerader Knoten – unmöglich.");
+        }
+
+        while (!oddNodes.isEmpty()) {
+            int a = oddNodes.removeFirst();
+            int b = oddNodes.removeFirst();
+
+            Node nodeA = Node.getNode("n_" + a);
+            Node nodeB = Node.getNode("n_" + b);
+
+            if (adjacencyList.getOrDefault(a, new HashSet<>()).contains(b)) {
+                Optional<Edge> edge = graph
+                        .getAdjacency()
+                        .getOrDefault(nodeA, new HashSet<>())
+                        .stream()
+                        .filter(e -> e.getOtherNode(nodeA).equals(nodeB))
+                        .findFirst();
+
+                if (edge.isEmpty() || (connected && graph.isEdgeABridge(edge.get()))) {
+                    oddNodes.add(a);
+                    oddNodes.addFirst(b);
+                    continue;
+                }
+
+                edge.ifPresent(graph::removeEdge);
+                adjacencyList.get(a).remove(b);
+                adjacencyList.get(b).remove(a);
+            } else {
+                this.addEdge(nodeA, a, nodeB, b, graph, adjacencyList);
+            }
+        }
+
+        // todo: Kanten hinzufügen oder entfernen
     }
 
     private void addEdge(Node nodeA, int indexA, Node nodeB, int indexB, GraphModel generatedGraph, Map<Integer, HashSet<Integer>> adjacencyList) {

@@ -74,18 +74,17 @@ public class GraphGeneratorTest {
 
     @Test
     void testAllNodeDegreesEven() {
-        GraphModel genGraph = generator.generateGraph(30, 306, false, true);
-        assertEquals(306, genGraph.getEdges().size());
+        GraphModel genGraph = generator.generateGraph(30, 410, true, true);
+        assertTrue(genGraph.isGraphConnected());
+        assertEquals(410, genGraph.getEdges().size());
 
-        for(Set<Edge> edgesOfNode : genGraph.getAdjacency().values()) {
+        for(Node node : genGraph.getAdjacency().keySet()) {
+            Set<Edge> edgesOfNode = genGraph.getAdjacency().get(node);
             int degree = edgesOfNode.size();
 
-            for (Edge edge : edgesOfNode) {
-                if(edge.getStart().equals(edge.getEnd())) {
-                    degree++;
-                }
-            }
-            assertFalse(degree % 2 != 0);
+            System.out.println(node.toString()+degree);
+
+            assertEquals(0, degree % 2, "Knotengrad ist ungerade");
         }
     }
 
