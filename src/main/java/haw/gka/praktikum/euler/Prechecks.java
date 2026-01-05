@@ -3,8 +3,6 @@ package haw.gka.praktikum.euler;
 import haw.gka.praktikum.Edge;
 import haw.gka.praktikum.GraphModel;
 
-import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -21,33 +19,46 @@ public class Prechecks {
      * - graph ungleich null
      * - graph ungerichtet
      * - graph hat mindestens 3 Kanten
-     * - graph hat gerade Knotengrade TODO!
+     * - graph hat gerade Knotengrade
      *
      * @param graph
-     * @return boolean true, wenn Graph alle Reqs erfüllt
-     * @throws IOException
+     * @throws IllegalArgumentException
      */
-    public static boolean checkEulerRequirements(GraphModel graph) throws IOException {
-        //check if null
-        if (graph == null) {
-            throw new IOException("Übergebener Graph ist null, damit kann ich" +
-                    " nicht arbeiten.");
-        }
+    public static void checkEulerRequirements(GraphModel graph) throws IllegalArgumentException {
+        checkDirected(graph);
+        checkGraphIsBigEnough(graph);
+        checkEvenNodeDegrees(graph);
+        checkConnected(graph);
+    }
 
-        //check if directed
+    /**
+     * Prüft, dass der Graph keine gerichteten Kanten enthält.
+     * @param graph Graph, der überprüft werden soll
+     */
+    public static void checkDirected(GraphModel graph) {
         if (graph.getDirectionOfGraph()) {
-            throw new IOException("Übergebener Graph ist gerichtet, damit " +
+            throw new IllegalArgumentException("Übergebener Graph ist gerichtet, damit " +
                     "kann ich nicht arbeiten.");
         }
+    }
 
-        HashSet<Edge> allEdges = graph.getEdges();
-        //check if size is big enough
-        if (allEdges.size() <= 2) {
-            throw new IOException("Übergebener Graph muss mindestens 3 Kanten" +
+    /**
+     * Prüft, ob der Graph groß genug ist.
+     * @param graph Graph, der überprüft werden soll
+     */
+    public static void checkGraphIsBigEnough(GraphModel graph) {
+
+        if (graph.getEdges().size() <= 2) {
+            throw new IllegalArgumentException("Übergebener Graph muss mindestens 3 Kanten" +
                     " enthalten für Eulerkreis.");
         }
+    }
 
-        //TODO Test für gerade Knotengrade -> müsste so passen
+    /**
+     * Prüft, ob alle Knotengrade gerade sind.
+     * @param graph Graph, der überprüft werden soll
+     */
+    public static void checkEvenNodeDegrees(GraphModel graph) {
         for(Set<Edge> edgesOfNode : graph.getAdjacency().values()) {
             int degree = edgesOfNode.size();
 
@@ -61,7 +72,15 @@ public class Prechecks {
                         " haben einen geraden Knotengrad.");
             }
         }
+    }
 
-        return true;
+    /**
+     * Prüft, ob der Graph zusammenhängend ist.
+     * @param graph Graph, der überprüft werden soll
+     */
+    public static void checkConnected(GraphModel graph) {
+        if (!graph.isGraphConnected()) {
+            throw new IllegalArgumentException("Der Graph ist nicht zusammenhängend.");
+        }
     }
 }
