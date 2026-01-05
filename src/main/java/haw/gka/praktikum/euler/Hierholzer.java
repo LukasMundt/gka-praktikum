@@ -5,18 +5,18 @@ import haw.gka.praktikum.GraphModel;
 import haw.gka.praktikum.LogResources.LogResources;
 import haw.gka.praktikum.Node;
 
-import java.io.IOException;
 import java.util.HashSet;
-
-import static haw.gka.praktikum.euler.Prechecks.checkEulerRequirements;
 
 public class Hierholzer {
 
-    public static GraphModel searchEulerCircle(GraphModel graph) throws IOException {
+    public static GraphModel searchEulerCircle(GraphModel graph) {
         //Start Logging
         LogResources.startTask("Running Hierholzer on graph");
 
-        checkEulerRequirements(graph);
+        if(graph == null) {
+            throw new IllegalArgumentException("graphModel cannot be null");
+        }
+        Prechecks.checkEulerRequirements(graph);
 
         //Kanten aus Graph holen und Vergleichsset anlegen
         HashSet<Edge> allEdges = graph.getEdges();
@@ -55,19 +55,6 @@ public class Hierholzer {
 
 
         return eulerCircle;
-    }
-
-    //TODO kann die auch für beide Algorithmen sein und eine eigene Klasse
-    // haben?
-    public static boolean checkEulerCircle(GraphModel candidate) {
-        //muss Weg sein, also die Kanten miteinander verbunden sein
-        // und start gleich endNode
-//        if () {
-//            return true;
-//        } else {
-//            return false;
-//        }
-        return false;
     }
 
 
