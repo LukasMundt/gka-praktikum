@@ -54,40 +54,10 @@ public class BreadthFirstSearch {
             return new ArrayList<>();
         }
 
-        // Start mit 0 indizieren und fügt ihn der Queue hinzu
-        graph.indexNode(start, 0);
-        ArrayList<Node> nodesToHandle = new ArrayList<>();
-        nodesToHandle.add(start);
-        Node current = null;
+        // Graph traversieren
+        traverseGraph(graph, start, end, verbose);
 
-        while (!nodesToHandle.isEmpty()) {
-            // nimmt den ersten Knoten aus der Queue und markiert ihn als aktuellen
-            current = nodesToHandle.getFirst();
-            nodesToHandle.removeFirst();
-
-            // holt den Index des aktuellen Knoten
-            int index = graph.getIndexOfNode(current);
-            if (index == -1) {
-                throw new RuntimeException("Node not found: " + current.getName());
-            }
-
-            // beendet, wenn Ziel gefunden
-            if(current.equals(end)){
-                break;
-            }
-
-            // holt alle noch nicht indizierten Nachbarn, indiziert sie mit n+1 und fügt sie der queue hinzu
-            Set<Node> neighbors = graph.getUnindexedNeighbors(current);
-            for (Node node : neighbors) {
-                graph.indexNode(node, index+1);
-                nodesToHandle.add(node);
-                if (verbose) {
-                    System.out.println("Found node: " + node.getName()+"; marked with:" +(index+1));
-                }
-            }
-        }
-
-        if(current.equals(end)){
+        if(graph.getIndexOfNode(end) != -1){
             // ziel wurde gefunden
             System.out.println("Ziel gefunden. Benutze Kanten: "+(graph.getIndexOfNode(end)));
         } else {
@@ -138,5 +108,52 @@ public class BreadthFirstSearch {
         resultList.addFirst(start);
 
         return resultList;
+    }
+
+    /**
+     * Traversiert einen Graphen für die BFS.
+     * Wenn end == null ist stoppt die Traversierung erst, wenn alle erreichbaren Knoten indiziert sind.
+     *
+     * @param graph Zu traversierender Graph
+     * @param start Startpunkt
+     * @param end Ziel-Knoten, kann auch null sein, dann terminiert die Traversierung nicht vorzeitig
+     * @param verbose Ob viel während der Laufzeit auf der Konsole ausgegeben werden soll
+     * @return
+     */
+    public static GraphModel traverseGraph(GraphModel graph, Node start, Node end, boolean verbose) {
+        // Start mit 0 indizieren und fügt ihn der Queue hinzu
+        graph.indexNode(start, 0);
+        ArrayList<Node> nodesToHandle = new ArrayList<>();
+        nodesToHandle.add(start);
+        Node current = null;
+
+        while (!nodesToHandle.isEmpty()) {
+            // nimmt den ersten Knoten aus der Queue und markiert ihn als aktuellen
+            current = nodesToHandle.getFirst();
+            nodesToHandle.removeFirst();
+
+            // holt den Index des aktuellen Knoten
+            int index = graph.getIndexOfNode(current);
+            if (index == -1) {
+                throw new RuntimeException("Node not found: " + current.getName());
+            }
+
+            // beendet, wenn Ziel gefunden
+            if(current.equals(end)){
+                break;
+            }
+
+            // holt alle noch nicht indizierten Nachbarn, indiziert sie mit n+1 und fügt sie der queue hinzu
+            Set<Node> neighbors = graph.getUnindexedNeighbors(current);
+            for (Node node : neighbors) {
+                graph.indexNode(node, index+1);
+                nodesToHandle.add(node);
+                if (verbose) {
+                    System.out.println("Found node: " + node.getName()+"; marked with:" +(index+1));
+                }
+            }
+        }
+
+        return graph;
     }
 }
