@@ -81,7 +81,7 @@ public class FleuryTest_smallGraphs {
     }
 
     @Test
-    void testThrowsIOException() throws IOException {
+    void testThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class,
                 () -> Fleury.search(null));
     }

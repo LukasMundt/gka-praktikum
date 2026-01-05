@@ -7,7 +7,6 @@ import haw.gka.praktikum.Node;
 import java.util.List;
 
 public class Euler {
-    //TODO: fehlt hier noch was
     public static boolean checkEulerCircle(GraphModel original, List<Edge> candidate) {
         if (original.getEdges().size() != candidate.size()) {
             return false;

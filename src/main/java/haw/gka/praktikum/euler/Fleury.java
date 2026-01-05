@@ -2,8 +2,10 @@ package haw.gka.praktikum.euler;
 
 import haw.gka.praktikum.Edge;
 import haw.gka.praktikum.GraphModel;
+import haw.gka.praktikum.LogResources.LogResources;
+import haw.gka.praktikum.Node;
 
-import java.util.List;
+import java.util.*;
 
 public class Fleury {
 
@@ -12,8 +14,6 @@ public class Fleury {
     private GraphModel eulerCircleGraph;
 
     /**
-     *
-     *
      * @param originalGraph Graph, in dem der Eulerkreis gesucht werden soll
      * @param eulerCircle Liste der Kanten des Eulerkreises
      * @param eulerCircleGraph Graph, der den Eulerkreis enthält
@@ -30,13 +30,62 @@ public class Fleury {
      *
      * @param graphModel Graph, in dem Eulerkreis gesucht werden soll
      * @return Fleury-Objekt
+     * @throws IllegalArgumentException
      */
     public static Fleury search(GraphModel graphModel) {
-        // todo: prechecks: zusammenhängend + knotengrade
+        // prechecks
+        if(graphModel == null) {
+            throw new IllegalArgumentException("graphModel cannot be null");
+        }
+        Prechecks.checkEulerRequirements(graphModel);
 
-        // todo: execute fleury
+        LogResources.startTask("Running Fleury on graph");
 
-        return new Fleury(graphModel, null, null);
+        // Graphen kopieren
+        GraphModel oldGraph = new GraphModel(new HashSet<>(graphModel.getNodes()), new HashSet<>(graphModel.getEdges()));
+
+        List<Edge> eulerCircle = new ArrayList<>();
+        GraphModel eulerCircleGraph = new GraphModel();
+
+        // ersten Knoten wählen
+        Node currentNode = graphModel.getNodes().iterator().next();
+
+        while (!oldGraph.getEdges().isEmpty()) {
+            // Inzidente Kanten
+            Set<Edge> incidentEdges = oldGraph.getAdjacency().get(currentNode);
+
+            // Wählen einer Kante, nicht-Brücken priorisiert
+            Edge selectedEdge = null;
+
+            for (Edge e : incidentEdges) {
+                if (!oldGraph.isEdgeABridge(e)) {
+                    selectedEdge = e;
+                    break;
+                }
+            }
+            // wenn alle Brücken sind -> irgendeine nehmen
+            if (selectedEdge == null) {
+                selectedEdge = incidentEdges.iterator().next();
+            }
+
+            // Kante markieren
+            eulerCircle.add(selectedEdge);
+            eulerCircleGraph.addEdges(selectedEdge);
+
+            // Kante aus dem alten Graphen entfernen
+            oldGraph.removeEdge(selectedEdge);
+            if (oldGraph.getAdjacency().getOrDefault(currentNode, new HashSet<>()).isEmpty()) {
+                oldGraph.removeNode(currentNode);
+            }
+
+            // neuen Knoten festlegen
+            currentNode = selectedEdge.getOtherNode(currentNode);
+//            System.out.println("currentNode: " + currentNode);
+        }
+
+        LogResources.stopTask("Running Fleury on graph");
+
+        return new Fleury(graphModel, eulerCircle, eulerCircleGraph);
     }
 
     /**
