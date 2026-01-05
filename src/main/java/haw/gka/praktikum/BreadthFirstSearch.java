@@ -2,9 +2,7 @@ package haw.gka.praktikum;
 
 import haw.gka.praktikum.LogResources.LogResources;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
 * Implementation of the BFS algorithm
@@ -45,9 +43,6 @@ public class BreadthFirstSearch {
             List<Node> resultList = new ArrayList<>();
             resultList.add(start);
             return resultList;
-        } else if(graph.getNodes().isEmpty()){
-            // wenn der Graph keine Knoten hat
-            return new ArrayList<>();
         } else if(!graph.getNodes().contains(start)) {
             // wenn der Startknoten nicht im Graphen vorkommt
             System.out.println("Start-Node not found in graph: " + start.getName());
@@ -57,9 +52,10 @@ public class BreadthFirstSearch {
         // Graph traversieren
         traverseGraph(graph, start, end, verbose);
 
-        if(graph.getIndexOfNode(end) != -1){
+        int endIndex = graph.getIndexOfNode(end);
+        if(endIndex != -1){
             // ziel wurde gefunden
-            System.out.println("Ziel gefunden. Benutze Kanten: "+(graph.getIndexOfNode(end)));
+            System.out.println("Ziel gefunden. Benutze Kanten: "+endIndex);
         } else {
             // Ziel wurde nicht gefunden -> gibt leere Liste zurück
             System.out.println("Ziel ist nicht vom Start erreichbar.");
@@ -123,14 +119,13 @@ public class BreadthFirstSearch {
     public static GraphModel traverseGraph(GraphModel graph, Node start, Node end, boolean verbose) {
         // Start mit 0 indizieren und fügt ihn der Queue hinzu
         graph.indexNode(start, 0);
-        ArrayList<Node> nodesToHandle = new ArrayList<>();
+        Deque<Node> nodesToHandle = new ArrayDeque<>();
         nodesToHandle.add(start);
         Node current = null;
 
         while (!nodesToHandle.isEmpty()) {
             // nimmt den ersten Knoten aus der Queue und markiert ihn als aktuellen
-            current = nodesToHandle.getFirst();
-            nodesToHandle.removeFirst();
+            current = nodesToHandle.poll();
 
             // holt den Index des aktuellen Knoten
             int index = graph.getIndexOfNode(current);
