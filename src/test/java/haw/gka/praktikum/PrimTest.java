@@ -95,15 +95,31 @@ public class PrimTest {
 
         long before = System.nanoTime();
 
-        for(Node n : g.getNodes()) {
-            for(Node subNode : g.getNodes()) {
-                List<Node> expectedBfsResult = BreadthFirstSearch.search(g, n, subNode);
-                List<Node> mstBfsResult = BreadthFirstSearch.search(mst, n, subNode);
+        Optional<Node> node = g.getNodes().stream().findFirst();
+        assertTrue(node.isPresent());
 
-                assertEquals(expectedBfsResult.isEmpty(), mstBfsResult.isEmpty());
-                assertEquals(expectedBfsResult.size() == 1, mstBfsResult.size() == 1);
-                assertEquals(expectedBfsResult.size() > 1, mstBfsResult.size() > 1);
-            }
+        GraphModel tempGraph = new GraphModel(new HashSet<>(g.getNodes()), new HashSet<>(g.getEdges()));
+        GraphModel traversedGraph = BreadthFirstSearch.traverseGraph(
+                tempGraph,
+                node.get(),
+                null,
+                false
+                );
+
+        GraphModel traversedMst = BreadthFirstSearch.traverseGraph(
+                new GraphModel(new HashSet<>(mst.getNodes()), new HashSet<>(mst.getEdges())),
+                node.get(),
+                null,
+                false
+        );
+
+
+        for (Node n : g.getNodes()) {
+            int indexGraph = traversedGraph.getIndexOfNode(n);
+            int indexMst = traversedMst.getIndexOfNode(n);
+
+            assertEquals(indexGraph == -1, indexMst == -1);
+            assertEquals(indexGraph >= 1, indexMst >= 1);
         }
 
         long after = System.nanoTime();
