@@ -152,6 +152,24 @@ public class GraphModel {
     }
 
     /**
+     * Entfernt den angegebenen Knoten und alle inzidenten Kanten.
+     *
+     * @param node Zu entfernender Knoten
+     */
+    public void removeNode(Node node) {
+        // Knoten entfernen
+        _nodes.remove(node);
+
+        // inzidente Kanten löschen
+        for (Edge edge : _adjacency.getOrDefault(node, new HashSet<>())) {
+            this.removeEdge(edge);
+        }
+
+        // Eintrag in der Adjazenzliste löschen
+        _adjacency.remove(node);
+    }
+
+    /**
      * Weist einem Knoten einen Index (Ebene) zu.
      *
      * @param node  Knoten
