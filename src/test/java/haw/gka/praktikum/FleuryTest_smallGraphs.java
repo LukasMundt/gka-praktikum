@@ -1,6 +1,5 @@
 package haw.gka.praktikum;
 
-import haw.gka.praktikum.euler.Euler;
 import haw.gka.praktikum.euler.Fleury;
 import org.junit.jupiter.api.Test;
 
@@ -94,8 +93,18 @@ public class FleuryTest_smallGraphs {
      * @throws IOException
      */
     @Test
-    void testFindsEulerCircle_Small() throws IOException {
+    void testFindsEulerCircle() throws IOException {
         GraphModel graph = graphReader.readGraph(path_eulercircle);
+
+        Fleury fleury = Fleury.search(graph);
+        List<Edge> actual_eulerkreis = fleury.getEulerCircleTour();
+
+        assertTrue(checkEulerCircle(graph, actual_eulerkreis));
+    }
+
+    @Test
+    void testFindsEulerCircle_minimum() throws IOException {
+        GraphModel graph = graphReader.readGraph(path_euler_minimum);
 
         Fleury fleury = Fleury.search(graph);
         List<Edge> actual_eulerkreis = fleury.getEulerCircleTour();
