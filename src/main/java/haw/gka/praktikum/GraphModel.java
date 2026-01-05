@@ -354,15 +354,14 @@ public class GraphModel {
     public boolean isGraphConnected() {
         boolean isConnected = true;
 
-        for (Node node : this.getNodes()) {
-            for (Node otherNode : this.getNodes()) {
-                // Wenn die Knoten gleich oder direkt verbunden direkt nächsten Knoten checken
-                if (node.equals(otherNode)) continue;
-                if (_adjacency.containsKey(node) && _adjacency.get(node).stream().anyMatch(edge -> edge.getOtherNode(node).equals(otherNode))) continue;
+        Node node = this.getNodes().stream().findFirst().orElse(null);
+        GraphModel tempGraph = new GraphModel(new HashSet<>(_nodes), new HashSet<>(_edges));
 
-                // wenn kein Weg gefunden, dann hängt Graph nicht zusammen
-                List<Node> result = BreadthFirstSearch.search(this, node, otherNode);
-                if(result.isEmpty()){
+        if (node != null) {
+            BreadthFirstSearch.traverseGraph(tempGraph, node, null, false);
+
+            for (Node otherNode: tempGraph.getNodes()) {
+                if (tempGraph.getIndexOfNode(otherNode) == -1){
                     isConnected = false;
                     break;
                 }
