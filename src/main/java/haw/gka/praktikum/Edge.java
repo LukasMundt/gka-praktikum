@@ -214,11 +214,11 @@ public class Edge implements Comparable<Edge> {
     public Node getOtherNode(Node node) {
         if (node == null) {
             throw new IllegalArgumentException("node == null");
-        } else if (!node.equals(_start) && !node.equals(_end)) {
+        } else if (node != _start && node != _end) {
             throw new IllegalArgumentException("The node is not part of this edge.");
         }
 
-        if (node.equals(_start)) {
+        if (node == _start) {
             return _end;
         }
         return _start;

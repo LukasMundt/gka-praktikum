@@ -35,7 +35,7 @@ public class GraphModel {
         _nodes = new HashSet<>();
         _edges = new HashSet<>();
         _indexedNodes = new HashMap<>();
-        _adjacency = new HashMap<>();
+        _adjacency = new IdentityHashMap<>();
     }
 
     /**
@@ -76,6 +76,8 @@ public class GraphModel {
 
     /**
      * Fügt einen oder mehrere Kanten zum Graphen hinzu.
+     * Falls die Knoten der Kante nicht bereits existieren werden sie
+     * hinzugefügt.
      *
      * @param edges Kanten, die hinzugefügt werden sollen
      * @throws NullPointerException wenn eine der Kanten null ist
@@ -372,7 +374,7 @@ public class GraphModel {
     public boolean isGraphConnected() {
         boolean isConnected = true;
 
-        Node node = this.getNodes().stream().findFirst().orElse(null);
+        Node node = this.getNodes().iterator().next();
         GraphModel tempGraph = new GraphModel(new HashSet<>(_nodes), new HashSet<>(_edges));
 
         if (node != null) {
@@ -394,15 +396,40 @@ public class GraphModel {
      * wird entfernt und geprüft, ob der Graph noch zusammenhängend ist. Wenn
      * ja, kann es sich nicht um eine Brücken-Kante gehandelt haben.
      *
-     * @param edge Kante, die überprüft werden soll
+     * @param forbidden Kante, die überprüft werden soll
      * @return Ob die Kante eine Brücken-Kante ist
      */
-    public boolean isEdgeABridge(Edge edge) {
-        GraphModel simulatedGraph = new GraphModel(new HashSet<>(_nodes), new HashSet<>(_edges));
+    public boolean isEdgeABridge(Edge forbidden) {
+        Set<Node> visited = new HashSet<>(getNodes().size());
+        Deque<Node> stack = new ArrayDeque<>();
 
-        simulatedGraph.removeEdge(edge);
+        // Wenn der v nicht mehr von u erreichbar ist ohne die Kante -> Brückenkante
+        Node u = forbidden.getStart();
+        Node v = forbidden.getEnd();
 
-        return !simulatedGraph.isGraphConnected();
+        // u kennzeichnen bzw. als Startpunkt nutzen
+        stack.push(u);
+        visited.add(u);
+
+        while (!stack.isEmpty()) {
+            // aktuellen Knoten abrufen
+            Node current = stack.pop();
+
+            // jeden Nachbarknoten als visited markieren und der abzuarbeitenden liste hinzufügen
+            for (Edge e : getAdjacency().get(current)) {
+                if (e == forbidden) continue;
+
+                Node next = e.getOtherNode(current);
+                if (next == v) {
+                    // wenn nachbarknoten v ist, dann kann Kante keine Brückenkante sein
+                    return false;
+                } else if (visited.add(next)) {
+                    stack.push(next);
+                }
+            }
+        }
+
+        return !visited.contains(v);
     }
 }
 

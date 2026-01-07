@@ -44,8 +44,7 @@ public class Fleury {
         // Graphen kopieren
         GraphModel oldGraph = new GraphModel(new HashSet<>(graphModel.getNodes()), new HashSet<>(graphModel.getEdges()));
 
-        List<Edge> eulerCircle = new ArrayList<>();
-        GraphModel eulerCircleGraph = new GraphModel();
+        List<Edge> eulerCircle = new ArrayList<>(graphModel.getEdges().size());
 
         // ersten Knoten wählen
         Node currentNode = graphModel.getNodes().iterator().next();
@@ -54,36 +53,47 @@ public class Fleury {
             // Inzidente Kanten
             Set<Edge> incidentEdges = oldGraph.getAdjacency().get(currentNode);
 
-            // Wählen einer Kante, nicht-Brücken priorisiert
-            Edge selectedEdge = null;
+            Edge selectedEdge;
 
-            for (Edge e : incidentEdges) {
-                if (!oldGraph.isEdgeABridge(e)) {
-                    selectedEdge = e;
-                    break;
-                }
-            }
-            // wenn alle Brücken sind -> irgendeine nehmen
-            if (selectedEdge == null) {
+            // Wählen einer Kante, nicht-Brücken priorisiert
+            if (incidentEdges.size() == 1) {
                 selectedEdge = incidentEdges.iterator().next();
+            } else {
+                selectedEdge = null;
+
+                // nach nicht brücken suchen
+                for (Edge e : incidentEdges) {
+                    if (!oldGraph.isEdgeABridge(e)) {
+                        selectedEdge = e;
+                        break;
+                    }
+                }
+
+                // wenn alle Brücken sind -> irgendeine nehmen
+                if (selectedEdge == null) {
+                    selectedEdge = incidentEdges.iterator().next();
+                }
             }
 
             // Kante markieren
             eulerCircle.add(selectedEdge);
-            eulerCircleGraph.addEdges(selectedEdge);
 
             // Kante aus dem alten Graphen entfernen
             oldGraph.removeEdge(selectedEdge);
-            if (oldGraph.getAdjacency().getOrDefault(currentNode, new HashSet<>()).isEmpty()) {
+            Set<Edge> adjEdges = oldGraph.getAdjacency().get(currentNode);
+            if (adjEdges == null || adjEdges.isEmpty()) {
                 oldGraph.removeNode(currentNode);
             }
 
             // neuen Knoten festlegen
             currentNode = selectedEdge.getOtherNode(currentNode);
-//            System.out.println("currentNode: " + currentNode);
         }
 
         LogResources.stopTask("Running Fleury on graph");
+
+        // create graph from euler circle
+        GraphModel eulerCircleGraph = new GraphModel();
+        eulerCircleGraph.addEdges(eulerCircle.toArray(new Edge[0]));
 
         return new Fleury(graphModel, eulerCircle, eulerCircleGraph);
     }
