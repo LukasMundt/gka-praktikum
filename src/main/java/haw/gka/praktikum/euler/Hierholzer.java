@@ -5,57 +5,113 @@ import haw.gka.praktikum.GraphModel;
 import haw.gka.praktikum.LogResources.LogResources;
 import haw.gka.praktikum.Node;
 
-import java.util.HashSet;
+import java.util.*;
 
+/**
+ * Implementierung des Hierholzer-Algorithmus
+ */
 public class Hierholzer {
 
+    /**
+     *
+     * @param graph
+     * @return
+     */
     public static GraphModel searchEulerCircle(GraphModel graph) {
         //Start Logging
         LogResources.startTask("Running Hierholzer on graph");
 
-        if(graph == null) {
-            throw new IllegalArgumentException("graphModel cannot be null");
+        if (graph == null || graph.getEdges().isEmpty()) {
+            throw new IllegalArgumentException("Graph is empty");
         }
-        Prechecks.checkEulerRequirements(graph);
 
-        //Kanten aus Graph holen und Vergleichsset anlegen
-        HashSet<Edge> allEdges = graph.getEdges();
+        //Algorithmus ausführen und
+        List<Edge> edgesCandidate = executeHierholzer(graph);
+
+        //final prüfen, ob Eulerkreis enthalten
+        if (!Euler.checkEulerCircle(graph, edgesCandidate)) {
+            System.err.println("Es wurde kein gültiger Eulerkreis gefunden!");
+            return null;
+        }
+
+        //Ergebnis-Liste in ein GraphModel umwandeln
+        GraphModel resultGraph = new GraphModel();
         HashSet<Edge> usedEdges = new HashSet<>();
 
-        //einen Knoten als Start aus dem graph wählen, EndNode deklarieren
-        Edge firstEdge = allEdges.iterator().next();
-        Node startNode = firstEdge.getStart();
-        Node currentNode = startNode;
-        Node endNode = null;
-
-        GraphModel eulerCircle = null;
-        //Suche wiederholen, bis alle Kanten verbraucht
-        //zuerst mit containsAll geprüft, das ist aber langsam;
-        // HashSet enthält keine Duplikate, also size vergleichen
-        // TODO und Startpunkt wieder erreicht wird (das in der Schleife
-        //  prüfen? sonst ist direkt am Anfang start gleich endNode
-        while (usedEdges.size() < allEdges.size()) {
-            //Unterkreis konstruieren, der Eulerkreis ist
-
-
-            // checken, ob Eulerkreis vorliegt
-            if (!checkEulerCircle(eulerCircle)) {
-                System.out.println("es wurde kein Eulerkreis gefunden");
-                return null;
-            }
-
-            //am ersten Punkt von K mit Grad > 0 einen weiteren Unterkreis suchen
-            // checkEulerCircle!
-
-
+        for (Edge e : edgesCandidate) {
+            resultGraph.addEdge(e.getStart(), e.getEnd(), e.isDirected(),
+                    e.isWeighted(), e.getWeight(), e.getName());
         }
 
         //Stop Logging
         LogResources.stopTask("Running Hierholzer on graph");
 
-
-        return eulerCircle;
+        return resultGraph;
     }
 
+    /**
+     * Methode, die den eigentlichen Hierholzer-Algorithmus ausführt
+     *
+     * @param graph
+     * @return
+     */
+    public static List<Edge> executeHierholzer(GraphModel graph) {
+
+        if (graph == null) {
+            throw new IllegalArgumentException("graphModel cannot be null");
+        }
+        Prechecks.checkEulerRequirements(graph);
+
+        // Hilfsstrukturen
+        Stack<Node> nodeStack = new Stack<>();
+        Stack<Edge> edgeStack = new Stack<>();
+        LinkedList<Edge> finalEdgeList = new LinkedList<>();
+        HashSet<Edge> usedEdges = new HashSet<>();
+
+        //Iterator pro Knoten statt Adjazenz-Matrix, damit sehr langsam
+        // (prüft alle Kanten, ob benutzt, statt zu wissen, wo es weitergeht)
+        Map<Node, Iterator<Edge>> edgeIterators = new HashMap<>();
+        for (Node node : graph.getNodes()) {
+            edgeIterators.put(node, graph.getAdjacency().getOrDefault(node, Collections.emptySet()).iterator());
+        }
+
+        Node startNode = graph.getEdges().iterator().next().getStart();
+        nodeStack.push(startNode);
+
+        while (!nodeStack.isEmpty()) {
+            Node currentNode = nodeStack.peek();
+            Iterator<Edge> it = edgeIterators.get(currentNode);
+
+            Edge nextEdge = null;
+
+            while (it != null && it.hasNext()) {
+                Edge e = it.next();
+                if (!usedEdges.contains(e)) {
+                    nextEdge = e;
+                    break;
+                }
+            }
+
+            if (nextEdge != null) {
+                //Kante markieren und weiterziehen
+                usedEdges.add(nextEdge);
+
+                //Nachbarknoten holen und STack hinzufügen
+                Node neighbor = nextEdge.getOtherNode(currentNode);
+                nodeStack.push(neighbor);
+                edgeStack.push(nextEdge);
+
+            } else {
+                // alle Kanten abgearbeitet? Knoten fertig, aus Stack entfernen
+                // aber nur, wenn da noch was drin ist
+                nodeStack.pop();
+                if (!edgeStack.isEmpty()) {
+                    finalEdgeList.addFirst(edgeStack.pop());
+                }
+            }
+        }
+
+        return finalEdgeList;
+    }
 
 }

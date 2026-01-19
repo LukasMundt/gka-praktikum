@@ -1,7 +1,6 @@
 package haw.gka.praktikum;
 
 import haw.gka.praktikum.euler.Euler;
-import haw.gka.praktikum.euler.Hierholzer;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class HierholzerTest_generatedGraphs {
 
         GraphModel actual_eulerkreis = searchEulerCircle(genGraph);
 
-//        assertTrue(Euler.checkEulerCircle(actual_eulerkreis));
+        assertTrue(Euler.checkEulerCircle(actual_eulerkreis));
     }
 
     /**
@@ -38,7 +37,7 @@ public class HierholzerTest_generatedGraphs {
 
         GraphModel actual_eulerkreis = searchEulerCircle(genGraph);
 
-//        assertTrue(Euler.checkEulerCircle(actual_eulerkreis));
+        assertTrue(Euler.checkEulerCircle(actual_eulerkreis));
     }
 
     @Test
