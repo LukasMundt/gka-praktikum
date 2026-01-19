@@ -109,6 +109,17 @@ public class HierholzerTest_smallGraphs {
     }
 
     @Test
+    void testFindsEulerCircle_Minimum() throws IOException {
+        GraphModel candidate = graphReader.readGraph(path_euler_minimum);
+
+        List<Edge> edgeList = Hierholzer.executeHierholzer(candidate);
+
+        GraphModel actual_eulerkreis = searchEulerCircle(candidate);
+
+        assertTrue(checkEulerCircle(actual_eulerkreis, edgeList));
+    }
+
+    @Test
     void testFindsEulerCircle_AlreadySorted() throws IOException {
         GraphModel candidate = graphReader.readGraph(path_euler_sorted);
 
